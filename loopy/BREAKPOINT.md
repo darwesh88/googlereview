@@ -8,8 +8,9 @@ Loopy has pivoted.
 - v2 semantic binary codec is the active direction
 - CPU validation is complete enough
 - Colab validation has started
-- the first Colab GPU baseline reproduced high fidelity and large speed gains
-- but the first measured packed bitstream is still worse than standard raw-text compression
+- strong real-corpus modeling quality is now reproduced across local and Colab runs
+- moderate rate pressure gives the first real packed-bitstream improvement
+- but the measured packed bitstream is still worse than standard raw-text compression
 
 ## What v2 is currently proving
 
@@ -20,20 +21,27 @@ Loopy has pivoted.
 
 ## Most recent result
 
-The first Colab baseline showed:
+Best fidelity-oriented real-corpus result:
 
-- byte accuracy: `0.9861`
-- estimated bpb: `1.6132`
-- avg epoch seconds: `4.66`
-- zlib-compressed learned bitstream bpb: `4.5060`
+- byte accuracy: `0.9876`
+- estimated bpb: `1.5684`
+- zlib-compressed learned bitstream bpb: `4.4418`
 - zlib-compressed raw text bpb: `3.0611`
+
+Best packed-bitstream result so far:
+
+- `rate_weight=0.01`
+- byte accuracy: `0.9799`
+- estimated bpb: `2.1823`
+- zlib-compressed learned bitstream bpb: `4.3861`
 
 Interpretation:
 
 - Loopy v2 is strong as a learned representation and modeling direction
-- Loopy v2 is not yet competitive as a practical compressor with the current hard-bit packing path
-- the next work is to see whether small rate pressure improves the real packed bitstream result
+- small to moderate rate pressure can improve the packed learned bitstream
+- the active problem is now the compression/fidelity frontier
+- Loopy v2 is still not yet competitive as a practical compressor with the current packing path
 
 ## Next resume step
 
-Run the Colab `rate_weight=0.001` comparison and measure its packed bitstream size.
+Run one or two intermediate real-corpus rate points such as `0.003` and `0.005`, then compare packed bitstream size against fidelity.

@@ -60,23 +60,25 @@ So v2 focuses on:
 
 ## Current best understanding in v2
 
-The first Colab GPU baseline reproduced the strong modeling result.
+The strongest real-corpus modeling baseline so far is now:
 
-- byte accuracy: `0.9861`
-- estimated bpb: `1.6132`
-- average epoch seconds: `4.66`
+- byte accuracy: `0.9876`
+- estimated bpb: `1.5684`
 - reconstruction stayed highly faithful on real noisy text
 
-But the first prototype true bitstream measurement showed an important limitation.
+The strongest packed-bitstream result so far came from adding moderate rate pressure locally:
 
-- zlib-compressed learned bitstream bpb: `4.5060`
+- `rate_weight=0.01`
+- byte accuracy: `0.9799`
+- zlib-compressed learned bitstream bpb: `4.3861`
 - zlib-compressed raw text bpb: `3.0611`
 
 Interpretation:
 
 - the learned representation is strong for modeling
-- the current packed hard-bitstream is not yet competitive with standard raw-text compression
-- the next phase is to improve the real bitstream story, not to claim victory early
+- moderate rate pressure can improve the packed learned bitstream
+- but the current codec is still not yet competitive with standard raw-text compression
+- the active problem is now the fidelity/compression tradeoff, not whether the architecture works at all
 
 ## Best next move from here
 
@@ -85,6 +87,6 @@ Do not rent H100s yet.
 Do this next:
 
 1. use [COLAB_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/COLAB_PLAN.md)
-2. run the Colab `rate_weight=0.001` comparison
+2. do a controlled real-corpus rate sweep around the current working point
 3. measure packed bitstream size again with [measure_bitstream_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/measure_bitstream_v2.py)
-4. only then decide whether H100 rentals are justified
+4. map the fidelity/compression frontier before deciding whether H100 rentals are justified

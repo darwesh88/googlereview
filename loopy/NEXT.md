@@ -1,77 +1,64 @@
 # Next
 
-Loopy v2 is now in the Colab validation phase.
+Loopy v2 now has two important real-corpus results:
+
+- a strong modeling baseline with high fidelity
+- a first modest packed-bitstream improvement under rate pressure
 
 ## Current status
 
-The first Colab GPU baseline passed for modeling quality and speed, but not yet for practical compression.
+Best fidelity-oriented baseline:
 
-Observed result:
-
-- byte accuracy: `0.9861`
-- estimated bpb: `1.6132`
-- average epoch seconds: `4.66`
-- zlib-compressed learned bitstream bpb: `4.5060`
+- byte accuracy: `0.9876`
+- estimated bpb: `1.5684`
+- zlib-compressed learned bitstream bpb: `4.4418`
 - zlib-compressed raw text bpb: `3.0611`
+
+Best packed-bitstream result so far:
+
+- run: `v2_twitter_rate_med`
+- `rate_weight=0.01`
+- byte accuracy: `0.9799`
+- estimated bpb: `2.1823`
+- zlib-compressed learned bitstream bpb: `4.3861`
 
 ## What this means
 
-The learned representation is strong and GPU scaling works.
-But the first true bitstream measurement shows that the current packed hard-bitstream is still worse than standard compression on raw text.
+The architecture clearly works.
 
-So the next clean step is:
-
-- keep the same baseline
-- add a small explicit rate penalty on Colab
-- rerun the bitstream measurement
-- see whether real packed size improves without damaging fidelity too much
+Rate pressure can improve the real packed bitstream, but it currently costs some fidelity.
+So the next clean task is to map the tradeoff curve, not to jump to bigger hardware.
 
 ## Immediate next step
 
-Run the Colab `rate_weight=0.001` comparison, then measure it.
+Run one or two intermediate rate points on the same real corpus:
 
-Training command:
+- `rate_weight=0.003`
+- `rate_weight=0.005`
 
-```bash
-!python -m loopy.train_binary_codec_v2 \
-  --data-path loopy/data/real/twitter_support_5k.txt \
-  --output-dir loopy/runs/v2_colab_rate_small \
-  --epochs 20 \
-  --batch-size 16 \
-  --max-seq-len 128 \
-  --patch-size 4 \
-  --embed-dim 128 \
-  --latent-dim 128 \
-  --encoder-layers 2 \
-  --decoder-layers 2 \
-  --num-heads 4 \
-  --dropout 0.0 \
-  --weight-decay 0.0 \
-  --bit-groups 6,6,6,6 \
-  --rate-weight 0.001 \
-  --balance-weight 0.001 \
-  --align-weight 0.05
-```
+Keep everything else fixed:
 
-Measurement command:
+- `patch_size=4`
+- `bit-groups 6,6,6,6`
+- `epochs 10`
+- `batch_size 8`
 
-```bash
-!python -m loopy.measure_bitstream_v2 \
-  --run-dir loopy/runs/v2_colab_rate_small \
-  --data-path loopy/data/real/twitter_support_5k.txt \
-  --output loopy/runs/v2_colab_rate_small/bitstream_summary.json
-```
+For each run, record:
+
+- `best_metrics.json`
+- `sample_reconstruction.txt`
+- `bitstream_summary.json`
 
 ## Decision rule
 
-Move forward only if:
+Move forward only if one of the intermediate rate settings:
 
-- fidelity remains high
-- packed bitstream size improves materially
-- raw-text zlib/gzip is at least approached more closely than the current baseline
+- improves packed learned-bitstream bpb relative to `4.4418`
+- keeps byte accuracy close to or above `0.982`
+- keeps reconstruction errors local rather than structural
 
 ## Do not do next
 
 - do not move to H100 yet
-- do not make public compression claims yet
-- do not discard the modeling result just because the first bitstream packing method is weak
+- do not claim the codec beats standard text compression yet
+- do not keep extending epochs blindly before the rate frontier is mapped

@@ -1142,3 +1142,76 @@ Current decision:
 - next run should be a rate-aware Colab follow-up plus repeated bitstream measurement
 - do not move to H100 yet
 - do not claim compression superiority yet
+
+## Colab CPU rerun of the baseline
+
+After the notebook/auth cleanup, the baseline was rerun in Colab on CPU.
+
+Observed training result:
+
+- loss: `0.2128`
+- recon loss: `0.0503`
+- align loss: `0.1625`
+- estimated bpb: `1.5684`
+- byte accuracy: `0.9876`
+- bit density: `0.5097`
+- raw capacity bpb: `6.0`
+- best epoch: `20`
+- average epoch seconds: `45.63`
+
+Sample reconstruction:
+
+- source: `Customer: delivery slot of 7m. Now 930 and still waiting.... Agent: Sorry Sam, did you receive your order? Ceri`
+- reconstruction: `Customer: delivery slot of 7m. How 930 and still waiting.... Agent: Sorry Sam, did you receive your order? Cerin`
+
+Observed prototype bitstream measurement:
+
+- zlib-compressed learned bitstream bpb: `4.4418`
+- gzip-compressed learned bitstream bpb: `4.4420`
+- zlib-compressed raw text bpb: `3.0611`
+- gzip-compressed raw text bpb: `3.0613`
+
+Interpretation:
+
+- this improved the previous baseline bitstream slightly
+- the modeling result stayed very strong
+- the learned bitstream still does not beat raw-text compression
+
+## Local rate-pressure follow-up (`rate_weight=0.01`)
+
+Observed training result:
+
+- loss: `0.2476`
+- recon loss: `0.0787`
+- rate loss: `0.00386`
+- align loss: `0.1651`
+- estimated bpb: `2.1823`
+- byte accuracy: `0.9799`
+- bit density: `0.4746`
+- raw capacity bpb: `6.0`
+- best epoch: `8`
+- average epoch seconds: `56.06`
+
+Sample reconstruction:
+
+- source: `Customer: delivery slot of 7m. Now 930 and still waiting.... Agent: Sorry Sam, did you receive your order? Ceri`
+- reconstruction: `Customer: delivery slot o! ,m. Now F10 and still waiting.... Agent: Sorry Sam, did you receive your order? Ceris`
+
+Observed prototype bitstream measurement:
+
+- zlib-compressed learned bitstream bpb: `4.3861`
+- gzip-compressed learned bitstream bpb: `4.3862`
+- zlib-compressed raw text bpb: `3.0611`
+- gzip-compressed raw text bpb: `3.0613`
+
+Interpretation:
+
+- this is the first clear sign that rate pressure can improve the real packed bitstream
+- the improvement is modest but real relative to the current baseline
+- the tradeoff is also real: fidelity dropped and fragile detail errors increased
+
+Current conclusion:
+
+- Loopy v2 has crossed into a real compression/fidelity frontier problem
+- the architecture is validated strongly enough to continue
+- the next clean step is a controlled sweep between `rate_weight=0.0` and `0.01`
