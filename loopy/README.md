@@ -79,6 +79,15 @@ Interpretation:
 - fragile details like names and numbers are still the main error mode
 - CPU validation is strong enough to move to medium-scale GPU validation
 
+## Colab entrypoint
+
+The fastest way to start the GPU phase is the ready notebook:
+
+- [Loopy_v2_Colab_Baseline.ipynb](C:/Users/adarw/Desktop/googlereview/loopy/Loopy_v2_Colab_Baseline.ipynb)
+
+GitHub Colab URL:
+
+`https://colab.research.google.com/github/darwesh88/googlereview/blob/main/loopy/Loopy_v2_Colab_Baseline.ipynb`
 ## Best next move from here
 
 Do not rent H100s yet.
@@ -90,3 +99,4 @@ Do this next:
 3. run a small `rate_weight` sweep
 4. measure packed bitstream size with [measure_bitstream_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/measure_bitstream_v2.py)
 5. only then decide whether H100 rentals are justified
+

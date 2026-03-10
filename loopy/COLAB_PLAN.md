@@ -15,6 +15,22 @@ Use it to:
 
 Do not use Colab yet to chase huge model sizes or many architecture changes at once.
 
+## Fastest entrypoint
+
+If you want the quickest start, open the ready notebook in Colab:
+
+- [Loopy_v2_Colab_Baseline.ipynb](C:/Users/adarw/Desktop/googlereview/loopy/Loopy_v2_Colab_Baseline.ipynb)
+
+When the repo is on GitHub, the Colab URL format is:
+
+`https://colab.research.google.com/github/darwesh88/googlereview/blob/main/loopy/Loopy_v2_Colab_Baseline.ipynb`
+
+The notebook:
+
+- clones the repo
+- installs dependencies
+- runs the current best baseline
+- runs the bitstream measurement script
 ## Current best CPU baseline
 
 Use this as the starting point:
@@ -194,3 +210,4 @@ H100 becomes justified only when:
 - one rate-aware variant is clearly better or clearly safer
 - bitstream measurement looks good enough to warrant larger runs
 - we are blocked by Colab memory or training time, not by architectural uncertainty
+
