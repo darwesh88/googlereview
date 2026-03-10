@@ -1,0 +1,5 @@
+Prompt:
+The operations queue saw
+
+Generated:
+The operations queue saw three support tickets where the password reset link worked only after a second attempt.

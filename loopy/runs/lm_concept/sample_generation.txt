@@ -1,0 +1,5 @@
+Prompt:
+A small <n4> woke
+
+Generated:
+A small <n4> woke up before sunrise and looked at the empty <n6>.

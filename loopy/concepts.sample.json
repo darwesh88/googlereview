@@ -1,0 +1,18 @@
+{
+  "concepts": [
+    {"id": "n2", "canonical": "tree", "aliases": ["tree", "trees", "oak", "oaks", "pine", "pines"]},
+    {"id": "n3", "canonical": "house", "aliases": ["house", "houses", "home", "homes"]},
+    {"id": "n4", "canonical": "robot", "aliases": ["robot", "robots", "bot", "bots", "android", "androids"]},
+    {"id": "n5", "canonical": "train", "aliases": ["train", "trains"]},
+    {"id": "n6", "canonical": "street", "aliases": ["street", "streets", "road", "roads"]},
+    {"id": "n7", "canonical": "moon", "aliases": ["moon", "moons"]},
+    {"id": "n8", "canonical": "book", "aliases": ["book", "books"]},
+    {"id": "n9", "canonical": "clock", "aliases": ["clock", "clocks", "timepiece", "timepieces"]},
+    {"id": "n10", "canonical": "map", "aliases": ["map", "maps"]},
+    {"id": "n11", "canonical": "market", "aliases": ["market", "markets"]},
+    {"id": "n12", "canonical": "garden", "aliases": ["garden", "gardens", "gardener", "gardeners"]},
+    {"id": "n13", "canonical": "bread", "aliases": ["bread", "loaf", "loaves"]},
+    {"id": "n14", "canonical": "notebook", "aliases": ["notebook", "notebooks"]},
+    {"id": "n15", "canonical": "storm", "aliases": ["storm", "storms"]}
+  ]
+}

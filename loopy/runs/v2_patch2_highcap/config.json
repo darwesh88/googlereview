@@ -1,0 +1,33 @@
+{
+  "data_path": "loopy/example_corpus.txt",
+  "output_dir": "loopy/runs/v2_patch2_highcap",
+  "batch_size": 4,
+  "epochs": 30,
+  "learning_rate": 0.0003,
+  "weight_decay": 0.01,
+  "max_seq_len": 128,
+  "patch_size": 2,
+  "embed_dim": 128,
+  "latent_dim": 128,
+  "encoder_layers": 2,
+  "decoder_layers": 2,
+  "num_heads": 4,
+  "dropout": 0.1,
+  "gradient_clip_norm": 1.0,
+  "val_ratio": 0.1,
+  "seed": 7,
+  "device": "auto",
+  "overfit_all": true,
+  "bit_groups": [
+    8,
+    8,
+    8,
+    8
+  ],
+  "rate_weight": 0.0,
+  "balance_weight": 0.001,
+  "align_weight": 0.05,
+  "total_bits": 32,
+  "num_patches": 64,
+  "raw_capacity_bpb": 16.0
+}

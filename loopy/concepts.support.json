@@ -1,0 +1,140 @@
+{
+  "concepts": [
+    {
+      "id": "n2",
+      "canonical": "customer",
+      "aliases": [
+        "customer",
+        "customers",
+        "user",
+        "users",
+        "member",
+        "members",
+        "account holder",
+        "account holders"
+      ]
+    },
+    {
+      "id": "n3",
+      "canonical": "subscription",
+      "aliases": [
+        "subscription",
+        "subscriptions",
+        "plan",
+        "plans",
+        "membership",
+        "memberships",
+        "tier",
+        "tiers"
+      ]
+    },
+    {
+      "id": "n4",
+      "canonical": "invoice",
+      "aliases": [
+        "invoice",
+        "invoices",
+        "bill",
+        "bills",
+        "billing statement",
+        "billing statements"
+      ]
+    },
+    {
+      "id": "n5",
+      "canonical": "refund",
+      "aliases": [
+        "refund",
+        "refunds",
+        "credit",
+        "credits",
+        "reimbursement",
+        "reimbursements",
+        "money back"
+      ]
+    },
+    {
+      "id": "n6",
+      "canonical": "password reset",
+      "aliases": [
+        "password reset",
+        "reset link",
+        "login reset",
+        "sign-in reset"
+      ]
+    },
+    {
+      "id": "n7",
+      "canonical": "dashboard",
+      "aliases": [
+        "dashboard",
+        "dashboards",
+        "admin panel",
+        "control panel",
+        "console"
+      ]
+    },
+    {
+      "id": "n8",
+      "canonical": "error message",
+      "aliases": [
+        "error message",
+        "warning banner",
+        "alert",
+        "error",
+        "warning"
+      ]
+    },
+    {
+      "id": "n9",
+      "canonical": "support ticket",
+      "aliases": [
+        "support ticket",
+        "ticket",
+        "case",
+        "support request"
+      ]
+    },
+    {
+      "id": "n10",
+      "canonical": "workspace",
+      "aliases": [
+        "workspace",
+        "project space",
+        "team space",
+        "account space"
+      ]
+    },
+    {
+      "id": "n11",
+      "canonical": "api key",
+      "aliases": [
+        "api key",
+        "access token",
+        "secret key"
+      ]
+    },
+    {
+      "id": "n12",
+      "canonical": "sync job",
+      "aliases": [
+        "sync job",
+        "import run",
+        "background sync",
+        "sync task"
+      ]
+    },
+    {
+      "id": "n13",
+      "canonical": "integration",
+      "aliases": [
+        "integration",
+        "integrations",
+        "connector",
+        "connectors",
+        "app connection",
+        "app connections"
+      ]
+    }
+  ]
+}

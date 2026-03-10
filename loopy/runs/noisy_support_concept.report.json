@@ -1,0 +1,64 @@
+{
+  "mode": "encode",
+  "files": 1,
+  "total_replacements": 860,
+  "concepts_used": 12,
+  "top_concepts": [
+    {
+      "id": "n2",
+      "canonical": "customer",
+      "count": 117
+    },
+    {
+      "id": "n4",
+      "canonical": "invoice",
+      "count": 88
+    },
+    {
+      "id": "n7",
+      "canonical": "dashboard",
+      "count": 84
+    },
+    {
+      "id": "n8",
+      "canonical": "error message",
+      "count": 82
+    },
+    {
+      "id": "n5",
+      "canonical": "refund",
+      "count": 74
+    },
+    {
+      "id": "n9",
+      "canonical": "support ticket",
+      "count": 72
+    },
+    {
+      "id": "n11",
+      "canonical": "api key",
+      "count": 69
+    },
+    {
+      "id": "n13",
+      "canonical": "integration",
+      "count": 67
+    },
+    {
+      "id": "n10",
+      "canonical": "workspace",
+      "count": 65
+    },
+    {
+      "id": "n3",
+      "canonical": "subscription",
+      "count": 62
+    }
+  ],
+  "preview": [
+    {
+      "source": "One buyer changed plan twice in one day and the receipt page still reflected the old tier.",
+      "rewritten": "One buyer changed <n3> twice in one day and the receipt page still reflected the old <n3>."
+    }
+  ]
+}

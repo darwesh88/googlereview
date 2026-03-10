@@ -1,0 +1,42 @@
+{
+  "domain": "replace_with_domain_name",
+  "notes": "Copy this file to a domain-specific lexicon and replace the placeholder concepts with real ones from your corpus.",
+  "concepts": [
+    {
+      "id": "n2",
+      "canonical": "customer",
+      "aliases": [
+        "customer",
+        "customers",
+        "user",
+        "users",
+        "member",
+        "members"
+      ]
+    },
+    {
+      "id": "n3",
+      "canonical": "subscription",
+      "aliases": [
+        "subscription",
+        "subscriptions",
+        "plan",
+        "plans",
+        "tier",
+        "tiers"
+      ]
+    },
+    {
+      "id": "n4",
+      "canonical": "invoice",
+      "aliases": [
+        "invoice",
+        "invoices",
+        "bill",
+        "bills",
+        "billing statement",
+        "billing statements"
+      ]
+    }
+  ]
+}

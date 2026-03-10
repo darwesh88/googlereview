@@ -1,0 +1,64 @@
+{
+  "mode": "encode",
+  "files": 1,
+  "total_replacements": 4268,
+  "concepts_used": 18,
+  "top_concepts": [
+    {
+      "id": "n16",
+      "canonical": "direct message",
+      "count": 781
+    },
+    {
+      "id": "n18",
+      "canonical": "issue",
+      "count": 714
+    },
+    {
+      "id": "n2",
+      "canonical": "account",
+      "count": 477
+    },
+    {
+      "id": "n10",
+      "canonical": "email",
+      "count": 429
+    },
+    {
+      "id": "n13",
+      "canonical": "app",
+      "count": 257
+    },
+    {
+      "id": "n12",
+      "canonical": "address",
+      "count": 226
+    },
+    {
+      "id": "n4",
+      "canonical": "delivery",
+      "count": 184
+    },
+    {
+      "id": "n17",
+      "canonical": "support article",
+      "count": 184
+    },
+    {
+      "id": "n19",
+      "canonical": "update",
+      "count": 175
+    },
+    {
+      "id": "n9",
+      "canonical": "payment",
+      "count": 149
+    }
+  ],
+  "preview": [
+    {
+      "source": "Customer: How do I disable notifications indicated by the bell icon in upper left corner of iOS Kindle app? Agent: we would like to help in realtime! When you have a free moment, please reach out to us here",
+      "rewritten": "Customer: How do I disable notifications indicated by the bell icon in upper left corner of iOS <n13>? Agent: we would like to help in realtime! When you have a free moment, please reach out to us here"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "data_path": "loopy/runs/concept_example.txt",
+  "output_dir": "loopy/runs/lm_concept",
+  "batch_size": 4,
+  "epochs": 120,
+  "learning_rate": 0.001,
+  "weight_decay": 0.0,
+  "max_seq_len": 64,
+  "embed_dim": 128,
+  "hidden_size": 192,
+  "num_layers": 2,
+  "dropout": 0.0,
+  "gradient_clip_norm": 1.0,
+  "val_ratio": 0.1,
+  "seed": 7,
+  "device": "auto",
+  "overfit_all": true,
+  "max_new_tokens": 24
+}

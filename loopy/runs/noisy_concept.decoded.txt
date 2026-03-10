@@ -1,0 +1,20 @@
+Metrics:
+{
+  "loss": 0.507648100455602,
+  "perplexity": 1.6613792181015015,
+  "train_samples": 324,
+  "val_samples": 36,
+  "vocab_size": 190
+}
+
+Prompt:
+Maya said the recovery
+
+Generated:
+Maya said the recovery step expired before the <n2> could reach the <n7>, while the <n2> was still on the page.
+
+Decoded Prompt:
+Maya said the recovery
+
+Decoded Generated:
+Maya said the recovery step expired before the customer could reach the dashboard, while the customer was still on the page.

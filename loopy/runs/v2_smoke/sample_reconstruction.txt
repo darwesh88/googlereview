@@ -1,0 +1,5 @@
+Source:
+A small robot woke up before sunrise and looked at the empty street.
+
+Reconstruction:
+                  e             e  e          e  ee    e     e         e   e      e               e               e             

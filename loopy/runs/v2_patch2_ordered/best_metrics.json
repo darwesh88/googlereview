@@ -1,0 +1,15 @@
+{
+  "loss": 0.10899313390254975,
+  "recon_loss": 0.047401335835456845,
+  "rate_loss": 0.0,
+  "balance_loss": 1.9768270931308507e-06,
+  "align_loss": 0.06158982366323471,
+  "estimated_bpb": 10.911901551117946,
+  "byte_accuracy": 0.9985815602836879,
+  "bit_density": 0.5042193625775446,
+  "raw_capacity_bpb": 16.0,
+  "train_samples": 20,
+  "val_samples": 20,
+  "best_epoch": 40,
+  "avg_epoch_seconds": 0.3342819924990181
+}

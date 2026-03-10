@@ -1,0 +1,64 @@
+{
+  "mode": "encode",
+  "files": 1,
+  "total_replacements": 1207,
+  "concepts_used": 12,
+  "top_concepts": [
+    {
+      "id": "n2",
+      "canonical": "customer",
+      "count": 238
+    },
+    {
+      "id": "n7",
+      "canonical": "dashboard",
+      "count": 123
+    },
+    {
+      "id": "n8",
+      "canonical": "error message",
+      "count": 114
+    },
+    {
+      "id": "n13",
+      "canonical": "integration",
+      "count": 109
+    },
+    {
+      "id": "n9",
+      "canonical": "support ticket",
+      "count": 104
+    },
+    {
+      "id": "n10",
+      "canonical": "workspace",
+      "count": 91
+    },
+    {
+      "id": "n4",
+      "canonical": "invoice",
+      "count": 86
+    },
+    {
+      "id": "n3",
+      "canonical": "subscription",
+      "count": 80
+    },
+    {
+      "id": "n5",
+      "canonical": "refund",
+      "count": 72
+    },
+    {
+      "id": "n12",
+      "canonical": "sync job",
+      "count": 69
+    }
+  ],
+  "preview": [
+    {
+      "source": "The dashboard hides the warning on mobile, so the user only sees the broken integration after refresh.",
+      "rewritten": "The <n7> hides the <n8> on mobile, so the <n2> only sees the broken <n13> after refresh."
+    }
+  ]
+}

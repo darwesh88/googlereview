@@ -1,0 +1,9 @@
+{
+  "loss": 2.614369440078735,
+  "recon_loss": 1.2833625555038453,
+  "vq_loss": 1.3310069561004638,
+  "codebook_perplexity": 15.090382766723632,
+  "avg_tokens_per_span": 72.4,
+  "avg_symbols_per_span": 18.55,
+  "compression_ratio": 3.9029649595687332
+}

@@ -1,0 +1,64 @@
+{
+  "mode": "encode",
+  "files": 1,
+  "total_replacements": 14,
+  "concepts_used": 12,
+  "top_concepts": [
+    {
+      "id": "n6",
+      "canonical": "street",
+      "count": 2
+    },
+    {
+      "id": "n10",
+      "canonical": "map",
+      "count": 2
+    },
+    {
+      "id": "n4",
+      "canonical": "robot",
+      "count": 1
+    },
+    {
+      "id": "n13",
+      "canonical": "bread",
+      "count": 1
+    },
+    {
+      "id": "n7",
+      "canonical": "moon",
+      "count": 1
+    },
+    {
+      "id": "n5",
+      "canonical": "train",
+      "count": 1
+    },
+    {
+      "id": "n14",
+      "canonical": "notebook",
+      "count": 1
+    },
+    {
+      "id": "n8",
+      "canonical": "book",
+      "count": 1
+    },
+    {
+      "id": "n9",
+      "canonical": "clock",
+      "count": 1
+    },
+    {
+      "id": "n12",
+      "canonical": "garden",
+      "count": 1
+    }
+  ],
+  "preview": [
+    {
+      "source": "A small robot woke up before sunrise and looked at the empty street.",
+      "rewritten": "A small <n4> woke up before sunrise and looked at the empty <n6>."
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "data_path": "loopy/data/real/twitter_support_5k.txt",
+  "output_dir": "loopy/runs/v2_twitter_local",
+  "batch_size": 8,
+  "epochs": 10,
+  "learning_rate": 0.0003,
+  "weight_decay": 0.0,
+  "max_seq_len": 128,
+  "patch_size": 4,
+  "embed_dim": 128,
+  "latent_dim": 128,
+  "encoder_layers": 2,
+  "decoder_layers": 2,
+  "num_heads": 4,
+  "dropout": 0.0,
+  "gradient_clip_norm": 1.0,
+  "val_ratio": 0.1,
+  "seed": 7,
+  "device": "auto",
+  "overfit_all": false,
+  "bit_groups": [
+    6,
+    6,
+    6,
+    6
+  ],
+  "rate_weight": 0.0,
+  "balance_weight": 0.001,
+  "align_weight": 0.05,
+  "total_bits": 24,
+  "num_patches": 32,
+  "raw_capacity_bpb": 6.0
+}

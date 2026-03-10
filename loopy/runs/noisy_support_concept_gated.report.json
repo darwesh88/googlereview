@@ -1,0 +1,460 @@
+{
+  "mode": "contextual_encode",
+  "files": 1,
+  "total_replacements": 778,
+  "concepts_used": 12,
+  "total_skips": 82,
+  "top_concepts": [
+    {
+      "id": "n2",
+      "canonical": "customer",
+      "count": 117
+    },
+    {
+      "id": "n5",
+      "canonical": "refund",
+      "count": 70
+    },
+    {
+      "id": "n11",
+      "canonical": "api key",
+      "count": 69
+    },
+    {
+      "id": "n13",
+      "canonical": "integration",
+      "count": 67
+    },
+    {
+      "id": "n7",
+      "canonical": "dashboard",
+      "count": 66
+    },
+    {
+      "id": "n10",
+      "canonical": "workspace",
+      "count": 65
+    },
+    {
+      "id": "n8",
+      "canonical": "error message",
+      "count": 65
+    },
+    {
+      "id": "n9",
+      "canonical": "support ticket",
+      "count": 63
+    },
+    {
+      "id": "n4",
+      "canonical": "invoice",
+      "count": 60
+    },
+    {
+      "id": "n12",
+      "canonical": "sync job",
+      "count": 59
+    }
+  ],
+  "top_skip_reasons": [
+    {
+      "rule": "bill:missing_window",
+      "count": 28
+    },
+    {
+      "rule": "console:missing_window",
+      "count": 18
+    },
+    {
+      "rule": "case:missing_window",
+      "count": 9
+    },
+    {
+      "rule": "error:missing_window",
+      "count": 7
+    },
+    {
+      "rule": "plan:missing_window",
+      "count": 6
+    },
+    {
+      "rule": "alert:missing_window",
+      "count": 6
+    },
+    {
+      "rule": "credit:missing_window",
+      "count": 4
+    },
+    {
+      "rule": "warning:missing_window",
+      "count": 4
+    }
+  ],
+  "preview": [
+    {
+      "source": "One buyer changed plan twice in one day and the receipt page still reflected the old tier.",
+      "rewritten": "One buyer changed plan twice in one day and the receipt page still reflected the old <n3>."
+    }
+  ],
+  "trace": [
+    {
+      "alias": "plan",
+      "concept_id": "n3",
+      "reason": "missing_window",
+      "before": [
+        "one",
+        "buyer",
+        "changed"
+      ],
+      "after": [
+        "twice",
+        "in",
+        "one",
+        "day"
+      ],
+      "surface": "plan"
+    },
+    {
+      "alias": "plan",
+      "concept_id": "n3",
+      "reason": "missing_window",
+      "before": [
+        "settings",
+        "one",
+        "subscriber",
+        "changed"
+      ],
+      "after": [
+        "twice",
+        "in",
+        "one",
+        "day"
+      ],
+      "surface": "plan"
+    },
+    {
+      "alias": "case",
+      "concept_id": "n9",
+      "reason": "missing_window",
+      "before": [
+        "review",
+        "elia",
+        "linked",
+        "the"
+      ],
+      "after": [
+        "the",
+        "integration",
+        "and",
+        "the"
+      ],
+      "surface": "case"
+    },
+    {
+      "alias": "bill",
+      "concept_id": "n4",
+      "reason": "missing_window",
+      "before": [
+        "integration",
+        "and",
+        "the",
+        "repeated"
+      ],
+      "after": [
+        "issue",
+        "the",
+        "buyer",
+        "opened"
+      ],
+      "surface": "bill"
+    },
+    {
+      "alias": "credit",
+      "concept_id": "n5",
+      "reason": "missing_window",
+      "before": [
+        "the",
+        "user",
+        "thought",
+        "the"
+      ],
+      "after": [
+        "had",
+        "failed",
+        "during",
+        "review"
+      ],
+      "surface": "credit"
+    },
+    {
+      "alias": "bill",
+      "concept_id": "n4",
+      "reason": "missing_window",
+      "before": [
+        "service",
+        "and",
+        "the",
+        "repeated"
+      ],
+      "after": [
+        "issue",
+        "the",
+        "member",
+        "opened"
+      ],
+      "surface": "bill"
+    },
+    {
+      "alias": "alert",
+      "concept_id": "n8",
+      "reason": "missing_window",
+      "before": [
+        "imported",
+        "correctly",
+        "but",
+        "one"
+      ],
+      "after": [
+        "stayed",
+        "beside",
+        "the",
+        "secret"
+      ],
+      "surface": "alert"
+    },
+    {
+      "alias": "alert",
+      "concept_id": "n8",
+      "reason": "missing_window",
+      "before": [
+        "imported",
+        "correctly",
+        "but",
+        "one"
+      ],
+      "after": [
+        "stayed",
+        "beside",
+        "the",
+        "private"
+      ],
+      "surface": "alert"
+    },
+    {
+      "alias": "error",
+      "concept_id": "n8",
+      "reason": "missing_window",
+      "before": [
+        "mobile",
+        "page",
+        "hid",
+        "the"
+      ],
+      "after": [
+        "a",
+        "long",
+        "sync",
+        "task"
+      ],
+      "surface": "error"
+    },
+    {
+      "alias": "credit",
+      "concept_id": "n5",
+      "reason": "missing_window",
+      "before": [
+        "the",
+        "buyer",
+        "thought",
+        "the"
+      ],
+      "after": [
+        "had",
+        "failed",
+        "the",
+        "workspace"
+      ],
+      "surface": "credit"
+    },
+    {
+      "alias": "console",
+      "concept_id": "n7",
+      "reason": "missing_window",
+      "before": [
+        "sync",
+        "finished",
+        "but",
+        "the"
+      ],
+      "after": [
+        "still",
+        "showed",
+        "a",
+        "error"
+      ],
+      "surface": "console"
+    },
+    {
+      "alias": "bill",
+      "concept_id": "n4",
+      "reason": "missing_window",
+      "before": [
+        "one",
+        "day",
+        "and",
+        "the"
+      ],
+      "after": [
+        "still",
+        "reflected",
+        "the",
+        "old"
+      ],
+      "surface": "bill"
+    },
+    {
+      "alias": "bill",
+      "concept_id": "n4",
+      "reason": "missing_window",
+      "before": [
+        "app",
+        "connection",
+        "duplicated",
+        "an"
+      ],
+      "after": [
+        "inside",
+        "the",
+        "same",
+        "instance"
+      ],
+      "surface": "bill"
+    },
+    {
+      "alias": "case",
+      "concept_id": "n9",
+      "reason": "missing_window",
+      "before": [
+        "the",
+        "app",
+        "connection",
+        "the"
+      ],
+      "after": [
+        "says",
+        "the",
+        "access",
+        "token"
+      ],
+      "surface": "case"
+    },
+    {
+      "alias": "alert",
+      "concept_id": "n8",
+      "reason": "missing_window",
+      "before": [
+        "app",
+        "connection",
+        "raised",
+        "a"
+      ],
+      "after": [
+        "when",
+        "the",
+        "customer",
+        "rotated"
+      ],
+      "surface": "alert"
+    },
+    {
+      "alias": "console",
+      "concept_id": "n7",
+      "reason": "missing_window",
+      "before": [
+        "never",
+        "appeared",
+        "on",
+        "the"
+      ],
+      "after": [
+        "the",
+        "help",
+        "thread",
+        "says"
+      ],
+      "surface": "console"
+    },
+    {
+      "alias": "plan",
+      "concept_id": "n3",
+      "reason": "missing_window",
+      "before": [
+        "workspace",
+        "one",
+        "user",
+        "changed"
+      ],
+      "after": [
+        "twice",
+        "in",
+        "one",
+        "day"
+      ],
+      "surface": "plan"
+    },
+    {
+      "alias": "warning",
+      "concept_id": "n8",
+      "reason": "missing_window",
+      "before": [
+        "imported",
+        "correctly",
+        "but",
+        "one"
+      ],
+      "after": [
+        "stayed",
+        "beside",
+        "the",
+        "api"
+      ],
+      "surface": "warning"
+    },
+    {
+      "alias": "credit",
+      "concept_id": "n5",
+      "reason": "missing_window",
+      "before": [
+        "the",
+        "customer",
+        "thought",
+        "the"
+      ],
+      "after": [
+        "had",
+        "failed",
+        "priya",
+        "said"
+      ],
+      "surface": "credit"
+    },
+    {
+      "alias": "bill",
+      "concept_id": "n4",
+      "reason": "missing_window",
+      "before": [
+        "support",
+        "ticket",
+        "because",
+        "the"
+      ],
+      "after": [
+        "for",
+        "the",
+        "bundle",
+        "looked"
+      ],
+      "surface": "bill"
+    }
+  ]
+}

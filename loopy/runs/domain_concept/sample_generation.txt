@@ -1,0 +1,5 @@
+Prompt:
+The operations queue saw
+
+Generated:
+The operations queue saw three support tickets where the <n6> link worked only after a second attempt.

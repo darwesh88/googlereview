@@ -1,0 +1,219 @@
+{
+  "domain": "twitter_support_5k",
+  "notes": "First draft lexicon for the real Twitter support corpus. Tightened after rewrite inspection to remove high-risk broad aliases.",
+  "concepts": [
+    {
+      "id": "n2",
+      "canonical": "account",
+      "aliases": [
+        "account",
+        "accounts",
+        "user account",
+        "profile",
+        "profiles"
+      ]
+    },
+    {
+      "id": "n3",
+      "canonical": "purchase order",
+      "aliases": [
+        "orders",
+        "purchase",
+        "purchases",
+        "booking",
+        "bookings"
+      ]
+    },
+    {
+      "id": "n4",
+      "canonical": "delivery",
+      "aliases": [
+        "delivery",
+        "deliveries",
+        "delivery date",
+        "late delivery",
+        "delivered"
+      ]
+    },
+    {
+      "id": "n5",
+      "canonical": "tracking",
+      "aliases": [
+        "tracking",
+        "tracking number",
+        "tracking info",
+        "tracking information",
+        "tracking update"
+      ]
+    },
+    {
+      "id": "n6",
+      "canonical": "package",
+      "aliases": [
+        "package",
+        "packages",
+        "shipment",
+        "shipments",
+        "parcel",
+        "parcels"
+      ]
+    },
+    {
+      "id": "n7",
+      "canonical": "refund",
+      "aliases": [
+        "refund",
+        "refunds",
+        "reimbursement",
+        "reimbursements",
+        "money back"
+      ]
+    },
+    {
+      "id": "n8",
+      "canonical": "cancellation",
+      "aliases": [
+        "cancellation",
+        "cancelation",
+        "cancellations",
+        "cancelations",
+        "cancellation fee",
+        "cancelation fee",
+        "cancel fee"
+      ]
+    },
+    {
+      "id": "n9",
+      "canonical": "payment",
+      "aliases": [
+        "payment",
+        "payments",
+        "charge",
+        "charges",
+        "charged",
+        "billing charge"
+      ]
+    },
+    {
+      "id": "n10",
+      "canonical": "email",
+      "aliases": [
+        "email",
+        "emails",
+        "e-mail",
+        "e-mails",
+        "email address",
+        "email addresses"
+      ]
+    },
+    {
+      "id": "n11",
+      "canonical": "phone number",
+      "aliases": [
+        "phone number",
+        "phone numbers",
+        "contact number",
+        "contact numbers",
+        "mobile number",
+        "telephone number"
+      ]
+    },
+    {
+      "id": "n12",
+      "canonical": "address",
+      "aliases": [
+        "address",
+        "addresses",
+        "full address",
+        "shipping address",
+        "billing address"
+      ]
+    },
+    {
+      "id": "n13",
+      "canonical": "app",
+      "aliases": [
+        "app",
+        "apps",
+        "application",
+        "applications",
+        "ios app",
+        "android app",
+        "kindle app"
+      ]
+    },
+    {
+      "id": "n14",
+      "canonical": "device",
+      "aliases": [
+        "device",
+        "devices",
+        "bluetooth device"
+      ]
+    },
+    {
+      "id": "n15",
+      "canonical": "password reset",
+      "aliases": [
+        "password reset",
+        "reset password",
+        "reset my password",
+        "reset your password",
+        "forgot password",
+        "forgot my password",
+        "login reset",
+        "sign-in reset"
+      ]
+    },
+    {
+      "id": "n16",
+      "canonical": "direct message",
+      "aliases": [
+        "direct message",
+        "direct messages",
+        "dm",
+        "dms",
+        "drop a dm",
+        "message us",
+        "send us a message"
+      ]
+    },
+    {
+      "id": "n17",
+      "canonical": "support article",
+      "aliases": [
+        "link",
+        "links",
+        "article",
+        "articles",
+        "help article",
+        "support article"
+      ]
+    },
+    {
+      "id": "n18",
+      "canonical": "issue",
+      "aliases": [
+        "issue",
+        "issues",
+        "problem",
+        "problems",
+        "error",
+        "errors",
+        "error message",
+        "trouble"
+      ]
+    },
+    {
+      "id": "n19",
+      "canonical": "update",
+      "aliases": [
+        "update",
+        "updates",
+        "status update",
+        "latest update"
+      ]
+    }
+  ]
+}
+

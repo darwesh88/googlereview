@@ -1,0 +1,402 @@
+{
+  "train_samples": 324,
+  "val_samples": 36,
+  "window": 4,
+  "examples": 76,
+  "canonical_accuracy": 0.2894736842105263,
+  "contextual_accuracy": 0.3157894736842105,
+  "samples": [
+    {
+      "concept_id": "n3",
+      "true_alias": "subscription",
+      "canonical_alias": "subscription",
+      "contextual_alias": "tier",
+      "context_tokens": [
+        "one",
+        "buyer",
+        "changed",
+        "twice",
+        "in",
+        "one",
+        "day"
+      ],
+      "contextual_score": 6.68515372008177
+    },
+    {
+      "concept_id": "n3",
+      "true_alias": "tier",
+      "canonical_alias": "subscription",
+      "contextual_alias": "tier",
+      "context_tokens": [
+        "still",
+        "reflected",
+        "the",
+        "old"
+      ],
+      "contextual_score": 7.828016340002326
+    },
+    {
+      "concept_id": "n12",
+      "true_alias": "sync task",
+      "canonical_alias": "sync job",
+      "contextual_alias": "sync task",
+      "context_tokens": [
+        "finance",
+        "manager",
+        "said",
+        "the",
+        "finished",
+        "but",
+        "the"
+      ],
+      "contextual_score": 8.660472695963456
+    },
+    {
+      "concept_id": "n7",
+      "true_alias": "dashboard",
+      "canonical_alias": "dashboard",
+      "contextual_alias": "admin panel",
+      "context_tokens": [
+        "the",
+        "buyer",
+        "said",
+        "the",
+        "looked",
+        "fine",
+        "on",
+        "desktop"
+      ],
+      "contextual_score": 9.168478900552133
+    },
+    {
+      "concept_id": "n11",
+      "true_alias": "access token",
+      "canonical_alias": "api key",
+      "contextual_alias": "access token",
+      "context_tokens": [
+        "the",
+        "<n2>",
+        "rotated",
+        "an",
+        "so",
+        "the",
+        "team"
+      ],
+      "contextual_score": 7.7997302069817955
+    },
+    {
+      "concept_id": "n5",
+      "true_alias": "money back",
+      "canonical_alias": "refund",
+      "contextual_alias": "money back",
+      "context_tokens": [
+        "the",
+        "<n2>",
+        "thought",
+        "the",
+        "had",
+        "failed"
+      ],
+      "contextual_score": 7.60475913756471
+    },
+    {
+      "concept_id": "n10",
+      "true_alias": "workspace",
+      "canonical_alias": "workspace",
+      "contextual_alias": "account space",
+      "context_tokens": [
+        "a",
+        "locked",
+        "plus",
+        "an",
+        "expired",
+        "<n11>"
+      ],
+      "contextual_score": 6.909017788094898
+    },
+    {
+      "concept_id": "n10",
+      "true_alias": "account space",
+      "canonical_alias": "workspace",
+      "contextual_alias": "account space",
+      "context_tokens": [
+        "breaks",
+        "in",
+        "the",
+        "production"
+      ],
+      "contextual_score": 5.853294741830044
+    },
+    {
+      "concept_id": "n12",
+      "true_alias": "sync task",
+      "canonical_alias": "sync job",
+      "contextual_alias": "sync task",
+      "context_tokens": [
+        "support",
+        "manager",
+        "said",
+        "the",
+        "finished",
+        "but",
+        "the"
+      ],
+      "contextual_score": 8.175269669571495
+    },
+    {
+      "concept_id": "n13",
+      "true_alias": "integration",
+      "canonical_alias": "integration",
+      "contextual_alias": "app connection",
+      "context_tokens": [
+        "a",
+        "<n5>",
+        "after",
+        "the",
+        "duplicated",
+        "an",
+        "<n4>",
+        "inside"
+      ],
+      "contextual_score": 8.75476741219718
+    },
+    {
+      "concept_id": "n4",
+      "true_alias": "invoice",
+      "canonical_alias": "invoice",
+      "contextual_alias": "bill",
+      "context_tokens": [
+        "the",
+        "<n13>",
+        "duplicated",
+        "an",
+        "inside",
+        "the",
+        "same",
+        "<n10>"
+      ],
+      "contextual_score": 9.88268145361614
+    },
+    {
+      "concept_id": "n10",
+      "true_alias": "workspace",
+      "canonical_alias": "workspace",
+      "contextual_alias": "project space",
+      "context_tokens": [
+        "<n4>",
+        "inside",
+        "the",
+        "same"
+      ],
+      "contextual_score": 5.368692974517388
+    },
+    {
+      "concept_id": "n3",
+      "true_alias": "tier",
+      "canonical_alias": "subscription",
+      "contextual_alias": "tier",
+      "context_tokens": [
+        "still",
+        "reflected",
+        "the",
+        "old"
+      ],
+      "contextual_score": 7.828016340002326
+    },
+    {
+      "concept_id": "n13",
+      "true_alias": "integration",
+      "canonical_alias": "integration",
+      "contextual_alias": "app connection",
+      "context_tokens": [
+        "a",
+        "<n5>",
+        "after",
+        "the",
+        "duplicated",
+        "an",
+        "receipt",
+        "page"
+      ],
+      "contextual_score": 8.113363899885272
+    },
+    {
+      "concept_id": "n12",
+      "true_alias": "import run",
+      "canonical_alias": "sync job",
+      "contextual_alias": "import run",
+      "context_tokens": [
+        "appeared",
+        "together",
+        "after",
+        "the",
+        "retried",
+        "the",
+        "same",
+        "record"
+      ],
+      "contextual_score": 9.446501765970467
+    },
+    {
+      "concept_id": "n11",
+      "true_alias": "access token",
+      "canonical_alias": "api key",
+      "contextual_alias": "access token",
+      "context_tokens": [
+        "the",
+        "<n2>",
+        "rotated",
+        "an",
+        "so",
+        "the",
+        "team"
+      ],
+      "contextual_score": 7.7997302069817955
+    },
+    {
+      "concept_id": "n7",
+      "true_alias": "dashboard",
+      "canonical_alias": "dashboard",
+      "contextual_alias": "admin panel",
+      "context_tokens": [
+        "buyer",
+        "could",
+        "reach",
+        "the",
+        "before",
+        "the",
+        "on"
+      ],
+      "contextual_score": 7.786622182336725
+    },
+    {
+      "concept_id": "n7",
+      "true_alias": "console",
+      "canonical_alias": "dashboard",
+      "contextual_alias": "console",
+      "context_tokens": [
+        "never",
+        "appeared",
+        "on",
+        "the"
+      ],
+      "contextual_score": 6.341597947947625
+    },
+    {
+      "concept_id": "n4",
+      "true_alias": "invoice",
+      "canonical_alias": "invoice",
+      "contextual_alias": "bill",
+      "context_tokens": [
+        "one",
+        "day",
+        "and",
+        "the",
+        "still",
+        "reflected",
+        "the",
+        "old"
+      ],
+      "contextual_score": 11.420818666895745
+    },
+    {
+      "concept_id": "n3",
+      "true_alias": "tier",
+      "canonical_alias": "subscription",
+      "contextual_alias": "tier",
+      "context_tokens": [
+        "still",
+        "reflected",
+        "the",
+        "old"
+      ],
+      "contextual_score": 7.828016340002326
+    }
+  ],
+  "by_concept": [
+    {
+      "concept_id": "n10",
+      "canonical": "workspace",
+      "total": 5,
+      "canonical_accuracy": 0.4,
+      "contextual_accuracy": 0.2
+    },
+    {
+      "concept_id": "n11",
+      "canonical": "api key",
+      "total": 6,
+      "canonical_accuracy": 0.16666666666666666,
+      "contextual_accuracy": 0.5
+    },
+    {
+      "concept_id": "n12",
+      "canonical": "sync job",
+      "total": 5,
+      "canonical_accuracy": 0.0,
+      "contextual_accuracy": 0.6
+    },
+    {
+      "concept_id": "n13",
+      "canonical": "integration",
+      "total": 9,
+      "canonical_accuracy": 0.5555555555555556,
+      "contextual_accuracy": 0.3333333333333333
+    },
+    {
+      "concept_id": "n2",
+      "canonical": "customer",
+      "total": 11,
+      "canonical_accuracy": 0.2727272727272727,
+      "contextual_accuracy": 0.2727272727272727
+    },
+    {
+      "concept_id": "n3",
+      "canonical": "subscription",
+      "total": 8,
+      "canonical_accuracy": 0.25,
+      "contextual_accuracy": 0.5
+    },
+    {
+      "concept_id": "n4",
+      "canonical": "invoice",
+      "total": 4,
+      "canonical_accuracy": 0.75,
+      "contextual_accuracy": 0.0
+    },
+    {
+      "concept_id": "n5",
+      "canonical": "refund",
+      "total": 5,
+      "canonical_accuracy": 0.2,
+      "contextual_accuracy": 0.4
+    },
+    {
+      "concept_id": "n6",
+      "canonical": "password reset",
+      "total": 1,
+      "canonical_accuracy": 0.0,
+      "contextual_accuracy": 0.0
+    },
+    {
+      "concept_id": "n7",
+      "canonical": "dashboard",
+      "total": 8,
+      "canonical_accuracy": 0.25,
+      "contextual_accuracy": 0.125
+    },
+    {
+      "concept_id": "n8",
+      "canonical": "error message",
+      "total": 9,
+      "canonical_accuracy": 0.1111111111111111,
+      "contextual_accuracy": 0.2222222222222222
+    },
+    {
+      "concept_id": "n9",
+      "canonical": "support ticket",
+      "total": 5,
+      "canonical_accuracy": 0.4,
+      "contextual_accuracy": 0.4
+    }
+  ]
+}

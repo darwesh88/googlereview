@@ -1,0 +1,20 @@
+Metrics:
+{
+  "loss": 0.24085553735494614,
+  "perplexity": 1.2723371982574463,
+  "train_samples": 288,
+  "val_samples": 32,
+  "vocab_size": 185
+}
+
+Prompt:
+The operations queue saw
+
+Generated:
+The operations queue saw three support tickets where the <n6> link worked only after a second attempt.
+
+Decoded Prompt:
+The operations queue saw
+
+Decoded Generated:
+The operations queue saw three support tickets where the password reset link worked only after a second attempt.

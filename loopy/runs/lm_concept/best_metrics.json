@@ -1,0 +1,7 @@
+{
+  "loss": 0.2041313648223877,
+  "perplexity": 1.226459264755249,
+  "train_samples": 20,
+  "val_samples": 20,
+  "vocab_size": 196
+}

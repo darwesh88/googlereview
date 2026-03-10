@@ -1,0 +1,5 @@
+Prompt:
+A small robot woke
+
+Generated:
+A small robot woke up before sunrise and looked at the empty street.

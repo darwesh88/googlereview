@@ -1,0 +1,52 @@
+{
+  "rules": [
+    {
+      "alias": "plan",
+      "concept_id": "n3",
+      "require_any_window": ["upgrade", "billing", "cancel", "invoice", "tier", "subscription", "pricing", "amount"],
+      "window": 4
+    },
+    {
+      "alias": "bill",
+      "concept_id": "n4",
+      "require_any_window": ["amount", "billing", "invoice", "refund", "charge", "subscription", "wrong"],
+      "window": 4
+    },
+    {
+      "alias": "credit",
+      "concept_id": "n5",
+      "require_any_window": ["refund", "issued", "billing", "account", "appeared", "approved"],
+      "window": 4
+    },
+    {
+      "alias": "console",
+      "concept_id": "n7",
+      "require_any_window": ["reach", "admin", "login", "panel", "dashboard", "mobile"],
+      "window": 4
+    },
+    {
+      "alias": "case",
+      "concept_id": "n9",
+      "require_any_window": ["support", "queue", "opened", "reopened", "issue", "ticket"],
+      "window": 4
+    },
+    {
+      "alias": "warning",
+      "concept_id": "n8",
+      "require_any_window": ["banner", "showed", "appears", "triggered", "mobile", "dashboard", "integration"],
+      "window": 4
+    },
+    {
+      "alias": "alert",
+      "concept_id": "n8",
+      "require_any_window": ["banner", "showed", "appears", "triggered", "mobile", "dashboard", "integration"],
+      "window": 4
+    },
+    {
+      "alias": "error",
+      "concept_id": "n8",
+      "require_any_window": ["showed", "appears", "triggered", "raised", "displayed", "dashboard", "integration"],
+      "window": 4
+    }
+  ]
+}

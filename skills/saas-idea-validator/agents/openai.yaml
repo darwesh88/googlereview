@@ -1,0 +1,4 @@
+interface:
+  display_name: "SaaS Idea Validator"
+  short_description: "Research and rank SaaS ideas fast"
+  default_prompt: "Use $saas-idea-validator to compare my SaaS ideas, score them, and recommend the best simple first product."

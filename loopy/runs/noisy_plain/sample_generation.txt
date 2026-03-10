@@ -1,0 +1,5 @@
+Prompt:
+Maya said the recovery
+
+Generated:
+Maya said the recovery step expired before the user could reach the admin panel, so the team marked it for follow - up.

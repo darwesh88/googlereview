@@ -1,0 +1,36 @@
+{
+  "config": {
+    "input_path": "loopy/data/raw/twitter_support/twitter_support_5k.txt",
+    "output_path": "loopy/data/real/twitter_support_5k.txt",
+    "text_key": "text",
+    "min_chars": 24,
+    "max_chars": 280,
+    "min_tokens": 4,
+    "max_samples": null,
+    "seed": 7,
+    "dedupe": true,
+    "redact_emails": true,
+    "redact_urls": true,
+    "redact_long_numbers": true
+  },
+  "files": 1,
+  "source_types": {
+    ".txt": 1
+  },
+  "invalid_jsonl_rows": 0,
+  "kept_before_dedupe": 4675,
+  "kept_after_dedupe": 4674,
+  "written_samples": 4674,
+  "dropped_reasons": {
+    "too_long": 268,
+    "too_few_tokens": 24
+  },
+  "avg_chars": 184.95,
+  "preview": [
+    "Customer: How do I disable notifications indicated by the bell icon in upper left corner of iOS Kindle app? Agent: we would like to help in realtime! When you have a free moment, please reach out to us here",
+    "Customer: Yes all files, Mac, El Capitan Agent: we are looping in an eert who can help you out here. They will reply as soon as they are available. Raj",
+    "Customer: My guaranteed delivery date was Monday. Agent: My apologies. What is the latest update on the tracking?",
+    "Customer: I have moved recently from Delhi to Mumbai, India permanently. However, I keep getting SMS/email about offers in Delhi. How can I change that to Mumbai? Agent: we will be happy to take a closer look. Send us a note via so our team can connect.",
+    "Customer: Premium amp when i\ufe0f have it on shuffle it turns off when the song is done and just plays in order and the repeat lights up but doesn\u2019t repeat Agent: Hmm. Can you try restarting your device by holding the Sleep/Wake Volume Down buttons for 10 seconds? Keep us posted /"
+  ]
+}
