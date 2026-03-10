@@ -28,9 +28,11 @@ When the repo is on GitHub, the Colab URL format is:
 The notebook:
 
 - clones the repo
-- installs dependencies
+- prompts for a GitHub token if the repo is private
+- installs dependencies only if the requirements file exists
 - runs the current best baseline
 - runs the bitstream measurement script
+
 ## Current best CPU baseline
 
 Use this as the starting point:
@@ -53,13 +55,13 @@ Use this as the starting point:
 ## Colab setup steps
 
 1. Open a GPU runtime in Colab.
-2. Clone or upload the repo.
+2. Open the ready notebook or clone the repo manually.
 3. Install minimal dependencies.
 4. Verify GPU visibility in PyTorch.
-5. Copy or mount the prepared dataset file.
+5. Confirm the prepared dataset file exists in the repo clone.
 6. Run the baseline first before any variants.
 
-Suggested setup cells:
+Suggested setup cells if you are not using the notebook:
 
 ```bash
 !git clone <your-repo-url>
@@ -210,4 +212,3 @@ H100 becomes justified only when:
 - one rate-aware variant is clearly better or clearly safer
 - bitstream measurement looks good enough to warrant larger runs
 - we are blocked by Colab memory or training time, not by architectural uncertainty
-
