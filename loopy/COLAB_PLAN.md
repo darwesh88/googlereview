@@ -21,7 +21,7 @@ If you want the quickest start, open the ready notebook in Colab:
 
 - [Loopy_v2_Colab_Baseline.ipynb](C:/Users/adarw/Desktop/googlereview/loopy/Loopy_v2_Colab_Baseline.ipynb)
 
-When the repo is on GitHub, the Colab URL format is:
+When the repo is on GitHub, the Colab URL is:
 
 `https://colab.research.google.com/github/darwesh88/googlereview/blob/main/loopy/Loopy_v2_Colab_Baseline.ipynb`
 
@@ -31,7 +31,9 @@ The notebook:
 - prompts for a GitHub token if the repo is private
 - installs dependencies only if the requirements file exists
 - runs the current best baseline
-- runs the bitstream measurement script
+- measures the baseline bitstream
+- runs the `rate_weight=0.001` comparison
+- measures the comparison bitstream
 
 ## Current best CPU baseline
 

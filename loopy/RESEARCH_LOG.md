@@ -1088,3 +1088,57 @@ Current conclusion:
 - CPU validation has done its job
 - Loopy v2 now has a strong real-corpus baseline
 - the next phase should be medium-scale GPU validation on Google Colab rather than more CPU-only extension runs
+## First Colab GPU baseline result
+
+The first Colab GPU baseline reproduced the CPU behavior cleanly and gave the first prototype true bitstream measurement.
+
+Observed training result on Colab GPU:
+
+- loss: `0.2156`
+- recon loss: `0.0510`
+- align loss: `0.1646`
+- estimated bpb: `1.6132`
+- byte accuracy: `0.9861`
+- bit density: `0.4921`
+- raw capacity bpb: `6.0`
+- best epoch: `19`
+- average epoch seconds: `4.66`
+
+Sample reconstruction:
+
+- source: `Customer: delivery slot of 7m. Now 930 and still waiting.... Agent: Sorry Sam, did you receive your order? Ceri`
+- reconstruction: `Customer: delivery slot of 7m. No! 330 and still waiting.... Agent: Sorry Sam, did you receive your order? Cerio`
+
+Interpretation of training:
+
+- the GPU baseline reproduced the strong CPU behavior
+- training became dramatically faster than CPU while keeping high fidelity
+- the remaining errors are still concentrated in fragile details like numbers, punctuation, and names
+
+Observed prototype bitstream measurement:
+
+- hard bitstream bpb: `6.0111`
+- zlib-compressed learned bitstream bpb: `4.5060`
+- gzip-compressed learned bitstream bpb: `4.5061`
+- zlib-compressed raw text bpb: `3.0611`
+- gzip-compressed raw text bpb: `3.0613`
+
+Interpretation of compression:
+
+- this is the first important reality check for Loopy v2
+- the learned representation is highly predictable to the model (`estimated_bpb` is low)
+- but the actual packed hard-bitstream plus simple standard compression is still worse than compressing the raw text directly with zlib/gzip
+- in other words, the representation is promising for modeling, but the current codec is not yet a competitive real compressor
+
+What this means:
+
+- Loopy v2 is validated as a learned representation / modeling direction
+- Loopy v2 is not yet validated as a practical text compressor
+- the next work should focus on turning model-side predictability into real bitstream savings
+
+Current decision:
+
+- keep Colab as the active phase
+- next run should be a rate-aware Colab follow-up plus repeated bitstream measurement
+- do not move to H100 yet
+- do not claim compression superiority yet
