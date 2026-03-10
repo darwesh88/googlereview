@@ -28,7 +28,7 @@ When the repo is on GitHub, the Colab URL is:
 The notebook:
 
 - clones the repo
-- prompts for a GitHub username and token if the repo is private
+- tries PAT clone and then falls back to a GitHub zip download if the repo is private
 - installs dependencies only if the requirements file exists
 - runs the current best baseline
 - measures the baseline bitstream
@@ -214,4 +214,5 @@ H100 becomes justified only when:
 - one rate-aware variant is clearly better or clearly safer
 - bitstream measurement looks good enough to warrant larger runs
 - we are blocked by Colab memory or training time, not by architectural uncertainty
+
 
