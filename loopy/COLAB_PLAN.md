@@ -28,12 +28,14 @@ When the repo is on GitHub, the Colab URL is:
 The notebook:
 
 - clones the repo
-- tries PAT clone and then falls back to a GitHub zip download if the repo is private
+- uses a normal public GitHub clone
 - installs dependencies only if the requirements file exists
 - runs the current best baseline
 - measures the baseline bitstream
 - runs the `rate_weight=0.001` comparison
 - measures the comparison bitstream
+
+If Colab still asks for a GitHub token, you are almost certainly running an older cached notebook version. Reopen the notebook from the GitHub URL after pushing the latest changes.
 
 ## Current best CPU baseline
 
