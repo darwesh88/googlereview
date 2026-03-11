@@ -166,9 +166,12 @@ The current `v3` ranking is:
 - safest low-capacity reference:
   - `8.0 bpb`
   - byte accuracy: `0.9892`
+- best recovered cliff point:
+  - `6.0 bpb` after `20` epochs
+  - byte accuracy: `0.9846`
 
 The next sensible step is:
 
-- keep `7.0 bpb` as the active baseline
-- run the `6.0 bpb` point longer
-- only then decide whether to push lower
+- keep `7.0 bpb` as the stable baseline
+- treat `6.0 bpb` as alive after longer training
+- push one step lower next

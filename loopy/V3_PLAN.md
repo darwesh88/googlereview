@@ -169,6 +169,24 @@ Interpretation:
 - but it is the first clear degradation point in the `v3` sweep
 - this is now the cliff test, not the baseline
 
+### Run 6
+
+- same `6.0 bpb` setting
+- `20` epochs instead of `10`
+- byte accuracy: `0.9846`
+- codebook perplexity: `61.95`
+
+Sample reconstruction:
+
+- `Customer: delivery slot of 7m. Now 930 and still waiting.... Agent: Sorry Sam. did you receive your order? Cerix`
+
+Interpretation:
+
+- longer training helped a lot
+- `6.0 bpb` is no longer just a broken cliff point
+- it is still weaker than `7.0 bpb`, but now clearly alive
+- this justifies pushing one step lower before spending more time polishing `6.0`
+
 ## Updated v3 decision
 
 - best pure fidelity:
@@ -181,11 +199,14 @@ Interpretation:
   - `8.0 bpb`
   - byte accuracy: `0.9892`
 - current cliff test:
-  - `6.0 bpb`
+  - `6.0 bpb` at `10` epochs
   - byte accuracy: `0.9794`
+- recovered low-capacity point:
+  - `6.0 bpb` at `20` epochs
+  - byte accuracy: `0.9846`
 
 Next step:
 
-- stop lowering capacity for one step
-- train the `6.0 bpb` point longer
-- then decide whether `5.0 bpb` is worth trying
+- keep `7.0 bpb` as the stable baseline
+- keep `6.0 bpb` as the new low-capacity frontier
+- try `5.0 bpb` next

@@ -2086,3 +2086,49 @@ Decision:
 - stop lowering capacity for one step
 - train the `6.0 bpb` point longer
 - then decide whether `5.0 bpb` is worth trying
+
+## v3 longer 6.0 bpb follow-up
+
+The `6.0 bpb` point was rerun for `20` epochs instead of `10`.
+
+Observed result:
+
+- loss: `0.06736`
+- recon loss: `0.06249`
+- byte accuracy: `0.9846`
+- codebook perplexity: `61.95`
+- raw capacity bpb: `6.0`
+
+Sample reconstruction:
+
+- `Customer: delivery slot of 7m. Now 930 and still waiting.... Agent: Sorry Sam. did you receive your order? Cerix`
+
+Interpretation:
+
+- longer training helped materially
+- the `6.0 bpb` point is now clearly alive
+- it is still not as clean as the `7.0 bpb` run
+- but it is good enough to justify pushing one step lower
+
+## Updated v3 frontier decision
+
+Current ranking:
+
+- best pure fidelity:
+  - `14.0 bpb`
+  - byte accuracy: `0.9988`
+- best efficiency-oriented balance:
+  - `7.0 bpb`
+  - byte accuracy: `0.9889`
+- safest low-capacity reference:
+  - `8.0 bpb`
+  - byte accuracy: `0.9892`
+- current low-capacity frontier:
+  - `6.0 bpb` at `20` epochs
+  - byte accuracy: `0.9846`
+
+Decision:
+
+- keep `7.0 bpb` as the active baseline
+- keep `6.0 bpb` as the frontier point
+- try `5.0 bpb` next
