@@ -1589,5 +1589,33 @@ Interpretation:
 
 Current conclusion:
 
-- the next clean test is grouped-symbol prior on the predictive codec checkpoint
-- if that still loses clearly to raw, the next move should be a stronger codebook / patch-symbol codec redesign
+## Grouped-symbol prior on the predictive codec
+
+Observed 5-epoch result on the predictive codec:
+
+- loss: `3.5281`
+- accuracy: `0.1378`
+- bpb: `5.1005`
+- best epoch: `5`
+- average epoch seconds: `1.82`
+
+Comparison:
+
+- grouped baseline codec: `4.9839`
+- grouped predictive codec: `5.1005`
+- bitwise learned baseline codec: `5.1364`
+- bitwise learned predictive codec: `5.0593`
+- raw patch prior: `3.6991`
+
+Interpretation:
+
+- grouped symbols still help compared with plain bitwise learned targets
+- but adding the light predictive codec objective did not help the grouped target
+- grouped predictive was slightly worse than grouped baseline
+
+Current conclusion:
+
+- this independent-bit codec family is now exhausted enough for the current stage
+- the next move should be a stronger latent redesign:
+  - patch symbols / codebooks
+  - or another explicitly structured latent that is not just grouped independent bits

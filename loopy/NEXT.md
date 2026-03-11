@@ -117,6 +117,9 @@ Current next step:
   - grouped `bpb = 4.9839`
   - grouped beats bitwise learned (`5.1364`)
   - grouped still loses clearly to raw (`3.6991`)
+- grouped-symbol 5-epoch result on the predictive codec:
+  - grouped predictive `bpb = 5.1005`
+  - worse than grouped baseline `4.9839`
 
 Interpretation:
 
@@ -125,15 +128,13 @@ Interpretation:
 - adding a light next-bit auxiliary loss is not enough by itself
 - grouped symbols are the next clean structured-latent test before a bigger codec rewrite
 - grouped symbols are helping, but not enough yet
+- grouped + predictive is not helping further
 
 Current next step:
 
-- run grouped-symbol patch-prior on the predictive codec checkpoint
-- compare:
-  - grouped baseline codec `4.9839`
-  - grouped predictive codec
-  - raw `3.6991`
-- if grouped predictive still loses clearly, move to a true codebook / patch-symbol codec redesign
+- stop this independent-bit codec family at the current branch point
+- next move is a true codebook / patch-symbol codec redesign
+- use the grouped result as evidence that structured latent targets are the right direction
 
 That redesign is now started:
 

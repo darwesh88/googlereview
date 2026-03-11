@@ -143,6 +143,8 @@ Follow-up now implemented:
   - grouped patch prior: `5.1985 bpb`
 - 5-epoch real result on the baseline codec:
   - grouped patch prior: `4.9839 bpb`
+- 5-epoch real result on the predictive codec:
+  - grouped predictive patch prior: `5.1005 bpb`
 
 Interpretation:
 
@@ -151,7 +153,8 @@ Interpretation:
   - grouped `4.9839`
   - learned `5.1364`
 - so part of the downstream weakness is in the target representation
-- if it still loses badly to raw patches, then the next move is a true codebook-style codec redesign
+- grouped predictive did not improve further and was slightly worse than grouped baseline
+- so the next move is now a true codebook-style codec redesign
 
 ## What not to do next
 
@@ -164,10 +167,11 @@ Interpretation:
 ## Decision after the next work package
 
 The predictive auxiliary loss did not improve downstream learned-patch `bpb` materially enough.
+Grouped symbols helped, but grouped predictive did not.
 
 So the next branch should be:
 
-- first run grouped-symbol downstream comparison on the predictive codec
-- then, if needed, consider a stronger latent redesign such as patch symbols / codebooks instead of independent bit prediction
+- move to a stronger latent redesign such as patch symbols / codebooks instead of independent bit prediction
+- keep the grouped downstream result as evidence that structured targets help
 
 

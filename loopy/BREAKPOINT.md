@@ -72,6 +72,9 @@ Interpretation:
 - grouped-symbol 5-epoch downstream result on the baseline codec:
   - grouped patch prior: `4.9839`
   - better than bitwise learned, still worse than raw
+- grouped-symbol 5-epoch downstream result on the predictive codec:
+  - grouped predictive patch prior: `5.1005`
+  - worse than grouped baseline
 - the active problem is now the codec objective itself
 - Loopy v2 is still not yet competitive as a practical compressor with the current packing path
 
@@ -84,5 +87,5 @@ Grouped packing has now been tested and rejected for the current bit layout.
 The next resume step is:
 
 - stop tweaking the light predictive auxiliary-loss branch
-- test grouped-symbol prior on the predictive codec
-- if that still loses clearly to raw, move to a stronger latent redesign so learned patches are easier to predict downstream
+- stop the grouped + predictive branch for this codec family
+- move to a stronger latent redesign so learned patches are easier to predict downstream

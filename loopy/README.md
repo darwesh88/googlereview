@@ -107,6 +107,8 @@ Interpretation:
 - a grouped-symbol downstream target helped more than bitwise learned prediction:
   - grouped patch prior `bpb = 4.9839`
   - still worse than raw `3.6991`
+- grouped symbols on the predictive codec did not improve further:
+  - grouped predictive patch prior `bpb = 5.1005`
 
 ## Best next move from here
 
@@ -118,5 +120,5 @@ Do this next:
 2. stop the grouped packing branch
 3. treat the current downstream patch-prior result as a negative result for the existing codec objective
 4. treat the first predictive auxiliary-loss test as only a weak partial improvement
-5. test grouped-symbol priors on the predictive codec
-6. if that still loses clearly to raw, move to a stronger latent redesign so the learned stream is easier to predict, not just easier to reconstruct
+5. treat grouped-symbol priors as evidence that structured targets help, but not enough inside this codec family
+6. move to a stronger latent redesign so the learned stream is easier to predict, not just easier to reconstruct
