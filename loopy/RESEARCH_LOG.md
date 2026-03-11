@@ -1867,3 +1867,82 @@ Interpretation:
 - this means the next fix should target both:
   - symbol capacity
   - patch-level modeling quality
+
+## v3 autoregressive decoder attempt
+
+An autoregressive intra-patch decoder was tested as a possible fix for patch-level order modeling.
+
+Observed result:
+
+- it made `patch_size=2` much worse
+- it also made `patch_size=1` much worse
+
+Interpretation:
+
+- autoregressive patch decoding is not the right next move for this `v3` family
+- the branch was reverted and treated as a negative result
+
+## v3 high-capacity patch-2 breakthrough
+
+The next successful step was to keep:
+
+- soft assignments
+- usage regularization
+- the original parallel patch decoder
+
+and raise `patch_size=2` capacity enough to give the model room to learn.
+
+### Toy result
+
+Observed result:
+
+- run: `v3_product_soft_usage_p2_c4_40ep`
+- `patch_size=2`
+- `num_codebooks=4`
+- `sub_codebook_size=256`
+- `raw_capacity_bpb = 16.0`
+- byte accuracy: `0.9746`
+- codebook perplexity: `215.86`
+
+Sample reconstruction:
+
+- exact toy reconstruction
+
+Interpretation:
+
+- this is the first true multi-byte `v3` success
+- `v3` can now represent and reconstruct `patch_size=2` cleanly, given enough capacity and training
+
+### Real-corpus smoke result
+
+Observed result:
+
+- run: `v3_twitter_p2_c4_2ep`
+- `patch_size=2`
+- `num_codebooks=4`
+- `sub_codebook_size=256`
+- `raw_capacity_bpb = 16.0`
+- after only `2` epochs:
+  - byte accuracy: `0.9892`
+  - codebook perplexity: `249.31`
+
+Sample reconstruction:
+
+- source: `Customer: delivery slot of 7m. Now 930 and still waiting.... Agent: Sorry Sam, did you receive your order? Ceri`
+- reconstruction: `Customer: delivery slot of 7m. Now D30 and still waiting.... Agent: Sorry Samy did you receive your order? Cerig`
+
+Interpretation:
+
+- `v3` is no longer toy-only
+- the high-capacity `patch_size=2` setup is viable on real text
+- but this is still a **viability** result, not an efficiency result, because the current setup uses `16.0` raw bits per byte
+
+Current conclusion:
+
+- `v3` is now alive on both toy and real text
+- the active problem has changed again
+- the next step is not “make `v3` work at all”
+- the next step is:
+  - lower `v3` capacity
+  - keep the new fidelity
+  - do that on Colab GPU, not local CPU

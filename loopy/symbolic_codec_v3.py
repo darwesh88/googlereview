@@ -78,7 +78,7 @@ class V3PatchDecoder(nn.Module):
         self.decoder = nn.TransformerEncoder(decoder_layer, num_layers=config.decoder_layers)
         self.output = nn.Linear(config.embed_dim, BYTE_VOCAB_SIZE)
 
-    def forward(self, latents: torch.Tensor) -> torch.Tensor:
+    def forward(self, latents: torch.Tensor, target_patch_ids: torch.Tensor) -> torch.Tensor:
         batch_size, num_patches, latent_dim = latents.shape
         flat = latents.reshape(batch_size * num_patches, latent_dim)
         expanded = self.expand(flat).reshape(batch_size * num_patches, self.patch_size, -1)
@@ -195,7 +195,7 @@ class SymbolicCodecV3(nn.Module):
     def forward(self, patch_ids: torch.Tensor, patch_mask: torch.Tensor) -> SymbolicForward:
         latents = self.encoder(patch_ids)
         symbol_ids, quantized, st_quantized, commitment_loss, codebook_loss, usage_loss, perplexity = self.quantizer(latents, patch_mask)
-        logits = self.decoder(st_quantized)
+        logits = self.decoder(st_quantized, patch_ids)
 
         recon_loss = F.cross_entropy(
             logits.reshape(-1, BYTE_VOCAB_SIZE),

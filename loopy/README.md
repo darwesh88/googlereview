@@ -139,5 +139,6 @@ Current understanding:
 - product-codebook `v3` is the correct next attempt
 - soft codebook assignments were the first real `v3` breakthrough
 - `patch_size=1` now reaches about `0.926` byte accuracy on the toy corpus with healthy codebook usage
-- `patch_size=2` is still too weak, so `v3` is not ready for real text yet
-- the next task is to make `v3` scale cleanly from `patch_size=1` to `patch_size=2`
+- `patch_size=2` becomes viable when capacity is raised enough
+- a high-capacity `patch_size=2` real-corpus smoke test already works
+- the next task is to keep that fidelity while bringing capacity back down

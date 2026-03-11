@@ -45,15 +45,16 @@ Product-codebook `v3` is now in the workspace:
   - `patch_size=1` now reaches `0.9265` byte accuracy
   - codebook perplexity is about `250.97`
   - output is mostly readable
-- but the first `patch_size=2` run is still weak:
-  - byte accuracy: `0.5652`
-  - codebook perplexity: `169.11`
-  - output still breaks badly
-- a higher-capacity `patch_size=2` diagnostic improves things a bit:
-  - `num_codebooks=3`
-  - byte accuracy: `0.6298`
-  - output is still not readable enough
-- so capacity matters, but capacity alone is not enough
+- `patch_size=2` is now viable at high capacity:
+  - toy run with `num_codebooks=4`, `40` epochs
+  - byte accuracy: `0.9746`
+  - exact toy reconstruction
+- short real-corpus smoke with the same high-capacity setup:
+  - byte accuracy: `0.9892`
+  - only tiny detail errors in the sample
+- important caveat:
+  - this setup has `raw_capacity_bpb = 16.0`
+  - so it proves viability, not efficiency
 
 ## Next resume step
 
@@ -61,7 +62,6 @@ Do not move `v3` to real text yet.
 
 Next resume step:
 
-- use the soft-assignment `patch_size=1` run as the new `v3` reference point
-- focus all next work on making `patch_size=2` readable
-- treat `patch_size=2` as both a capacity and modeling problem
-- if `patch_size=2` still stalls, fix `v3` again before any scaling
+- use the high-capacity `patch_size=2` run as the new `v3` reference point
+- focus all next work on reducing capacity while keeping fidelity
+- move the next serious `v3` sweep to Colab GPU, not local CPU

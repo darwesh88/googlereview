@@ -64,9 +64,16 @@ The active branch is now a **product-codebook** `v3`:
   - byte accuracy: `0.5652`
   - codebook perplexity: `169.11`
   - output is not yet good enough
+- increasing `patch_size=2` capacity and training longer changed the picture:
+  - toy run with `num_codebooks=4`, `40` epochs:
+    - byte accuracy: `0.9746`
+    - output became exact on the toy sentence
+  - short real-corpus smoke with the same high-capacity setup:
+    - byte accuracy: `0.9892`
+    - output stayed very close, with only tiny detail errors
 
 ## Decision rule
 
-If the soft-assignment product-codebook `v3` cannot make `patch_size=2` readable, stop and fix the architecture before any real-corpus run.
+If the soft-assignment product-codebook `v3` cannot keep `patch_size=2` fidelity while lowering capacity, stop and fix the architecture before any larger-scale run.
 
 If `v3` starts reconstructing toy text clearly and codebook perplexity stays healthy, move to the real Twitter corpus next.

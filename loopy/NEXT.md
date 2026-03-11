@@ -21,14 +21,13 @@ What `v3` has shown so far:
   - byte accuracy: `0.9265`
   - codebook perplexity: `250.97`
   - output is mostly readable
-- first `patch_size=2` toy result with the same idea is still weak:
-  - byte accuracy: `0.5652`
-  - codebook perplexity: `169.11`
-  - output is not readable enough yet
-- a higher-capacity `patch_size=2` diagnostic helped, but not enough:
-  - `num_codebooks=3`
-  - byte accuracy: `0.6298`
-  - output still not readable enough
+- the key `patch_size=2` milestone has now been hit:
+  - `num_codebooks=4`, `40` epochs on toy data
+  - byte accuracy: `0.9746`
+  - exact toy reconstruction
+- the same high-capacity `patch_size=2` setup also passed a short real-corpus smoke:
+  - byte accuracy: `0.9892`
+  - very small local errors only
 
 ## What this means
 
@@ -38,28 +37,33 @@ The direction is still right:
 - but the current `v3` training path is still too weak
 - we are still in architecture-debugging mode
 
-The next task is not a real-corpus run yet.
-It is to make the soft-assignment `v3` scale from `patch_size=1` to `patch_size=2`.
-The latest diagnostic says that capacity matters, but it is not the only issue.
+The next task is no longer “make `patch_size=2` work at all.”
+That part now works.
+
+The next task is:
+
+- keep `patch_size=2` fidelity
+- lower capacity from the current high-capacity setup
+- do this on Colab GPU, not local CPU
 
 ## Immediate next step
 
-Run the next `patch_size=2` stabilization experiment, not another `patch_size=1` repeat.
 Best next hypothesis:
 
 - keep soft assignments
 - keep explicit usage pressure
-- improve patch-level modeling quality, not just capacity
+- start from the working `patch_size=2`, `num_codebooks=4` setup
+- reduce capacity gradually and compare fidelity
 
 ## Decision rule
 
-Move `v3` to the real corpus only if:
+Move `v3` to the next stage only if:
 
-- `patch_size=2` toy reconstruction becomes clearly readable
-- `patch_size=2` byte accuracy improves meaningfully over the current `0.5652`
+- `patch_size=2` keeps high fidelity on real text
+- capacity can start coming down without collapse
 - codebook perplexity stays healthy
 
-If `patch_size=2` still stalls, the next move is another `v3` architecture fix, not more training scale.
+The next stage is now a Colab GPU sweep around the working high-capacity `patch_size=2` point.
 
 ## Do not do next
 

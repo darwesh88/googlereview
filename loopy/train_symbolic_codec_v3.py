@@ -187,7 +187,7 @@ def run_epoch(
             totals["batches"] += 1
 
             if not preview["source"]:
-                reconstruction = forward.logits.argmax(dim=-1)[0]
+                reconstruction = model.reconstruct(patch_ids, patch_mask)[0]
                 preview = {
                     "source": batch["text"][0],
                     "reconstruction": decode_patch_ids(reconstruction, patch_mask[0]),
