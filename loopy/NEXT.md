@@ -25,6 +25,10 @@ What `v3` has shown so far:
   - byte accuracy: `0.5652`
   - codebook perplexity: `169.11`
   - output is not readable enough yet
+- a higher-capacity `patch_size=2` diagnostic helped, but not enough:
+  - `num_codebooks=3`
+  - byte accuracy: `0.6298`
+  - output still not readable enough
 
 ## What this means
 
@@ -36,10 +40,16 @@ The direction is still right:
 
 The next task is not a real-corpus run yet.
 It is to make the soft-assignment `v3` scale from `patch_size=1` to `patch_size=2`.
+The latest diagnostic says that capacity matters, but it is not the only issue.
 
 ## Immediate next step
 
 Run the next `patch_size=2` stabilization experiment, not another `patch_size=1` repeat.
+Best next hypothesis:
+
+- keep soft assignments
+- keep explicit usage pressure
+- improve patch-level modeling quality, not just capacity
 
 ## Decision rule
 

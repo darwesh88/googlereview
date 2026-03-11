@@ -1840,3 +1840,30 @@ Current conclusion:
 - the new `v3` reference point is the soft-assignment `patch_size=1` run
 - the next bottleneck is now very specific: making `patch_size=2` readable
 - do not move `v3` to real text until that happens
+
+## v3 patch-2 capacity diagnostic
+
+A quick follow-up tested whether `patch_size=2` is failing mainly because of too little symbol capacity.
+
+Observed result:
+
+- run: `v3_product_soft_usage_p2_c3`
+- `patch_size=2`
+- `num_codebooks=3`
+- `sub_codebook_size=256`
+- raw capacity bpb: `12.0`
+- byte accuracy: `0.6298`
+- codebook perplexity: `197.81`
+
+Sample reconstruction:
+
+- `d seans aaoot ooke ts ieoole siiiise aii sooked an the e ott streeth`
+
+Interpretation:
+
+- this is better than the `patch_size=2`, `num_codebooks=2` run (`0.5652`)
+- so capacity is part of the bottleneck
+- but even with more capacity, `patch_size=2` is still not good enough
+- this means the next fix should target both:
+  - symbol capacity
+  - patch-level modeling quality

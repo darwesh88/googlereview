@@ -49,6 +49,11 @@ Product-codebook `v3` is now in the workspace:
   - byte accuracy: `0.5652`
   - codebook perplexity: `169.11`
   - output still breaks badly
+- a higher-capacity `patch_size=2` diagnostic improves things a bit:
+  - `num_codebooks=3`
+  - byte accuracy: `0.6298`
+  - output is still not readable enough
+- so capacity matters, but capacity alone is not enough
 
 ## Next resume step
 
@@ -58,4 +63,5 @@ Next resume step:
 
 - use the soft-assignment `patch_size=1` run as the new `v3` reference point
 - focus all next work on making `patch_size=2` readable
+- treat `patch_size=2` as both a capacity and modeling problem
 - if `patch_size=2` still stalls, fix `v3` again before any scaling
