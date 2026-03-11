@@ -28,6 +28,11 @@ What `v3` has shown so far:
 - the same high-capacity `patch_size=2` setup also passed a short real-corpus smoke:
   - byte accuracy: `0.9892`
   - very small local errors only
+- first Colab capacity-reduction runs are now in:
+  - `num_codebooks=3`, `sub_codebook_size=256`, `raw_capacity_bpb=12.0`
+    - byte accuracy: `0.9973`
+  - `num_codebooks=4`, `sub_codebook_size=128`, `raw_capacity_bpb=14.0`
+    - byte accuracy: `0.9988`
 
 ## What this means
 
@@ -52,7 +57,7 @@ Best next hypothesis:
 
 - keep soft assignments
 - keep explicit usage pressure
-- start from the working `patch_size=2`, `num_codebooks=4` setup
+- start from the working `patch_size=2`, `num_codebooks=3`, `sub_codebook_size=256` setup
 - reduce capacity gradually and compare fidelity
 
 ## Decision rule
@@ -63,7 +68,7 @@ Move `v3` to the next stage only if:
 - capacity can start coming down without collapse
 - codebook perplexity stays healthy
 
-The next stage is now a Colab GPU sweep around the working high-capacity `patch_size=2` point.
+The next stage is now a Colab GPU sweep below the new `12.0 bpb` point.
 
 ## Do not do next
 

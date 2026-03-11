@@ -1946,3 +1946,57 @@ Current conclusion:
   - lower `v3` capacity
   - keep the new fidelity
   - do that on Colab GPU, not local CPU
+
+## v3 first capacity-reduction sweep
+
+Two Colab GPU runs tested whether `v3` could lower capacity while keeping the new real-text fidelity.
+
+### Colab run: `patch_size=2`, `num_codebooks=3`, `sub_codebook_size=256`
+
+Observed result:
+
+- loss: `0.01938`
+- recon loss: `0.01040`
+- byte accuracy: `0.9973`
+- codebook perplexity: `252.72`
+- raw capacity bpb: `12.0`
+
+Sample reconstruction:
+
+- source: `Customer: delivery slot of 7m. Now 930 and still waiting.... Agent: Sorry Sam, did you receive your order? Ceri`
+- reconstruction: `Customer: delivery slot of 7m. Now 930 and still waiting.... Agent: Sorry Sam, did you receive your order? Ceri2`
+
+Interpretation:
+
+- this is the first strong efficiency-oriented `v3` result
+- fidelity stayed extremely high while capacity dropped from `16.0` to `12.0`
+- this is now the best current `v3` baseline
+
+### Colab run: `patch_size=2`, `num_codebooks=4`, `sub_codebook_size=128`
+
+Observed result:
+
+- loss: `0.01111`
+- recon loss: `0.00466`
+- byte accuracy: `0.9988`
+- codebook perplexity: `127.21`
+- raw capacity bpb: `14.0`
+
+Sample reconstruction:
+
+- `Customer: delivery slot of 7m. Now 930 and still waiting.... Agent: Sorry Sam, did you receive your order? Ceri3`
+
+Interpretation:
+
+- this is the strongest pure-fidelity `v3` result so far
+- but it is less efficient than the `12.0 bpb` point
+
+Updated conclusion:
+
+- `v3` is now clearly viable on real text
+- the new baseline should be:
+  - `patch_size=2`
+  - `num_codebooks=3`
+  - `sub_codebook_size=256`
+  - `raw_capacity_bpb=12.0`
+- the next research step is to continue lowering capacity from there, not to return to the `16.0` setup
