@@ -141,11 +141,16 @@ Follow-up now implemented:
 - grouped mode predicts grouped categorical patch symbols instead of independent bits
 - 1-epoch smoke result on the baseline codec:
   - grouped patch prior: `5.1985 bpb`
+- 5-epoch real result on the baseline codec:
+  - grouped patch prior: `4.9839 bpb`
 
 Interpretation:
 
 - grouped-symbol modeling is the next clean structured-latent test
-- if it beats the bitwise learned prior materially, then the problem is partly in the downstream target representation
+- it does beat the bitwise learned prior materially:
+  - grouped `4.9839`
+  - learned `5.1364`
+- so part of the downstream weakness is in the target representation
 - if it still loses badly to raw patches, then the next move is a true codebook-style codec redesign
 
 ## What not to do next
@@ -162,7 +167,7 @@ The predictive auxiliary loss did not improve downstream learned-patch `bpb` mat
 
 So the next branch should be:
 
-- first run a real grouped-symbol downstream comparison
+- first run grouped-symbol downstream comparison on the predictive codec
 - then, if needed, consider a stronger latent redesign such as patch symbols / codebooks instead of independent bit prediction
 
 

@@ -1563,3 +1563,31 @@ Interpretation:
 - the smoke result is slightly better than the previous 1-epoch bitwise learned smoke (`5.4109 bpb`)
 - this is not decisive yet
 - the next real test should be a 5-epoch Colab grouped-symbol comparison against the existing learned and raw baselines
+
+## Grouped-symbol downstream prior 5-epoch result
+
+Observed result on the baseline codec:
+
+- loss: `3.4475`
+- accuracy: `0.1456`
+- bpb: `4.9839`
+- best epoch: `5`
+- average epoch seconds: `1.77`
+
+Comparison:
+
+- grouped patch prior: `4.9839`
+- bitwise learned patch prior: `5.1364`
+- predictive bitwise learned patch prior: `5.0593`
+- raw patch prior: `3.6991`
+
+Interpretation:
+
+- grouped symbols are a real improvement over the bitwise learned downstream target
+- that means part of the downstream problem is representation of the target stream, not only the codec training objective
+- however, grouped symbols are still far from the raw patch baseline
+
+Current conclusion:
+
+- the next clean test is grouped-symbol prior on the predictive codec checkpoint
+- if that still loses clearly to raw, the next move should be a stronger codebook / patch-symbol codec redesign
