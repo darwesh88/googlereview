@@ -41,6 +41,8 @@ What `v3` has shown so far:
     - byte accuracy: `0.9794`
   - same `6.0 bpb` setting at `20` epochs
     - byte accuracy: `0.9846`
+  - `num_codebooks=2`, `sub_codebook_size=32`, `raw_capacity_bpb=5.0`
+    - byte accuracy: `0.9464`
 
 ## What this means
 
@@ -58,7 +60,8 @@ The next task is now narrower:
 - keep `patch_size=2` fidelity
 - hold `7.0 bpb` as the new baseline
 - note that `6.0 bpb` did recover with longer training
-- push one step lower next
+- note that `5.0 bpb` is too degraded
+- switch from capacity probing to downstream usefulness
 
 ## Immediate next step
 
@@ -67,8 +70,8 @@ Best next hypothesis:
 - keep soft assignments
 - keep explicit usage pressure
 - keep `patch_size=2`, `num_codebooks=2`, `sub_codebook_size=128` as the active baseline
-- use `6.0 bpb` as the new frontier point
-- try `5.0 bpb` next
+- keep `6.0 bpb` as the low-capacity frontier point
+- compare `v3` symbol-stream prediction against raw patches next
 
 ## Decision rule
 
@@ -78,7 +81,19 @@ Move `v3` to the next stage only if:
 - capacity can start coming down without collapse
 - codebook perplexity stays healthy
 
-The next stage is now a Colab GPU test at `5.0 bpb`.
+The next stage is now a downstream-LM test for `v3`.
+
+## Immediate next run
+
+Compare:
+
+- raw patch prior at `patch_size=2`
+- `v3` grouped prior on the `7.0 bpb` checkpoint
+- `v3` grouped prior on the `6.0 bpb` checkpoint
+
+Main metric:
+
+- validation `bpb`
 
 ## Do not do next
 
@@ -86,3 +101,4 @@ The next stage is now a Colab GPU test at `5.0 bpb`.
 - do not rent H100s yet
 - do not return to tiny `v2` rate sweeps unless there is a brand new hypothesis
 - do not jump straight to H100s while Colab is still enough for these frontier tests
+- do not push `v3` below `5.0 bpb` until downstream usefulness is tested

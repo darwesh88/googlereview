@@ -70,6 +70,9 @@ Product-codebook `v3` is now in the workspace:
   - the same `6.0 bpb` run at `20` epochs improved to:
     - byte accuracy: `0.9846`
     - this means `6.0 bpb` is now a real frontier point, not just a failure case
+  - the next lower test at `5.0 bpb` gave:
+    - byte accuracy: `0.9464`
+    - this is now clearly below the current quality bar
 
 ## Next resume step
 
@@ -78,4 +81,6 @@ Next resume step:
 - use the `7.0 bpb` run as the new `v3` reference point
 - keep the `8.0 bpb` run as the safer reference
 - treat the new `6.0 bpb` `20`-epoch run as the current low-capacity frontier
-- try `5.0 bpb` next on Colab GPU
+- stop lowering capacity for now
+- move to downstream usefulness testing for `v3`
+- use [train_patch_prior_v3.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v3.py) for grouped-symbol priors on `v3`

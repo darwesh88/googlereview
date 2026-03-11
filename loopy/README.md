@@ -61,6 +61,8 @@ So v2 focuses on:
 - [v3_config.py](C:/Users/adarw/Desktop/googlereview/loopy/v3_config.py): v3 config
 - [symbolic_codec_v3.py](C:/Users/adarw/Desktop/googlereview/loopy/symbolic_codec_v3.py): product-codebook codec
 - [train_symbolic_codec_v3.py](C:/Users/adarw/Desktop/googlereview/loopy/train_symbolic_codec_v3.py): v3 training loop
+- [DOWNSTREAM_V3_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/DOWNSTREAM_V3_PLAN.md): downstream usefulness plan for v3
+- [train_patch_prior_v3.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v3.py): grouped prior over v3 patch symbols
 
 ## Current best understanding in v2
 
@@ -169,9 +171,13 @@ The current `v3` ranking is:
 - best recovered cliff point:
   - `6.0 bpb` after `20` epochs
   - byte accuracy: `0.9846`
+- too-far compression point:
+  - `5.0 bpb` after `20` epochs
+  - byte accuracy: `0.9464`
 
 The next sensible step is:
 
 - keep `7.0 bpb` as the stable baseline
 - treat `6.0 bpb` as alive after longer training
-- push one step lower next
+- treat `5.0 bpb` as below the current quality bar
+- move to downstream usefulness testing for `v3`

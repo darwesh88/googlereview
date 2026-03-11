@@ -2132,3 +2132,83 @@ Decision:
 - keep `7.0 bpb` as the active baseline
 - keep `6.0 bpb` as the frontier point
 - try `5.0 bpb` next
+
+## v3 5.0 bpb probe
+
+The next lower-capacity point was:
+
+- `patch_size=2`
+- `num_codebooks=2`
+- `sub_codebook_size=32`
+- `raw_capacity_bpb=5.0`
+- `20` epochs
+
+Observed result:
+
+- loss: `0.20395`
+- recon loss: `0.19511`
+- byte accuracy: `0.9464`
+- codebook perplexity: `31.28`
+
+Sample reconstruction:
+
+- `Customer: delivery slot of 5a. Now 4t? and still wamting.... Agent: S rry Sho, d d you receive your orderi Ceris`
+
+Interpretation:
+
+- `5.0 bpb` is still training and the codebooks are still healthy
+- but reconstruction quality is now clearly below the current bar
+- this is too degraded to keep lowering capacity for now
+
+## Updated v3 frontier decision
+
+Current ranking:
+
+- best pure fidelity:
+  - `14.0 bpb`
+  - byte accuracy: `0.9988`
+- best efficiency-oriented balance:
+  - `7.0 bpb`
+  - byte accuracy: `0.9889`
+- safest low-capacity reference:
+  - `8.0 bpb`
+  - byte accuracy: `0.9892`
+- current low-capacity frontier:
+  - `6.0 bpb` at `20` epochs
+  - byte accuracy: `0.9846`
+- too-far compression point:
+  - `5.0 bpb` at `20` epochs
+  - byte accuracy: `0.9464`
+
+Decision:
+
+- stop the pure capacity sweep here
+- keep `7.0 bpb` as the active baseline
+- keep `6.0 bpb` as the frontier point
+- switch to downstream usefulness testing for `v3`
+
+## v3 downstream prior scaffold
+
+Added:
+
+- [train_patch_prior_v3.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v3.py)
+- [DOWNSTREAM_V3_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/DOWNSTREAM_V3_PLAN.md)
+
+Purpose:
+
+- train a grouped prior directly over `v3` patch symbols
+- compare `v3` symbol prediction against raw patch prediction
+- answer the actual research question: is `v3` becoming a better downstream training representation, not just a reconstructor
+
+Smoke result:
+
+- local `1`-epoch run against `v3_twitter_p2_c4_10ep`
+- validation loss: `3.3987`
+- validation accuracy: `0.2340`
+- validation bpb: `9.8135`
+
+Interpretation:
+
+- the `v3` downstream path runs end to end
+- the metric plumbing works
+- next step is the real Colab comparison on the new `7.0 bpb` and `6.0 bpb` checkpoints
