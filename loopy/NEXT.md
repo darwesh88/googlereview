@@ -65,6 +65,8 @@ Next two serious directions are:
 1. improve packing / entropy coding
 2. test whether downstream modeling on the learned stream gives a real LLM-training benefit
 
+Detailed execution order is captured in [WORK_ORDER.md](C:/Users/adarw/Desktop/googlereview/loopy/WORK_ORDER.md).
+
 ## Decision rule
 
 Move forward only if the next step either:
