@@ -135,6 +135,19 @@ Interpretation:
 - this is not enough to close the large gap to raw patches (`3.6991`)
 - the next redesign should therefore be stronger than a light auxiliary loss
 
+Follow-up now implemented:
+
+- [train_patch_prior_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v2.py) now also supports `--mode grouped`
+- grouped mode predicts grouped categorical patch symbols instead of independent bits
+- 1-epoch smoke result on the baseline codec:
+  - grouped patch prior: `5.1985 bpb`
+
+Interpretation:
+
+- grouped-symbol modeling is the next clean structured-latent test
+- if it beats the bitwise learned prior materially, then the problem is partly in the downstream target representation
+- if it still loses badly to raw patches, then the next move is a true codebook-style codec redesign
+
 ## What not to do next
 
 - do not do another tiny `rate_weight` sweep
@@ -149,7 +162,7 @@ The predictive auxiliary loss did not improve downstream learned-patch `bpb` mat
 
 So the next branch should be:
 
-- consider a stronger latent redesign such as patch symbols / codebooks instead of independent bit prediction
-- or add a more structured predictive target than next-bit BCE alone
+- first run a real grouped-symbol downstream comparison
+- then, if needed, consider a stronger latent redesign such as patch symbols / codebooks instead of independent bit prediction
 
 

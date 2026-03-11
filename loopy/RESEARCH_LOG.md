@@ -1537,3 +1537,29 @@ Current conclusion:
 - the next redesign should be stronger:
   - structured patch symbols or codebooks
   - or a stronger latent predictive objective than independent next-bit BCE
+
+## Grouped-symbol downstream prior scaffold
+
+Added a new downstream comparison mode to [train_patch_prior_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v2.py):
+
+- `grouped`: predict grouped categorical patch symbols instead of independent patch bits
+
+Purpose:
+
+- test a more structured latent target before rewriting the codec itself
+- check whether the downstream weakness is partly caused by bitwise prediction rather than the latent stream as a whole
+
+One-epoch CPU smoke result on the baseline codec:
+
+- grouped patch prior:
+  - loss: `3.5959`
+  - accuracy: `0.1145`
+  - bpb: `5.1985`
+  - epoch seconds: `8.56`
+
+Interpretation:
+
+- the grouped-symbol path works end to end
+- the smoke result is slightly better than the previous 1-epoch bitwise learned smoke (`5.4109 bpb`)
+- this is not decisive yet
+- the next real test should be a 5-epoch Colab grouped-symbol comparison against the existing learned and raw baselines

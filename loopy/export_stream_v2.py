@@ -44,7 +44,7 @@ def load_checkpoint(run_dir: Path, device: torch.device) -> tuple[SemanticBinary
     config_kwargs = {key: value for key, value in config_dict.items() if key in allowed}
     config = BinaryCodecConfig(**config_kwargs)
     model = SemanticBinaryCodec(config).to(device)
-    model.load_state_dict(payload["model_state"])
+    model.load_state_dict(payload["model_state"], strict=False)
     model.eval()
     return model, config, payload
 

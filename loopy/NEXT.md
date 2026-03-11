@@ -111,18 +111,21 @@ Current next step:
   - old learned: `5.1364`
   - predictive learned: `5.0593`
 - raw patch prior is still far better at `3.6991`
+- a new grouped-symbol patch-prior mode is now implemented and smoke-tested:
+  - grouped smoke `bpb = 5.1985` after 1 epoch on the baseline codec
 
 Interpretation:
 
 - the predictive branch is alive, but too weak
 - the current codec objective is still too reconstructive
 - adding a light next-bit auxiliary loss is not enough by itself
+- grouped symbols are the next clean structured-latent test before a bigger codec rewrite
 
 Current next step:
 
-- redesign the latent representation more strongly
-- likely move away from purely independent bit prediction toward structured patch symbols / codebooks or a stronger latent predictor
-- do not do more tiny rate sweeps before that redesign
+- run a real grouped-symbol patch-prior comparison on Colab GPU
+- compare grouped vs learned vs raw patch priors on the same 5-epoch budget
+- if grouped still loses clearly, move to a true codebook / patch-symbol codec redesign
 
 That redesign is now started:
 

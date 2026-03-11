@@ -43,6 +43,7 @@ class PriorConfig:
     max_seq_len: int
     patch_size: int
     byte_embed_dim: int
+    group_embed_dim: int
     batch_encode_size: int
 
     def to_dict(self) -> dict[str, object]:
@@ -69,6 +70,25 @@ class LearnedPatchDataset(Dataset):
 
 
 class RawPatchDataset(Dataset):
+    def __init__(self, inputs: list[torch.Tensor], targets: list[torch.Tensor], masks: list[torch.Tensor], byte_counts: list[torch.Tensor]) -> None:
+        self.inputs = inputs
+        self.targets = targets
+        self.masks = masks
+        self.byte_counts = byte_counts
+
+    def __len__(self) -> int:
+        return len(self.inputs)
+
+    def __getitem__(self, index: int) -> dict[str, torch.Tensor]:
+        return {
+            "inputs": self.inputs[index],
+            "targets": self.targets[index],
+            "mask": self.masks[index],
+            "byte_counts": self.byte_counts[index],
+        }
+
+
+class GroupedPatchDataset(Dataset):
     def __init__(self, inputs: list[torch.Tensor], targets: list[torch.Tensor], masks: list[torch.Tensor], byte_counts: list[torch.Tensor]) -> None:
         self.inputs = inputs
         self.targets = targets
@@ -121,9 +141,33 @@ class RawPatchPrior(nn.Module):
         return logits.reshape(inputs.size(0), inputs.size(1), self.patch_size, 257)
 
 
+class GroupedPatchPrior(nn.Module):
+    def __init__(self, group_sizes: list[int], group_embed_dim: int, hidden_size: int, num_layers: int, dropout: float) -> None:
+        super().__init__()
+        gru_dropout = dropout if num_layers > 1 else 0.0
+        self.group_sizes = group_sizes
+        self.group_embeddings = nn.ModuleList(
+            [nn.Embedding(1 << group_size, group_embed_dim) for group_size in group_sizes]
+        )
+        self.input_proj = nn.Linear(group_embed_dim * len(group_sizes), hidden_size)
+        self.gru = nn.GRU(hidden_size, hidden_size, num_layers=num_layers, batch_first=True, dropout=gru_dropout)
+        self.dropout = nn.Dropout(dropout)
+        self.heads = nn.ModuleList([nn.Linear(hidden_size, 1 << group_size) for group_size in group_sizes])
+
+    def forward(self, inputs: torch.Tensor) -> list[torch.Tensor]:
+        embedded_groups = [
+            embedding(inputs[..., group_index])
+            for group_index, embedding in enumerate(self.group_embeddings)
+        ]
+        embedded = torch.cat(embedded_groups, dim=-1)
+        hidden, _ = self.gru(self.input_proj(embedded))
+        hidden = self.dropout(hidden)
+        return [head(hidden) for head in self.heads]
+
+
 def parse_args(argv: list[str] | None = None) -> PriorConfig:
     parser = argparse.ArgumentParser(description="Train a patch-level prior over Loopy v2 learned or raw patch streams.")
-    parser.add_argument("--mode", choices=["learned", "raw"], required=True)
+    parser.add_argument("--mode", choices=["learned", "raw", "grouped"], required=True)
     parser.add_argument("--data-path", required=True)
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--codec-run-dir", default="")
@@ -141,6 +185,7 @@ def parse_args(argv: list[str] | None = None) -> PriorConfig:
     parser.add_argument("--max-seq-len", type=int, default=128)
     parser.add_argument("--patch-size", type=int, default=4)
     parser.add_argument("--byte-embed-dim", type=int, default=16)
+    parser.add_argument("--group-embed-dim", type=int, default=16)
     parser.add_argument("--batch-encode-size", type=int, default=32)
     args = parser.parse_args(argv)
     return PriorConfig(
@@ -162,6 +207,7 @@ def parse_args(argv: list[str] | None = None) -> PriorConfig:
         max_seq_len=args.max_seq_len,
         patch_size=args.patch_size,
         byte_embed_dim=args.byte_embed_dim,
+        group_embed_dim=args.group_embed_dim,
         batch_encode_size=args.batch_encode_size,
     )
 
@@ -190,7 +236,7 @@ def load_codec(run_dir: str, device: torch.device) -> tuple[SemanticBinaryCodec,
     config_kwargs = {key: value for key, value in config_dict.items() if key in allowed}
     config = BinaryCodecConfig(**config_kwargs)
     model = SemanticBinaryCodec(config).to(device)
-    model.load_state_dict(payload["model_state"])
+    model.load_state_dict(payload["model_state"], strict=False)
     model.eval()
     return model, config
 
@@ -265,6 +311,61 @@ def build_learned_dataset(
     return LearnedPatchDataset(inputs, targets, masks, byte_counts)
 
 
+def grouped_symbol_ids(bit_values: torch.Tensor, bit_groups: tuple[int, ...]) -> torch.Tensor:
+    groups: list[torch.Tensor] = []
+    cursor = 0
+    for group_size in bit_groups:
+        group_bits = bit_values[..., cursor : cursor + group_size].to(torch.long)
+        shifts = torch.arange(group_size - 1, -1, -1, device=group_bits.device, dtype=torch.long)
+        group_values = (group_bits * (2 ** shifts)).sum(dim=-1)
+        groups.append(group_values)
+        cursor += group_size
+    return torch.stack(groups, dim=-1)
+
+
+def build_grouped_dataset(
+    samples: list[str],
+    codec: SemanticBinaryCodec,
+    codec_config: BinaryCodecConfig,
+    device: torch.device,
+    batch_size: int,
+) -> GroupedPatchDataset:
+    inputs: list[torch.Tensor] = []
+    targets: list[torch.Tensor] = []
+    masks: list[torch.Tensor] = []
+    byte_counts: list[torch.Tensor] = []
+
+    with torch.no_grad():
+        for start in range(0, len(samples), batch_size):
+            batch_samples = samples[start : start + batch_size]
+            patch_ids_list = []
+            patch_mask_list = []
+            byte_count_list = []
+            for sample in batch_samples:
+                patch_ids, patch_mask = encode_text_to_patches(sample, codec_config.max_seq_len, codec_config.patch_size)
+                patch_tensor = torch.tensor(patch_ids, dtype=torch.long)
+                patch_ids_list.append(patch_ids)
+                patch_mask_list.append(patch_mask)
+                byte_count_list.append(patch_tensor.ne(PAD_BYTE_ID).sum(dim=-1).to(torch.float32))
+
+            patch_ids_tensor = torch.tensor(patch_ids_list, dtype=torch.long, device=device)
+            patch_mask_tensor = torch.tensor(patch_mask_list, dtype=torch.float32, device=device)
+            forward = codec(patch_ids_tensor, patch_mask_tensor)
+            grouped_ids = grouped_symbol_ids(forward.bit_values.detach(), codec_config.bit_groups).cpu()
+            patch_mask_cpu = patch_mask_tensor.detach().cpu()
+
+            for index in range(len(batch_samples)):
+                ids = grouped_ids[index]
+                mask = patch_mask_cpu[index]
+                counts = byte_count_list[index]
+                inputs.append(ids[:-1].to(torch.long))
+                targets.append(ids[1:].to(torch.long))
+                masks.append(mask[1:].to(torch.float32))
+                byte_counts.append(counts[1:])
+
+    return GroupedPatchDataset(inputs, targets, masks, byte_counts)
+
+
 def compute_learned_metrics(logits: torch.Tensor, targets: torch.Tensor, mask: torch.Tensor, byte_counts: torch.Tensor) -> tuple[torch.Tensor, float]:
     loss = F.binary_cross_entropy_with_logits(logits, targets, reduction="none")
     masked_loss = loss * mask.unsqueeze(-1)
@@ -298,6 +399,41 @@ def compute_raw_metrics(logits: torch.Tensor, targets: torch.Tensor, mask: torch
     return mean_loss, byte_acc, bpb
 
 
+def compute_grouped_metrics(
+    logits_list: list[torch.Tensor],
+    targets: torch.Tensor,
+    mask: torch.Tensor,
+    byte_counts: torch.Tensor,
+) -> tuple[torch.Tensor, float, float]:
+    masked_losses = []
+    correct = 0.0
+    valid_groups = 0.0
+
+    for group_index, logits in enumerate(logits_list):
+        group_targets = targets[..., group_index]
+        group_loss = F.cross_entropy(
+            logits.reshape(-1, logits.size(-1)),
+            group_targets.reshape(-1),
+            reduction="none",
+        ).reshape_as(group_targets)
+        masked_group_loss = group_loss * mask
+        masked_losses.append(masked_group_loss)
+
+        predictions = logits.argmax(dim=-1)
+        valid = mask.bool()
+        correct += ((predictions == group_targets) & valid).sum().item()
+        valid_groups += valid.sum().item()
+
+    total_loss = torch.stack(masked_losses, dim=0).sum(dim=0)
+    total_group_tokens = (mask.sum() * len(logits_list)).clamp_min(1.0)
+    mean_loss = total_loss.sum() / total_group_tokens
+    accuracy = float(correct / max(1.0, valid_groups))
+    total_nll_bits = total_loss.sum().item() / math.log(2.0)
+    total_bytes = (byte_counts * mask).sum().item()
+    bpb = float(total_nll_bits / max(1.0, total_bytes))
+    return mean_loss, accuracy, bpb
+
+
 def run_epoch(
     model: nn.Module,
     loader: DataLoader,
@@ -321,6 +457,8 @@ def run_epoch(
             logits = model(inputs)
             if mode == "learned":
                 loss, accuracy, bpb = compute_learned_metrics(logits, targets, mask, byte_counts)
+            elif mode == "grouped":
+                loss, accuracy, bpb = compute_grouped_metrics(logits, targets, mask, byte_counts)
             else:
                 loss, accuracy, bpb = compute_raw_metrics(logits, targets, mask, byte_counts)
 
@@ -366,13 +504,24 @@ def main() -> None:
     samples = load_text_samples(config.data_path, dedupe=False)
     train_samples, val_samples = split_samples(samples, config.val_ratio, config.seed)
 
-    if config.mode == "learned":
+    if config.mode in {"learned", "grouped"}:
         if not config.codec_run_dir:
-            raise ValueError("--codec-run-dir is required for learned mode")
+            raise ValueError("--codec-run-dir is required for learned/grouped mode")
         codec, codec_config = load_codec(config.codec_run_dir, device)
-        train_dataset = build_learned_dataset(train_samples, codec, codec_config, device, config.batch_encode_size)
-        val_dataset = build_learned_dataset(val_samples, codec, codec_config, device, config.batch_encode_size)
-        model = LearnedPatchPrior(codec_config.total_bits, config.hidden_size, config.num_layers, config.dropout).to(device)
+        if config.mode == "learned":
+            train_dataset = build_learned_dataset(train_samples, codec, codec_config, device, config.batch_encode_size)
+            val_dataset = build_learned_dataset(val_samples, codec, codec_config, device, config.batch_encode_size)
+            model = LearnedPatchPrior(codec_config.total_bits, config.hidden_size, config.num_layers, config.dropout).to(device)
+        else:
+            train_dataset = build_grouped_dataset(train_samples, codec, codec_config, device, config.batch_encode_size)
+            val_dataset = build_grouped_dataset(val_samples, codec, codec_config, device, config.batch_encode_size)
+            model = GroupedPatchPrior(
+                list(codec_config.bit_groups),
+                config.group_embed_dim,
+                config.hidden_size,
+                config.num_layers,
+                config.dropout,
+            ).to(device)
     else:
         train_dataset = build_raw_dataset(train_samples, config.max_seq_len, config.patch_size)
         val_dataset = build_raw_dataset(val_samples, config.max_seq_len, config.patch_size)
