@@ -81,6 +81,21 @@ Immediate experiment:
 - use Colab GPU
 - run longer than the 1-epoch CPU smoke test
 
+Observed 5-epoch result:
+
+- learned patch prior:
+  - `bpb = 5.1364`
+  - `accuracy = 0.5777`
+- raw patch prior:
+  - `bpb = 3.6991`
+  - `accuracy = 0.3240`
+
+Interpretation:
+
+- the current learned stream is still worse than the raw patch baseline on the core downstream metric (`bpb`)
+- this is a negative result for the current codec objective
+- scaling this exact setup further is unlikely to be the best next move
+
 ## Decision rule
 
 Move forward only if the next step either:
@@ -88,6 +103,10 @@ Move forward only if the next step either:
 - improves packed learned-bitstream bpb below `4.3997` without large fidelity loss
 or
 - shows a downstream LM benefit that justifies the representation even if raw compression remains worse than `zlib/gzip`
+
+Current next step:
+
+- redesign the codec objective so the learned patches are optimized for predictability, not only reconstruction
 
 ## Do not do next
 

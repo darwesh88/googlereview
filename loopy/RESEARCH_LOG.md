@@ -1434,3 +1434,31 @@ Interpretation:
 - the patch-level downstream comparison path is now real and runnable
 - after 1 epoch, the learned stream is not yet beating the raw patch baseline in bpb
 - this is not decisive yet; the branch needs a longer run, preferably on Colab GPU
+
+## Patch-level prior 5-epoch Colab comparison
+
+Observed result:
+
+- learned mode:
+  - loss: `0.5921`
+  - accuracy: `0.5777`
+  - bpb: `5.1364`
+  - average epoch seconds: `0.99`
+- raw mode:
+  - loss: `2.5640`
+  - accuracy: `0.3240`
+  - bpb: `3.6991`
+  - average epoch seconds: `1.09`
+
+Interpretation:
+
+- this is the first real downstream-usefulness result
+- the learned stream still loses clearly to the raw patch baseline on the key metric (`bpb`)
+- the learned stream is easier in per-bit accuracy terms, but that does not outweigh the worse compression-style predictive quality
+- this is a negative result for the current codec objective, not for the whole research direction
+
+Updated conclusion:
+
+- the current codec is good at reconstruction
+- the current codec is not yet producing a downstream-superior patch stream
+- the next step should be a downstream-aware codec redesign, not more rate sweeps or packing tweaks

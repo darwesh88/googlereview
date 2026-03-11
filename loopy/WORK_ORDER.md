@@ -17,10 +17,10 @@ This means the next work should not be another tiny rate sweep.
 
 ## Main decision
 
-The next branch should be:
+The next branch should now be:
 
-1. **packing / entropy coding improvement first**
-2. **downstream LM usefulness second**
+1. **downstream-aware codec redesign first**
+2. **retest downstream patch prediction**
 
 Do not jump to H100 rentals yet.
 
@@ -33,44 +33,43 @@ The current research already answers the local rate question well enough.
 - `0.002`, `0.0025`, and `0.005` all lost
 
 So the next bottleneck is not rate tuning.
-It is that model-side predictability is not yet turning into a strong real stored bitstream.
+And it is not grouped packing either.
+
+The deeper issue is:
+
+- the codec learns a stream that reconstructs well
+- but that stream is not yet a better prediction target than raw patches
 
 ## Immediate work package
 
-### Work package A: better packing
+### Work package A: downstream-aware codec redesign
 
 Goal:
 
-- improve real packed learned-bitstream size without changing the codec architecture too much
+- make the learned patch stream easier to predict downstream without destroying reconstruction
 
 Tasks:
 
-1. inspect the current bitstream measurement path in [measure_bitstream_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/measure_bitstream_v2.py)
-2. separate patch-group streams instead of packing one flat bitstream
-3. measure whether per-group compression beats the current flat packing
-4. test simple delta / run-length style preprocessing only if it is mathematically justified by the bit patterns
+1. add an auxiliary next-patch predictability objective during codec training
+2. keep the current reconstruction path intact
+3. retrain on the real corpus baseline setting
+4. rerun the patch-prior comparison against the raw patch baseline
 
 Success condition:
 
-- packed learned-bitstream `zlib` bpb drops below the current `0.003` result of `4.3997`
-- fidelity stays close to the current `0.003` run
+- learned patch prior `bpb` moves materially toward or below the raw patch baseline
 
-### Work package B: downstream LM usefulness
+### Work package B: downstream LM usefulness retest
 
 Goal:
 
-- test whether the learned binary stream helps later modeling even if raw compression is not state of the art
+- verify whether the redesigned codec actually produces a better downstream patch stream
 
 Tasks:
 
-1. export the learned patch/binary stream for `twitter_support_5k`
-2. train a tiny prior model on that stream
-3. compare against a byte-level or token-level baseline of similar scale
-4. judge whether the latent stream is easier to model than raw text
-
-Success condition:
-
-- the downstream model on the learned stream is clearly easier to train or reaches better predictive quality per unit compute
+1. train the codec with the new downstream-aware objective
+2. rerun [train_patch_prior_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v2.py) in `learned` and `raw` modes
+3. compare `bpb`, `accuracy`, and training speed
 
 ## Exact next coding task
 
@@ -78,55 +77,32 @@ Start with **Work package A**.
 
 Concrete first implementation:
 
-- add grouped bitstream measurement to [measure_bitstream_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/measure_bitstream_v2.py)
-- report:
-  - flat packed bitstream size
-  - per-group packed bitstream size
-  - per-group `zlib/gzip` results
-  - whether groupwise packing improves over flat packing
+- add a lightweight predictive auxiliary loss to [train_binary_codec_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/train_binary_codec_v2.py)
+- simplest form:
+  - predict next patch bits from current patch latents
+  - weight the new loss lightly so reconstruction remains stable
 
 Reason:
 
-- this is the smallest next change that directly attacks the current bottleneck
-- it does not require retraining first
-- it tells us whether the packing path is weak because we are mixing unlike bit groups together
+- this attacks the newly exposed bottleneck directly
+- the current codec is reconstructive but not predictive enough
+- we need the learned stream itself to become a better modeling target
 
 Status:
 
-- grouped bitstream measurement has now been added and tested
-- grouped packing was worse than flat packing on the current best checkpoints
-- so Work package A did not unlock the next gain
-- a first downstream export path now exists via [export_stream_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/export_stream_v2.py)
-- the simple group-token LM smoke test is runnable, but it expands each patch back into four tokens, so it does not preserve the sequence-length advantage we really want to test
+- grouped packing was tested and rejected
+- the patch-level downstream prior path is now implemented
+- the first 5-epoch learned-vs-raw patch prior comparison was negative for the learned stream
 
-## Updated immediate task
+Observed downstream result:
 
-Move now to **Work package B**.
+- learned patch prior: `5.1364 bpb`
+- raw patch prior: `3.6991 bpb`
 
-Concrete first implementation:
+Interpretation:
 
-- use [export_stream_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/export_stream_v2.py)
-- export:
-  - `group_stream.txt`
-  - `raw_byte_stream.txt`
-- train the same tiny LM on both streams with [train_token_lm.py](C:/Users/adarw/Desktop/googlereview/loopy/train_token_lm.py)
-- compare validation quality and training speed
-
-Current interpretation:
-
-- this is a useful smoke test only
-- it validates the tooling path
-- it does not yet answer the real downstream question
-
-## Refined next task
-
-Build a **patch-level prior model**, not just a token LM over expanded group tokens.
-
-Reason:
-
-- the group-token export uses 4 tokens for each 4-byte patch
-- that removes the potential sequence reduction benefit of the learned patch representation
-- the correct downstream test should operate on one learned code step per patch
+- the current codec objective is not producing a better downstream stream than raw patches
+- this is the bottleneck to fix next
 
 ## What not to do next
 
@@ -138,14 +114,12 @@ Reason:
 
 ## Decision after the next work package
 
-If better packing materially improves stored bitstream size:
+If the predictive auxiliary loss improves downstream learned-patch `bpb` materially:
 
-- continue improving the codec/packing path on Colab
+- continue along the downstream-aware codec branch
 
-If better packing does not help much:
+If it does not:
 
-- move immediately to downstream LM usefulness
-
-That is the clean next fork.
+- consider a stronger latent redesign such as patch symbols / codebooks instead of independent bit prediction
 
 

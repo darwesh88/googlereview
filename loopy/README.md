@@ -99,7 +99,8 @@ Interpretation:
 - `0.01` is still the best packed-bitstream point so far
 - the nearby `0.002`, `0.0025`, and `0.005` points are all worse than `0.003`
 - but the current codec is still not yet competitive with standard raw-text compression
-- the active problem is now the fidelity/compression tradeoff, not whether the architecture works at all
+- the active problem is no longer just fidelity/compression
+- the learned stream is also not yet beating a raw patch baseline in downstream patch prediction
 
 ## Best next move from here
 
@@ -107,7 +108,7 @@ Do not rent H100s yet.
 
 Do this next:
 
-1. use [COLAB_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/COLAB_PLAN.md)
-2. stop the simple local rate sweep around the current working point
-3. measure packed bitstream size again with [measure_bitstream_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/measure_bitstream_v2.py)
-4. shift to the next bottleneck: packing / entropy coding or downstream LM usefulness before deciding whether H100 rentals are justified
+1. stop the simple local rate sweep around the current working point
+2. stop the grouped packing branch
+3. treat the current downstream patch-prior result as a negative result for the existing codec objective
+4. redesign the codec objective so the learned stream is easier to predict, not just easier to reconstruct

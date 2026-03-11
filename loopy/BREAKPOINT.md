@@ -63,7 +63,9 @@ Interpretation:
 - small to moderate rate pressure can improve the packed learned bitstream
 - `0.003` is currently the best tested compromise between compression pressure and fidelity
 - `0.01` remains the best packed-bitstream point so far
-- the active problem is now the compression/fidelity frontier
+- grouped packing did not help
+- the learned stream also lost to a raw patch baseline in downstream patch prediction
+- the active problem is now the codec objective itself
 - Loopy v2 is still not yet competitive as a practical compressor with the current packing path
 
 ## Next resume step
@@ -74,4 +76,4 @@ Grouped packing has now been tested and rejected for the current bit layout.
 
 The next resume step is:
 
-- patch-level downstream LM testing on the learned binary stream
+- redesign the codec objective so learned patches are easier to predict downstream
