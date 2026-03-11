@@ -118,6 +118,23 @@ Interpretation:
 - the current codec objective is not producing a better downstream stream than raw patches
 - this is the bottleneck to fix next
 
+Observed predictive-branch result:
+
+- predictive codec run:
+  - byte accuracy: `0.9814`
+  - estimated bpb: `2.5241`
+  - predictive loss: `0.00594`
+- learned patch prior on predictive checkpoint:
+  - `bpb = 5.0593`
+  - `accuracy = 0.5711`
+
+Interpretation:
+
+- the predictive auxiliary loss helped only slightly:
+  - learned `bpb` improved from `5.1364` to `5.0593`
+- this is not enough to close the large gap to raw patches (`3.6991`)
+- the next redesign should therefore be stronger than a light auxiliary loss
+
 ## What not to do next
 
 - do not do another tiny `rate_weight` sweep
@@ -128,12 +145,11 @@ Interpretation:
 
 ## Decision after the next work package
 
-If the predictive auxiliary loss improves downstream learned-patch `bpb` materially:
+The predictive auxiliary loss did not improve downstream learned-patch `bpb` materially enough.
 
-- continue along the downstream-aware codec branch
-
-If it does not:
+So the next branch should be:
 
 - consider a stronger latent redesign such as patch symbols / codebooks instead of independent bit prediction
+- or add a more structured predictive target than next-bit BCE alone
 
 

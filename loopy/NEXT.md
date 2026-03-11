@@ -106,7 +106,23 @@ or
 
 Current next step:
 
-- redesign the codec objective so the learned patches are optimized for predictability, not only reconstruction
+- the first predictive auxiliary-loss codec has now been tested
+- it improved learned downstream patch-prior `bpb` only slightly:
+  - old learned: `5.1364`
+  - predictive learned: `5.0593`
+- raw patch prior is still far better at `3.6991`
+
+Interpretation:
+
+- the predictive branch is alive, but too weak
+- the current codec objective is still too reconstructive
+- adding a light next-bit auxiliary loss is not enough by itself
+
+Current next step:
+
+- redesign the latent representation more strongly
+- likely move away from purely independent bit prediction toward structured patch symbols / codebooks or a stronger latent predictor
+- do not do more tiny rate sweeps before that redesign
 
 That redesign is now started:
 

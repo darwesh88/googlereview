@@ -65,6 +65,10 @@ Interpretation:
 - `0.01` remains the best packed-bitstream point so far
 - grouped packing did not help
 - the learned stream also lost to a raw patch baseline in downstream patch prediction
+- a light predictive auxiliary-loss branch improved learned downstream `bpb` only slightly:
+  - old learned patch prior: `5.1364`
+  - predictive learned patch prior: `5.0593`
+  - raw patch prior: `3.6991`
 - the active problem is now the codec objective itself
 - Loopy v2 is still not yet competitive as a practical compressor with the current packing path
 
@@ -76,4 +80,5 @@ Grouped packing has now been tested and rejected for the current bit layout.
 
 The next resume step is:
 
-- redesign the codec objective so learned patches are easier to predict downstream
+- stop tweaking the light predictive auxiliary-loss branch
+- move to a stronger latent redesign so learned patches are easier to predict downstream

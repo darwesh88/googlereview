@@ -1484,3 +1484,56 @@ Interpretation:
 - the new branch runs end to end
 - the metric plumbing works
 - the next real question is whether a predictive-weighted codec improves the learned patch prior on real data
+
+## Predictive auxiliary loss real-corpus result
+
+The predictive branch was tested on the real Twitter support corpus using:
+
+- `rate_weight=0.003`
+- `predictive_weight=0.01`
+
+Observed predictive codec result:
+
+- loss: `0.2248`
+- recon loss: `0.0731`
+- rate loss: `0.00132`
+- align loss: `0.1444`
+- predictive loss: `0.00594`
+- estimated bpb: `2.5241`
+- byte accuracy: `0.9814`
+- bit density: `0.5294`
+- best epoch: `7`
+- average epoch seconds: `9.06`
+
+Sample reconstruction:
+
+- source: `Customer: delivery slot of 7m. Now 930 and still waiting.... Agent: Sorry Sam, did you receive your order? Ceri`
+- reconstruction: `Customer: delivery slot of 7m. Now P30 and still waiting.... Agent: Sorry Sam, did you receive your order? Cerif`
+
+Observed learned patch-prior result on the predictive checkpoint:
+
+- loss: `0.5833`
+- accuracy: `0.5711`
+- bpb: `5.0593`
+- best epoch: `5`
+
+Comparison against the previous downstream baselines:
+
+- previous learned patch prior: `5.1364 bpb`
+- predictive learned patch prior: `5.0593 bpb`
+- raw patch prior: `3.6991 bpb`
+
+Interpretation:
+
+- the predictive auxiliary loss helped a little
+- but the improvement is small
+- the learned stream is still far worse than the raw patch baseline on the key downstream metric
+- so the current codec objective remains too reconstructive
+
+Current conclusion:
+
+- the predictive branch is not dead
+- but a light next-bit auxiliary loss is not enough
+- the next redesign should be stronger:
+  - structured patch symbols or codebooks
+  - or a stronger latent predictive objective than independent next-bit BCE

@@ -101,6 +101,9 @@ Interpretation:
 - but the current codec is still not yet competitive with standard raw-text compression
 - the active problem is no longer just fidelity/compression
 - the learned stream is also not yet beating a raw patch baseline in downstream patch prediction
+- a light predictive auxiliary loss helped only slightly downstream:
+  - learned patch prior `bpb` moved from `5.1364` to `5.0593`
+  - raw patch prior is still much better at `3.6991`
 
 ## Best next move from here
 
@@ -111,4 +114,5 @@ Do this next:
 1. stop the simple local rate sweep around the current working point
 2. stop the grouped packing branch
 3. treat the current downstream patch-prior result as a negative result for the existing codec objective
-4. redesign the codec objective so the learned stream is easier to predict, not just easier to reconstruct
+4. treat the first predictive auxiliary-loss test as only a weak partial improvement
+5. move to a stronger latent redesign so the learned stream is easier to predict, not just easier to reconstruct
