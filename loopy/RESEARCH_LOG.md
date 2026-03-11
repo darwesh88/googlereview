@@ -1287,3 +1287,71 @@ Updated conclusion:
 - the useful region now appears to be below `0.005`
 - `0.003` is the best compromise tested so far
 - the next clean sweep should probe tighter values such as `0.002` and `0.0025`
+
+## Colab GPU intermediate rate point (`rate_weight=0.002`)
+
+Observed training result:
+
+- loss: `0.2181`
+- recon loss: `0.0761`
+- rate loss: `0.00088`
+- align loss: `0.1411`
+- estimated bpb: `2.5042`
+- byte accuracy: `0.9803`
+- bit density: `0.4958`
+- raw capacity bpb: `6.0`
+- best epoch: `8`
+- average epoch seconds: `9.14`
+
+Sample reconstruction:
+
+- source: `Customer: delivery slot of 7m. Now 930 and still waiting.... Agent: Sorry Sam, did you receive your order? Ceri`
+- reconstruction: `Customer: delivery slot of 7m. Gow W30 and still waiting.... Agent: Sorry Sam, did you receive your orderd Cerid`
+
+Observed prototype bitstream measurement:
+
+- zlib-compressed learned bitstream bpb: `4.5546`
+- gzip-compressed learned bitstream bpb: `4.5548`
+
+Interpretation:
+
+- this point is clearly worse than `0.003`
+- it should be rejected
+
+## Colab GPU intermediate rate point (`rate_weight=0.0025`)
+
+Observed training result:
+
+- loss: `0.2125`
+- recon loss: `0.0631`
+- rate loss: `0.00102`
+- align loss: `0.1484`
+- estimated bpb: `2.3094`
+- byte accuracy: `0.9840`
+- bit density: `0.4847`
+- raw capacity bpb: `6.0`
+- best epoch: `8`
+- average epoch seconds: `9.28`
+
+Sample reconstruction:
+
+- source: `Customer: delivery slot of 7m. Now 930 and still waiting.... Agent: Sorry Sam, did you receive your order? Ceri`
+- reconstruction: `Customer: delivery slot of Lm. Now L30 and still waiting.... Agent: Sorry Sam, did you receive your orderd Cerin`
+
+Observed prototype bitstream measurement:
+
+- zlib-compressed learned bitstream bpb: `4.5508`
+- gzip-compressed learned bitstream bpb: `4.5510`
+
+Interpretation:
+
+- fidelity improved over `0.002`
+- but packed learned-bitstream size stayed poor
+- this point is also worse than `0.003`
+
+Final conclusion for this sweep:
+
+- `0.003` is the best tested compromise
+- `0.01` is the best packed-bitstream point so far
+- the tiny neighborhood sweep around `0.003` did not produce a better point
+- the next work should move away from simple rate tuning and toward either better packing or downstream LM usefulness

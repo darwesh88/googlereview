@@ -32,6 +32,14 @@ Best middle tradeoff so far:
 
 Failed middle point:
 
+- run: `v2_colab_rate_002`
+- `rate_weight=0.002`
+- byte accuracy: `0.9803`
+- zlib-compressed learned bitstream bpb: `4.5546`
+- run: `v2_colab_rate_0025`
+- `rate_weight=0.0025`
+- byte accuracy: `0.9840`
+- zlib-compressed learned bitstream bpb: `4.5508`
 - run: `v2_colab_rate_005`
 - `rate_weight=0.005`
 - byte accuracy: `0.9805`
@@ -41,39 +49,32 @@ Failed middle point:
 
 The architecture clearly works.
 
-Rate pressure can improve the real packed bitstream, but it currently costs some fidelity.
-So the next clean task is to map the tradeoff curve, not to jump to bigger hardware.
+The low-rate sweep is now informative enough:
+
+- `0.003` is the best tested compromise
+- `0.01` is the best packed-bitstream point
+- the points around `0.002` to `0.005` did not beat `0.003`
+
+So the next clean task is no longer another small rate sweep.
+It is to attack the next bottleneck directly.
 
 ## Immediate next step
 
-Run one or two tighter rate points on the same real corpus:
+Next two serious directions are:
 
-- `rate_weight=0.002`
-- `rate_weight=0.0025`
-
-Keep everything else fixed:
-
-- `patch_size=4`
-- `bit-groups 6,6,6,6`
-- `epochs 10`
-- `batch_size 8`
-
-For each run, record:
-
-- `best_metrics.json`
-- `sample_reconstruction.txt`
-- `bitstream_summary.json`
+1. improve packing / entropy coding
+2. test whether downstream modeling on the learned stream gives a real LLM-training benefit
 
 ## Decision rule
 
-Move forward only if one of the intermediate rate settings:
+Move forward only if the next step either:
 
-- improves packed learned-bitstream bpb relative to `4.3997`
-- keeps byte accuracy close to or above `0.981`
-- keeps reconstruction errors local rather than structural
+- improves packed learned-bitstream bpb below `4.3997` without large fidelity loss
+or
+- shows a downstream LM benefit that justifies the representation even if raw compression remains worse than `zlib/gzip`
 
 ## Do not do next
 
 - do not move to H100 yet
 - do not claim the codec beats standard text compression yet
-- do not keep extending epochs blindly before the rate frontier is mapped
+- do not keep doing tiny nearby rate sweeps unless there is a clear new hypothesis
