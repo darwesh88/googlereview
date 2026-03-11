@@ -2274,3 +2274,39 @@ Updated decision:
 - keep `7.0 bpb` as the safer reconstruction baseline
 - treat `5.0 bpb` as the strongest downstream `v3` point so far
 - next run should be a longer grouped-prior test on the `5.0 bpb` checkpoint
+
+## v3 longer grouped-prior runs on the 5.0 bpb checkpoint
+
+Observed result at `10` epochs:
+
+- loss: `2.0208`
+- accuracy: `0.4352`
+- bpb: `2.9174`
+
+Observed result at `20` epochs:
+
+- loss: `1.9739`
+- accuracy: `0.4472`
+- bpb: `2.8497`
+
+Comparison:
+
+- raw patch prior: `2.9473`
+- `v3` grouped at `7.0 bpb`: `3.8102`
+- `v3` grouped at `6.0 bpb`: `3.4601`
+- `v3` grouped at `5.0 bpb`, `5` epochs: `3.0444`
+- `v3` grouped at `5.0 bpb`, `10` epochs: `2.9174`
+- `v3` grouped at `5.0 bpb`, `20` epochs: `2.8497`
+
+Interpretation:
+
+- `v3` at `5.0 bpb` has now beaten the raw baseline on the downstream `bpb` metric
+- this is the first result in the project where the learned stream wins the downstream usefulness test
+- the cost is lower reconstruction quality than the `6.0` or `7.0 bpb` checkpoints
+- the next important question is whether `6.0 bpb` can catch up downstream with longer prior training while keeping better reconstruction quality
+
+Updated decision:
+
+- keep `7.0 bpb` as the safer reconstruction baseline
+- keep `5.0 bpb` as the current best downstream `v3` point
+- run a longer grouped-prior comparison on the `6.0 bpb` checkpoint next

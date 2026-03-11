@@ -185,7 +185,28 @@ Interpretation:
 - longer training helped a lot
 - `6.0 bpb` is no longer just a broken cliff point
 - it is still weaker than `7.0 bpb`, but now clearly alive
-- this justifies pushing one step lower before spending more time polishing `6.0`
+- this justified one lower-capacity probe
+
+### Run 7
+
+- `patch_size=2`
+- `num_codebooks=2`
+- `sub_codebook_size=32`
+- `raw_capacity_bpb=5.0`
+- `20` epochs
+- byte accuracy: `0.9464`
+- codebook perplexity: `31.28`
+
+Sample reconstruction:
+
+- `Customer: delivery slot of 5a. Now 4t? and still wamting.... Agent: S rry Sho, d d you receive your orderi Ceris`
+
+Interpretation:
+
+- `5.0 bpb` is still alive mathematically
+- but quality is now clearly below the current bar
+- this is too degraded to become the next baseline
+- the capacity sweep should stop here for now
 
 ## Updated v3 decision
 
@@ -204,9 +225,42 @@ Interpretation:
 - recovered low-capacity point:
   - `6.0 bpb` at `20` epochs
   - byte accuracy: `0.9846`
+- too-far compression point:
+  - `5.0 bpb` at `20` epochs
+  - byte accuracy: `0.9464`
 
 Next step:
 
 - keep `7.0 bpb` as the stable baseline
 - keep `6.0 bpb` as the new low-capacity frontier
-- try `5.0 bpb` next
+- stop lowering capacity
+- test whether `v3` symbols are better downstream targets than raw patches
+
+## Downstream milestone
+
+The first downstream grouped-prior tests changed the picture again.
+
+Observed results:
+
+- raw patch prior:
+  - `bpb = 2.9473`
+- `v3` grouped at `7.0 bpb`:
+  - `bpb = 3.8102`
+- `v3` grouped at `6.0 bpb`:
+  - `bpb = 3.4601`
+- `v3` grouped at `5.0 bpb`:
+  - `5` epochs: `3.0444`
+  - `10` epochs: `2.9174`
+  - `20` epochs: `2.8497`
+
+Interpretation:
+
+- `5.0 bpb` is too degraded as a reconstruction baseline
+- but it is now the best downstream `v3` point
+- after longer prior training, it has beaten the raw patch baseline
+
+Updated next step:
+
+- keep `7.0 bpb` as the safer reconstruction baseline
+- keep `5.0 bpb` as the current best downstream point
+- run a longer grouped-prior comparison on the `6.0 bpb` checkpoint next

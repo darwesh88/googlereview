@@ -57,12 +57,18 @@ Observed 5-epoch comparison at `patch_size=2`:
 - `v3` grouped prior on `5.0 bpb` checkpoint:
   - `bpb = 3.0444`
   - `accuracy = 0.4122`
+  - at `10` epochs:
+    - `bpb = 2.9174`
+    - `accuracy = 0.4352`
+  - at `20` epochs:
+    - `bpb = 2.8497`
+    - `accuracy = 0.4472`
 
 Interpretation:
 
-- `v3` is still worse than raw as a downstream target
+- `v3` at `5.0 bpb` has now beaten the raw baseline downstream
 - but `v3` is now much closer than the old `v2` branch ever was
 - lower-capacity `v3` symbols are easier to predict downstream than the `7.0 bpb` symbols
-- `5.0 bpb` is now extremely close to raw downstream
+- `5.0 bpb` is now the strongest downstream point so far
 - that means the new tradeoff is no longer just reconstruction quality
-- the next useful test is a longer grouped-prior run at `5.0 bpb`
+- the next useful test is a `10`-epoch grouped prior on the `6.0 bpb` checkpoint for a fair longer comparison

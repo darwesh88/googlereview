@@ -194,10 +194,11 @@ At `patch_size=2`, 5-epoch grouped-prior comparison:
   - `bpb = 3.4601`
 - `v3` grouped symbols at `5.0 bpb`:
   - `bpb = 3.0444`
+  - `10` epochs: `2.9174`
+  - `20` epochs: `2.8497`
 
 Interpretation:
 
-- `v3` is still not better than raw downstream
+- `v3` at `5.0 bpb` has now beaten raw downstream after longer prior training
 - but the lower-capacity `v3` symbols are clearly becoming better downstream targets
-- `5.0 bpb` is now very close to raw downstream
 - that is the strongest sign yet that `v3` may become a useful training representation
