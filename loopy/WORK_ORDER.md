@@ -91,6 +91,43 @@ Reason:
 - it does not require retraining first
 - it tells us whether the packing path is weak because we are mixing unlike bit groups together
 
+Status:
+
+- grouped bitstream measurement has now been added and tested
+- grouped packing was worse than flat packing on the current best checkpoints
+- so Work package A did not unlock the next gain
+- a first downstream export path now exists via [export_stream_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/export_stream_v2.py)
+- the simple group-token LM smoke test is runnable, but it expands each patch back into four tokens, so it does not preserve the sequence-length advantage we really want to test
+
+## Updated immediate task
+
+Move now to **Work package B**.
+
+Concrete first implementation:
+
+- use [export_stream_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/export_stream_v2.py)
+- export:
+  - `group_stream.txt`
+  - `raw_byte_stream.txt`
+- train the same tiny LM on both streams with [train_token_lm.py](C:/Users/adarw/Desktop/googlereview/loopy/train_token_lm.py)
+- compare validation quality and training speed
+
+Current interpretation:
+
+- this is a useful smoke test only
+- it validates the tooling path
+- it does not yet answer the real downstream question
+
+## Refined next task
+
+Build a **patch-level prior model**, not just a token LM over expanded group tokens.
+
+Reason:
+
+- the group-token export uses 4 tokens for each 4-byte patch
+- that removes the potential sequence reduction benefit of the learned patch representation
+- the correct downstream test should operate on one learned code step per patch
+
 ## What not to do next
 
 - do not do another tiny `rate_weight` sweep

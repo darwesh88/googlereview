@@ -1355,3 +1355,82 @@ Final conclusion for this sweep:
 - `0.01` is the best packed-bitstream point so far
 - the tiny neighborhood sweep around `0.003` did not produce a better point
 - the next work should move away from simple rate tuning and toward either better packing or downstream LM usefulness
+
+## Grouped packing follow-up
+
+Grouped bitstream measurement was added to [measure_bitstream_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/measure_bitstream_v2.py) and tested on the two most relevant checkpoints.
+
+Observed result on the best fidelity baseline (`v2_twitter_local_20ep`):
+
+- flat zlib learned-bitstream bpb: `4.4178`
+- grouped zlib learned-bitstream bpb: `5.6482`
+
+Observed result on the best compromise point (`v2_twitter_rate_003`):
+
+- flat zlib learned-bitstream bpb: `4.3997`
+- grouped zlib learned-bitstream bpb: `5.5823`
+
+Interpretation:
+
+- grouped packing is clearly worse than flat packing with the current bit layout
+- mixing the groups together is not the main reason the stored bitstream is weak
+- the next branch should move away from packing tweaks and toward downstream usefulness
+
+## Downstream export + smoke test
+
+Added [export_stream_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/export_stream_v2.py) and [DOWNSTREAM_LM_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/DOWNSTREAM_LM_PLAN.md).
+
+The exporter writes:
+
+- `group_stream.txt`
+- `raw_byte_stream.txt`
+
+Both use angle-bracket tokens so [train_token_lm.py](C:/Users/adarw/Desktop/googlereview/loopy/train_token_lm.py) can consume them directly.
+
+Smoke-test result:
+
+- grouped stream LM, 1 epoch:
+  - val loss: `2.5831`
+  - perplexity: `13.24`
+  - vocab size: `261`
+- raw-byte stream LM, 1 epoch:
+  - val loss: `1.6024`
+  - perplexity: `4.97`
+  - vocab size: `163`
+
+Interpretation:
+
+- the downstream tooling path works
+- but this group-token LM is not yet the right decisive experiment
+- it expands each patch back into four tokens, so it removes the sequence-length advantage that makes Loopy v2 interesting
+- the correct next downstream branch is a patch-level prior model
+
+## Patch-level prior scaffold + smoke test
+
+Added [train_patch_prior_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v2.py).
+
+This trains a patch-level prior in two modes:
+
+- `learned`: predict next learned patch bits
+- `raw`: predict next raw byte patch
+
+The key metric is validation **bits per byte**, so both branches can be compared in the same unit.
+
+One-epoch CPU smoke test:
+
+- learned mode:
+  - val loss: `0.6238`
+  - val accuracy: `0.5550`
+  - val bpb: `5.4109`
+  - epoch seconds: `10.86`
+- raw mode:
+  - val loss: `3.0383`
+  - val accuracy: `0.2246`
+  - val bpb: `4.3833`
+  - epoch seconds: `16.57`
+
+Interpretation:
+
+- the patch-level downstream comparison path is now real and runnable
+- after 1 epoch, the learned stream is not yet beating the raw patch baseline in bpb
+- this is not decisive yet; the branch needs a longer run, preferably on Colab GPU

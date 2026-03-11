@@ -67,6 +67,20 @@ Next two serious directions are:
 
 Detailed execution order is captured in [WORK_ORDER.md](C:/Users/adarw/Desktop/googlereview/loopy/WORK_ORDER.md).
 
+Important refinement:
+
+- the first group-token export path is only a tooling smoke test
+- the real downstream test should be patch-level, not 4 expanded group tokens per patch
+- [train_patch_prior_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v2.py) is now the active downstream comparison tool
+
+Immediate experiment:
+
+- run `train_patch_prior_v2.py` in both modes:
+  - `learned`
+  - `raw`
+- use Colab GPU
+- run longer than the 1-epoch CPU smoke test
+
 ## Decision rule
 
 Move forward only if the next step either:
