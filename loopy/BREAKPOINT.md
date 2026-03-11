@@ -56,9 +56,9 @@ Product-codebook `v3` is now in the workspace:
   - this setup has `raw_capacity_bpb = 16.0`
   - so it proves viability, not efficiency
 - the first capacity-reduction sweep changed that:
-  - `num_codebooks=3`, `sub_codebook_size=256`, `raw_capacity_bpb=12.0`
-  - byte accuracy: `0.9973`
-  - near-exact real-text reconstruction
+  - `num_codebooks=2`, `sub_codebook_size=256`, `raw_capacity_bpb=8.0`
+  - byte accuracy: `0.9892`
+  - still near-exact real-text reconstruction
   - this is now the best efficiency-oriented `v3` baseline
 
 ## Next resume step
@@ -67,6 +67,6 @@ Do not move `v3` to real text yet.
 
 Next resume step:
 
-- use the `12.0 bpb` `patch_size=2` run as the new `v3` reference point
+- use the `8.0 bpb` `patch_size=2` run as the new `v3` reference point
 - focus all next work on reducing capacity further while keeping fidelity
 - move the next serious `v3` sweep to Colab GPU, not local CPU

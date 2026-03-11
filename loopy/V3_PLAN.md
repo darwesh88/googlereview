@@ -105,9 +105,22 @@ Sample reconstruction:
 Interpretation:
 
 - both runs are successful
-- `12.0 bpb` is currently the best efficiency-oriented `v3` point
+- `8.0 bpb` is now the best efficiency-oriented `v3` point
 - `14.0 bpb` is the best pure-fidelity point
-- the next work should continue reducing capacity from the new `12.0 bpb` baseline
+- the next work should continue reducing capacity from the new `8.0 bpb` baseline
+
+### Run 3
+
+- `patch_size=2`
+- `num_codebooks=2`
+- `sub_codebook_size=256`
+- `raw_capacity_bpb=8.0`
+- byte accuracy: `0.9892`
+- codebook perplexity: `246.69`
+
+Sample reconstruction:
+
+- `Customer: delivery slot of 7m. Now 93. and still waiting.... Agent: Sorry Sam, did you receive your order? Cerij`
 
 ## Decision rule
 

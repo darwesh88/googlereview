@@ -143,6 +143,6 @@ Current understanding:
 - a high-capacity `patch_size=2` real-corpus smoke test already works
 - the next task is to keep that fidelity while bringing capacity back down
 - first Colab capacity-reduction results are now strong:
-  - `num_codebooks=3`, `sub_codebook_size=256`, `raw_capacity_bpb=12.0`
-  - byte accuracy: `0.9973`
-  - near-exact reconstruction on real text
+  - `num_codebooks=2`, `sub_codebook_size=256`, `raw_capacity_bpb=8.0`
+  - byte accuracy: `0.9892`
+  - still near-exact reconstruction on real text

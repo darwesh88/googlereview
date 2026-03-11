@@ -1991,12 +1991,32 @@ Interpretation:
 - this is the strongest pure-fidelity `v3` result so far
 - but it is less efficient than the `12.0 bpb` point
 
+### Colab run: `patch_size=2`, `num_codebooks=2`, `sub_codebook_size=256`
+
+Observed result:
+
+- loss: `0.05615`
+- recon loss: `0.04185`
+- byte accuracy: `0.9892`
+- codebook perplexity: `246.69`
+- raw capacity bpb: `8.0`
+
+Sample reconstruction:
+
+- `Customer: delivery slot of 7m. Now 93. and still waiting.... Agent: Sorry Sam, did you receive your order? Cerij`
+
+Interpretation:
+
+- this is now the best efficiency-oriented `v3` point
+- capacity dropped all the way to `8.0 bpb`
+- fidelity is still very strong, even though it is a little weaker than the `12.0` and `14.0` runs
+
 Updated conclusion:
 
 - `v3` is now clearly viable on real text
 - the new baseline should be:
   - `patch_size=2`
-  - `num_codebooks=3`
+  - `num_codebooks=2`
   - `sub_codebook_size=256`
-  - `raw_capacity_bpb=12.0`
-- the next research step is to continue lowering capacity from there, not to return to the `16.0` setup
+  - `raw_capacity_bpb=8.0`
+- the next research step is to continue lowering capacity from there, not to return to the `16.0` or `12.0` setups
