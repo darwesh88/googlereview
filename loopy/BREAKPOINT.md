@@ -94,3 +94,4 @@ Next resume step:
   - `v3` grouped at `5.0 bpb`, `20` epochs: `2.8497 bpb`
 - next resume step:
   - run a longer codec training on the `5.0 bpb` checkpoint
+  - then recheck whether it keeps the downstream win while improving reconstruction

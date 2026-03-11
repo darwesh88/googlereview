@@ -265,3 +265,4 @@ Updated next step:
 - keep `5.0 bpb` as the current best downstream point
 - note that longer grouped-prior training helped `6.0 bpb`, but not enough
 - run a longer codec training on the `5.0 bpb` checkpoint next
+- then rerun the grouped prior and check whether the downstream win survives

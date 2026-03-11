@@ -2316,4 +2316,4 @@ Updated decision:
 - keep `7.0 bpb` as the safer reconstruction baseline
 - keep `5.0 bpb` as the current best downstream `v3` point
 - note that longer prior training helped `6.0 bpb`, but not enough to catch `5.0 bpb`
-- next run should be a longer codec training on the `5.0 bpb` checkpoint
+- next run should be a longer codec training on the `5.0 bpb` checkpoint so we can test whether reconstruction can improve without giving up the downstream win
