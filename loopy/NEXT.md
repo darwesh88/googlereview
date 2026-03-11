@@ -105,12 +105,15 @@ Observed:
   - `bpb = 3.8102`
 - `v3` grouped prior on `6.0 bpb`:
   - `bpb = 3.4601`
+- `v3` grouped prior on `5.0 bpb`:
+  - `bpb = 3.0444`
 
 Interpretation:
 
 - lower-capacity `v3` symbols are becoming easier to predict downstream
 - `6.0 bpb` is better downstream than `7.0 bpb`
-- the next run should now be the grouped prior on the `5.0 bpb` checkpoint
+- `5.0 bpb` is now very close to raw downstream
+- the next run should now be a longer grouped prior on the `5.0 bpb` checkpoint
 
 ## Do not do next
 

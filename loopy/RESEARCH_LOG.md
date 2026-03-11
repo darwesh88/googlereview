@@ -2245,3 +2245,32 @@ Decision:
 - keep `7.0 bpb` as the safer reconstruction baseline
 - keep `6.0 bpb` as the best downstream `v3` point so far
 - test the grouped prior on the `5.0 bpb` checkpoint next
+
+## v3 grouped prior on the 5.0 bpb checkpoint
+
+Observed result:
+
+- loss: `2.1088`
+- accuracy: `0.4122`
+- bpb: `3.0444`
+
+Comparison:
+
+- raw patch prior: `2.9473`
+- `v3` grouped at `7.0 bpb`: `3.8102`
+- `v3` grouped at `6.0 bpb`: `3.4601`
+- `v3` grouped at `5.0 bpb`: `3.0444`
+
+Interpretation:
+
+- this is the strongest downstream `v3` result so far
+- `v3` is still slightly worse than raw
+- but it is now very close
+- lower-capacity `v3` symbols are continuing to improve as downstream targets
+
+Updated decision:
+
+- stop treating `5.0 bpb` as only a failure point
+- keep `7.0 bpb` as the safer reconstruction baseline
+- treat `5.0 bpb` as the strongest downstream `v3` point so far
+- next run should be a longer grouped-prior test on the `5.0 bpb` checkpoint
