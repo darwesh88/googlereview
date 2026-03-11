@@ -1215,3 +1215,75 @@ Current conclusion:
 - Loopy v2 has crossed into a real compression/fidelity frontier problem
 - the architecture is validated strongly enough to continue
 - the next clean step is a controlled sweep between `rate_weight=0.0` and `0.01`
+
+## Local intermediate rate point (`rate_weight=0.003`)
+
+Observed training result:
+
+- loss: `0.2208`
+- recon loss: `0.0730`
+- rate loss: `0.00121`
+- align loss: `0.1466`
+- estimated bpb: `2.2935`
+- byte accuracy: `0.9810`
+- bit density: `0.4820`
+- raw capacity bpb: `6.0`
+- best epoch: `9`
+- average epoch seconds: `54.70`
+
+Sample reconstruction:
+
+- source: `Customer: delivery slot of 7m. Now 930 and still waiting.... Agent: Sorry Sam, did you receive your order? Ceri`
+- reconstruction: `Customer: delivery slot of em. Now 330 and still waiting.... Agent: Sorry Sam, did you receive your order? Ceris`
+
+Observed prototype bitstream measurement:
+
+- zlib-compressed learned bitstream bpb: `4.3997`
+- gzip-compressed learned bitstream bpb: `4.3998`
+- zlib-compressed raw text bpb: `3.0611`
+- gzip-compressed raw text bpb: `3.0613`
+
+Interpretation:
+
+- this is currently the best tested middle tradeoff
+- it improves packed learned-bitstream size over the fidelity baseline
+- it preserves slightly more fidelity than `rate_weight=0.01`
+
+## Colab GPU intermediate rate point (`rate_weight=0.005`)
+
+Observed training result:
+
+- loss: `0.2285`
+- recon loss: `0.0734`
+- rate loss: `0.00208`
+- align loss: `0.1530`
+- estimated bpb: `2.3675`
+- byte accuracy: `0.9805`
+- bit density: `0.4768`
+- raw capacity bpb: `6.0`
+- best epoch: `8`
+- average epoch seconds: `10.61`
+
+Sample reconstruction:
+
+- source: `Customer: delivery slot of 7m. Now 930 and still waiting.... Agent: Sorry Sam, did you receive your order? Ceri`
+- reconstruction: `Customer: delivery slot of 7m. Oow h30 and still waiting.... Agent: Sorry Sam, did you receive your order? Cerin`
+
+Observed prototype bitstream measurement:
+
+- zlib-compressed learned bitstream bpb: `4.5231`
+- gzip-compressed learned bitstream bpb: `4.5233`
+- zlib-compressed raw text bpb: `3.0611`
+- gzip-compressed raw text bpb: `3.0613`
+
+Interpretation:
+
+- this point is not useful
+- it is worse than the fidelity baseline and worse than the stronger local `0.01` rate run
+- it should be treated as a rejected rate setting
+
+Updated conclusion:
+
+- the useful region now appears to be below `0.005`
+- `0.003` is the best compromise tested so far
+- the next clean sweep should probe tighter values such as `0.002` and `0.0025`

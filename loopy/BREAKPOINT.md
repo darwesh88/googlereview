@@ -35,13 +35,28 @@ Best packed-bitstream result so far:
 - estimated bpb: `2.1823`
 - zlib-compressed learned bitstream bpb: `4.3861`
 
+Best middle tradeoff result so far:
+
+- `rate_weight=0.003`
+- byte accuracy: `0.9810`
+- estimated bpb: `2.2935`
+- zlib-compressed learned bitstream bpb: `4.3997`
+
+Rejected middle point:
+
+- `rate_weight=0.005`
+- byte accuracy: `0.9805`
+- estimated bpb: `2.3675`
+- zlib-compressed learned bitstream bpb: `4.5231`
+
 Interpretation:
 
 - Loopy v2 is strong as a learned representation and modeling direction
 - small to moderate rate pressure can improve the packed learned bitstream
+- `0.003` is currently the best tested compromise between compression pressure and fidelity
 - the active problem is now the compression/fidelity frontier
 - Loopy v2 is still not yet competitive as a practical compressor with the current packing path
 
 ## Next resume step
 
-Run one or two intermediate real-corpus rate points such as `0.003` and `0.005`, then compare packed bitstream size against fidelity.
+Run one or two tighter real-corpus rate points such as `0.002` and `0.0025`, then compare packed bitstream size against fidelity.

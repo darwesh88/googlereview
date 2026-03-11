@@ -73,10 +73,22 @@ The strongest packed-bitstream result so far came from adding moderate rate pres
 - zlib-compressed learned bitstream bpb: `4.3861`
 - zlib-compressed raw text bpb: `3.0611`
 
+The best middle tradeoff tested so far is:
+
+- `rate_weight=0.003`
+- byte accuracy: `0.9810`
+- zlib-compressed learned bitstream bpb: `4.3997`
+
+And the `rate_weight=0.005` Colab GPU run was clearly worse than the baseline:
+
+- byte accuracy: `0.9805`
+- zlib-compressed learned bitstream bpb: `4.5231`
+
 Interpretation:
 
 - the learned representation is strong for modeling
 - moderate rate pressure can improve the packed learned bitstream
+- `0.003` is currently the best compromise among the tested rate points
 - but the current codec is still not yet competitive with standard raw-text compression
 - the active problem is now the fidelity/compression tradeoff, not whether the architecture works at all
 
@@ -87,6 +99,6 @@ Do not rent H100s yet.
 Do this next:
 
 1. use [COLAB_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/COLAB_PLAN.md)
-2. do a controlled real-corpus rate sweep around the current working point
+2. do a tighter real-corpus rate sweep around the current working point
 3. measure packed bitstream size again with [measure_bitstream_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/measure_bitstream_v2.py)
 4. map the fidelity/compression frontier before deciding whether H100 rentals are justified

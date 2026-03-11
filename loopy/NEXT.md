@@ -22,6 +22,21 @@ Best packed-bitstream result so far:
 - estimated bpb: `2.1823`
 - zlib-compressed learned bitstream bpb: `4.3861`
 
+Best middle tradeoff so far:
+
+- run: `v2_twitter_rate_003`
+- `rate_weight=0.003`
+- byte accuracy: `0.9810`
+- estimated bpb: `2.2935`
+- zlib-compressed learned bitstream bpb: `4.3997`
+
+Failed middle point:
+
+- run: `v2_colab_rate_005`
+- `rate_weight=0.005`
+- byte accuracy: `0.9805`
+- zlib-compressed learned bitstream bpb: `4.5231`
+
 ## What this means
 
 The architecture clearly works.
@@ -31,10 +46,10 @@ So the next clean task is to map the tradeoff curve, not to jump to bigger hardw
 
 ## Immediate next step
 
-Run one or two intermediate rate points on the same real corpus:
+Run one or two tighter rate points on the same real corpus:
 
-- `rate_weight=0.003`
-- `rate_weight=0.005`
+- `rate_weight=0.002`
+- `rate_weight=0.0025`
 
 Keep everything else fixed:
 
@@ -53,8 +68,8 @@ For each run, record:
 
 Move forward only if one of the intermediate rate settings:
 
-- improves packed learned-bitstream bpb relative to `4.4418`
-- keeps byte accuracy close to or above `0.982`
+- improves packed learned-bitstream bpb relative to `4.3997`
+- keeps byte accuracy close to or above `0.981`
 - keeps reconstruction errors local rather than structural
 
 ## Do not do next
