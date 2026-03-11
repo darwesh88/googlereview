@@ -57,6 +57,10 @@ So v2 focuses on:
 - [v2_config.py](C:/Users/adarw/Desktop/googlereview/loopy/v2_config.py): v2 config
 - [binary_codec_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/binary_codec_v2.py): grouped binary codec model
 - [train_binary_codec_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/train_binary_codec_v2.py): training loop for the codec
+- [V3_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V3_PLAN.md): codebook branch plan
+- [v3_config.py](C:/Users/adarw/Desktop/googlereview/loopy/v3_config.py): v3 config
+- [symbolic_codec_v3.py](C:/Users/adarw/Desktop/googlereview/loopy/symbolic_codec_v3.py): codebook-style codec
+- [train_symbolic_codec_v3.py](C:/Users/adarw/Desktop/googlereview/loopy/train_symbolic_codec_v3.py): v3 training loop
 
 ## Current best understanding in v2
 
@@ -122,3 +126,4 @@ Do this next:
 4. treat the first predictive auxiliary-loss test as only a weak partial improvement
 5. treat grouped-symbol priors as evidence that structured targets help, but not enough inside this codec family
 6. move to a stronger latent redesign so the learned stream is easier to predict, not just easier to reconstruct
+7. `v3` codebook scaffold is now started

@@ -135,6 +135,13 @@ Current next step:
 - stop this independent-bit codec family at the current branch point
 - next move is a true codebook / patch-symbol codec redesign
 - use the grouped result as evidence that structured latent targets are the right direction
+- `v3` codebook scaffold is now in the repo
+- first v3 smoke run passed end to end
+
+Immediate v3 next step:
+
+- run a longer toy overfit test for `v3`
+- if reconstruction starts becoming readable and codebook perplexity stays healthy, move v3 to the real corpus
 
 That redesign is now started:
 

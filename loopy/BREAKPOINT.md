@@ -89,3 +89,5 @@ The next resume step is:
 - stop tweaking the light predictive auxiliary-loss branch
 - stop the grouped + predictive branch for this codec family
 - move to a stronger latent redesign so learned patches are easier to predict downstream
+- `v3` codebook scaffold is now started
+- next live test is a longer toy overfit run for `v3`

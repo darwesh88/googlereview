@@ -1619,3 +1619,36 @@ Current conclusion:
 - the next move should be a stronger latent redesign:
   - patch symbols / codebooks
   - or another explicitly structured latent that is not just grouped independent bits
+
+## v3 codebook scaffold
+
+Started the next branch:
+
+- [v3_config.py](C:/Users/adarw/Desktop/googlereview/loopy/v3_config.py)
+- [symbolic_codec_v3.py](C:/Users/adarw/Desktop/googlereview/loopy/symbolic_codec_v3.py)
+- [train_symbolic_codec_v3.py](C:/Users/adarw/Desktop/googlereview/loopy/train_symbolic_codec_v3.py)
+- [V3_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V3_PLAN.md)
+
+Architecture:
+
+- encoder maps byte patches to latents
+- vector quantizer maps each patch to one learned codebook symbol
+- decoder reconstructs bytes from quantized latents
+- optional next-symbol predictive loss is supported from the start
+
+One-epoch toy smoke result:
+
+- loss: `4.8840`
+- recon loss: `4.7821`
+- codebook loss: `0.0371`
+- commitment loss: `0.0093`
+- predictive loss: `0.0556`
+- byte accuracy: `0.1339`
+- codebook perplexity: `14.33`
+- raw capacity bpb: `2.0`
+
+Interpretation:
+
+- the v3 code path runs end to end
+- codebook usage is nontrivial already
+- next test is a longer toy overfit run before moving to real text

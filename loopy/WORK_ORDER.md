@@ -174,4 +174,10 @@ So the next branch should be:
 - move to a stronger latent redesign such as patch symbols / codebooks instead of independent bit prediction
 - keep the grouped downstream result as evidence that structured targets help
 
+Status:
+
+- `v3` codebook scaffold is now implemented
+- the first toy smoke run passes end to end
+- next action is a longer toy overfit check before any real-corpus `v3` run
+
 
