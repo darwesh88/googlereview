@@ -96,6 +96,7 @@ def parse_args(argv: list[str] | None = None) -> BinaryCodecConfig:
     parser.add_argument("--rate-weight", type=float, default=0.0)
     parser.add_argument("--balance-weight", type=float, default=0.01)
     parser.add_argument("--align-weight", type=float, default=0.1)
+    parser.add_argument("--predictive-weight", type=float, default=0.0)
     args = parser.parse_args(argv)
     bit_groups = tuple(int(part) for part in args.bit_groups.split(",") if part.strip())
     return BinaryCodecConfig(
@@ -122,6 +123,7 @@ def parse_args(argv: list[str] | None = None) -> BinaryCodecConfig:
         rate_weight=args.rate_weight,
         balance_weight=args.balance_weight,
         align_weight=args.align_weight,
+        predictive_weight=args.predictive_weight,
     )
 
 
@@ -169,6 +171,7 @@ def run_epoch(
         "rate_loss": 0.0,
         "balance_loss": 0.0,
         "align_loss": 0.0,
+        "predictive_loss": 0.0,
         "estimated_bpb": 0.0,
         "byte_accuracy": 0.0,
         "bit_density": 0.0,
@@ -195,6 +198,7 @@ def run_epoch(
             totals["rate_loss"] += forward.rate_loss.item()
             totals["balance_loss"] += forward.balance_loss.item()
             totals["align_loss"] += forward.align_loss.item()
+            totals["predictive_loss"] += forward.predictive_loss.item()
             totals["estimated_bpb"] += estimated_patch_bpb(forward.bit_probs, patch_ids, patch_mask)
             totals["byte_accuracy"] += byte_accuracy(forward.logits, patch_ids)
             totals["bit_density"] += tensor_bit_density(forward.bit_values, patch_mask)
@@ -276,6 +280,7 @@ def main() -> None:
             f"val_loss={val_metrics['loss']:.4f} "
             f"val_recon={val_metrics['recon_loss']:.4f} "
             f"val_align={val_metrics['align_loss']:.4f} "
+            f"val_pred={val_metrics['predictive_loss']:.4f} "
             f"val_bpb={val_metrics['estimated_bpb']:.3f} "
             f"byte_acc={val_metrics['byte_accuracy']:.3f} "
             f"bit_density={val_metrics['bit_density']:.3f} "
@@ -291,6 +296,7 @@ def main() -> None:
                 "rate_loss": val_metrics["rate_loss"],
                 "balance_loss": val_metrics["balance_loss"],
                 "align_loss": val_metrics["align_loss"],
+                "predictive_loss": val_metrics["predictive_loss"],
                 "estimated_bpb": val_metrics["estimated_bpb"],
                 "byte_accuracy": val_metrics["byte_accuracy"],
                 "bit_density": val_metrics["bit_density"],

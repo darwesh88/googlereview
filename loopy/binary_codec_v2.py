@@ -21,10 +21,11 @@ class CodecForward:
     rate_loss: torch.Tensor
     balance_loss: torch.Tensor
     align_loss: torch.Tensor
+    predictive_loss: torch.Tensor
 
     @property
     def total_loss(self) -> torch.Tensor:
-        return self.recon_loss + self.rate_loss + self.balance_loss + self.align_loss
+        return self.recon_loss + self.rate_loss + self.balance_loss + self.align_loss + self.predictive_loss
 
 
 class GroupedBinaryQuantizer(nn.Module):
@@ -111,6 +112,12 @@ class SemanticBinaryCodec(nn.Module):
         self.encoder = PatchEncoder(config)
         self.quantizer = GroupedBinaryQuantizer(config.latent_dim, config.total_bits)
         self.decoder = PatchDecoder(config)
+        self.next_bit_predictor = nn.Sequential(
+            nn.LayerNorm(config.latent_dim),
+            nn.Linear(config.latent_dim, config.latent_dim),
+            nn.GELU(),
+            nn.Linear(config.latent_dim, config.total_bits),
+        )
 
     def forward(self, patch_ids: torch.Tensor, patch_mask: torch.Tensor) -> CodecForward:
         latents = self.encoder(patch_ids)
@@ -140,6 +147,21 @@ class SemanticBinaryCodec(nn.Module):
         align_error = ((restored - latents.detach()) ** 2) * patch_presence
         align_loss = align_error.mean() * self.config.align_weight
 
+        if decoded_latents.size(1) > 1:
+            pair_mask = (patch_mask[:, :-1] * patch_mask[:, 1:]).unsqueeze(-1)
+            next_bit_logits = self.next_bit_predictor(decoded_latents[:, :-1])
+            next_bit_targets = bit_values[:, 1:].detach()
+            predictive_error = F.binary_cross_entropy_with_logits(
+                next_bit_logits,
+                next_bit_targets,
+                reduction="none",
+            )
+            predictive_denom = (pair_mask.sum() * next_bit_logits.size(-1)).clamp_min(1.0)
+            predictive_loss = (predictive_error * pair_mask).sum() / predictive_denom
+            predictive_loss = predictive_loss * self.config.predictive_weight
+        else:
+            predictive_loss = recon_loss.new_zeros(())
+
         return CodecForward(
             logits=logits,
             bit_probs=bit_probs,
@@ -148,6 +170,7 @@ class SemanticBinaryCodec(nn.Module):
             rate_loss=rate_loss,
             balance_loss=balance_loss,
             align_loss=align_loss,
+            predictive_loss=predictive_loss,
         )
 
     @torch.no_grad()

@@ -1462,3 +1462,25 @@ Updated conclusion:
 - the current codec is good at reconstruction
 - the current codec is not yet producing a downstream-superior patch stream
 - the next step should be a downstream-aware codec redesign, not more rate sweeps or packing tweaks
+
+## Predictive auxiliary loss branch
+
+Added a downstream-aware auxiliary objective to the codec:
+
+- [binary_codec_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/binary_codec_v2.py) now predicts next-patch bits from current decoded latents
+- [train_binary_codec_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/train_binary_codec_v2.py) now supports `--predictive-weight`
+- metrics now include `predictive_loss`
+
+Smoke result on toy corpus (`predictive_weight=0.01`, 1 epoch):
+
+- val loss: `4.9112`
+- val recon: `4.8929`
+- val align: `0.0114`
+- val predictive loss: `0.0069`
+- val bpb: `6.1007`
+
+Interpretation:
+
+- the new branch runs end to end
+- the metric plumbing works
+- the next real question is whether a predictive-weighted codec improves the learned patch prior on real data

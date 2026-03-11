@@ -90,6 +90,20 @@ Reason:
 
 Status:
 
+- predictive auxiliary loss is now implemented
+- the codec training path now supports `--predictive-weight`
+- smoke run passed and logs `predictive_loss`
+
+Immediate experiment:
+
+1. train a new codec run on the real corpus with:
+   - `predictive_weight=0.01`
+   - current best baseline settings otherwise unchanged
+2. rerun the patch prior comparison on that new checkpoint
+3. compare learned-patch prior `bpb` against the previous learned result of `5.1364`
+
+Status:
+
 - grouped packing was tested and rejected
 - the patch-level downstream prior path is now implemented
 - the first 5-epoch learned-vs-raw patch prior comparison was negative for the learned stream

@@ -108,6 +108,16 @@ Current next step:
 
 - redesign the codec objective so the learned patches are optimized for predictability, not only reconstruction
 
+That redesign is now started:
+
+- [train_binary_codec_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/train_binary_codec_v2.py) now supports `--predictive-weight`
+- the codec now includes a next-patch bit prediction auxiliary loss
+
+Immediate experiment:
+
+- retrain the codec on the real corpus with a light predictive weight
+- then rerun the learned-vs-raw patch prior comparison
+
 ## Do not do next
 
 - do not move to H100 yet

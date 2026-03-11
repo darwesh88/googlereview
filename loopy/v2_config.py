@@ -28,6 +28,7 @@ class BinaryCodecConfig:
     rate_weight: float = 0.0
     balance_weight: float = 0.01
     align_weight: float = 0.1
+    predictive_weight: float = 0.0
 
     @property
     def total_bits(self) -> int:
