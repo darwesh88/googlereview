@@ -22,7 +22,7 @@ Conclusion:
 
 ## v2
 
-Loopy v2 is the active path.
+Loopy v2 is the completed active branch for grouped-bit latents.
 
 The new goal is to build a **semantic binary codec**:
 
@@ -57,9 +57,9 @@ So v2 focuses on:
 - [v2_config.py](C:/Users/adarw/Desktop/googlereview/loopy/v2_config.py): v2 config
 - [binary_codec_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/binary_codec_v2.py): grouped binary codec model
 - [train_binary_codec_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/train_binary_codec_v2.py): training loop for the codec
-- [V3_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V3_PLAN.md): codebook branch plan
+- [V3_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V3_PLAN.md): product-codebook branch plan
 - [v3_config.py](C:/Users/adarw/Desktop/googlereview/loopy/v3_config.py): v3 config
-- [symbolic_codec_v3.py](C:/Users/adarw/Desktop/googlereview/loopy/symbolic_codec_v3.py): codebook-style codec
+- [symbolic_codec_v3.py](C:/Users/adarw/Desktop/googlereview/loopy/symbolic_codec_v3.py): product-codebook codec
 - [train_symbolic_codec_v3.py](C:/Users/adarw/Desktop/googlereview/loopy/train_symbolic_codec_v3.py): v3 training loop
 
 ## Current best understanding in v2
@@ -127,3 +127,15 @@ Do this next:
 5. treat grouped-symbol priors as evidence that structured targets help, but not enough inside this codec family
 6. move to a stronger latent redesign so the learned stream is easier to predict, not just easier to reconstruct
 7. `v3` codebook scaffold is now started
+8. independent-bit `v2` is now good enough as a reference point, but not the main architecture to scale further
+
+## Current active branch
+
+`v3` is now the active architecture branch.
+
+Current understanding:
+
+- single-symbol `v3` was too weak
+- product-codebook `v3` is the correct next attempt
+- the first product-codebook toy smoke test is partially readable but still not strong enough
+- the next task is a clean toy sanity run on the committed product-codebook path, before any real-corpus `v3` run

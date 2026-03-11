@@ -1652,3 +1652,118 @@ Interpretation:
 - the v3 code path runs end to end
 - codebook usage is nontrivial already
 - next test is a longer toy overfit run before moving to real text
+
+## v3 single-symbol overfit result
+
+Observed result on the first longer toy overfit run:
+
+- loss: `4.1718`
+- recon loss: `3.7091`
+- byte accuracy: `0.1688`
+- codebook perplexity: `5.03`
+- raw capacity bpb: `2.0`
+
+Sample reconstruction:
+
+- source: `A small robot woke up before sunrise and looked at the empty street.`
+- reconstruction: blank
+
+Interpretation:
+
+- the first single-symbol `v3` setup is too weak
+- this is not a usable reconstruction path yet
+- simply training longer is not enough
+
+## v3 single-symbol diagnostics
+
+Additional local tests were run to understand the failure mode.
+
+### Patch size 4, very large codebook
+
+- `patch_size=4`
+- `codebook_size=65536`
+- result still failed
+- codebook perplexity stayed low
+- reconstruction remained unusable
+
+### Patch size 2, very large codebook
+
+- `patch_size=2`
+- `codebook_size=65536`
+- raw capacity became `8.0 bpb`
+- result still failed badly
+
+### Patch size 1, smaller codebook
+
+- `patch_size=1`
+- `codebook_size=512`
+- after longer training:
+  - byte accuracy reached about `0.75`
+  - codebook perplexity stayed around `7-8`
+  - reconstruction became partially readable but plateaued
+
+Sample reconstruction from the stronger single-symbol patch-1 run:
+
+- `r s all roeot  oee    eeeore s  rise a d looeed at the e  t  streete`
+
+Interpretation:
+
+- single-symbol `v3` can partially learn at `patch_size=1`
+- but it is not strong enough to scale as-is
+- the next fix should increase symbol structure, not just codebook size
+
+## v3 product-codebook redesign
+
+`v3` was then upgraded from a single-symbol codebook to a **product-codebook** design.
+
+Meaning:
+
+- each patch is now represented by multiple sub-symbols
+- this is more expressive than one symbol per patch
+- it is the current active `v3` branch
+
+Code changes:
+
+- `v3_config.py`
+  - replaced `codebook_size`
+  - added `num_codebooks` and `sub_codebook_size`
+- `symbolic_codec_v3.py`
+  - quantizer now splits the latent into multiple subvectors
+  - each subvector has its own codebook
+  - predictive loss is now averaged across sub-codebooks
+- `train_symbolic_codec_v3.py`
+  - CLI now uses `--num-codebooks` and `--sub-codebook-size`
+  - logging now reports product-codebook settings
+
+## v3 product-codebook toy smoke result
+
+Observed result:
+
+- run: `v3_product_smoke`
+- `patch_size=1`
+- `num_codebooks=2`
+- `sub_codebook_size=256`
+- loss: `1.8895`
+- recon loss: `1.3930`
+- byte accuracy: `0.7589`
+- codebook perplexity: `6.90`
+- raw capacity bpb: `16.0`
+
+Sample reconstruction:
+
+- source: `A small robot woke up before sunrise and looked at the empty street.`
+- reconstruction: `e soall rohot iohe eo he ore senrese and loohed at the eootn streete`
+
+Interpretation:
+
+- product-codebook `v3` is clearly better than the blank-output branch
+- but it is still only partially readable
+- `v3` is still in toy-architecture-debugging mode
+- do not move it to the real corpus yet
+
+Current conclusion:
+
+- `v2` is now the reference branch, not the active scaling branch
+- `v3` product-codebook is the active architecture branch
+- the next task is a clean toy sanity test on the committed product-codebook path
+- if toy reconstruction still stalls, fix `v3` again before any scaling

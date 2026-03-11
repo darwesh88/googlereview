@@ -87,37 +87,69 @@ class V3PatchDecoder(nn.Module):
 
 
 class VectorQuantizer(nn.Module):
-    def __init__(self, latent_dim: int, codebook_size: int, commitment_weight: float, codebook_weight: float) -> None:
+    def __init__(
+        self,
+        latent_dim: int,
+        num_codebooks: int,
+        codebook_size: int,
+        commitment_weight: float,
+        codebook_weight: float,
+    ) -> None:
         super().__init__()
+        if latent_dim % num_codebooks != 0:
+            raise ValueError("latent_dim must be divisible by num_codebooks")
         self.latent_dim = latent_dim
+        self.num_codebooks = num_codebooks
+        self.sub_dim = latent_dim // num_codebooks
         self.codebook_size = codebook_size
         self.commitment_weight = commitment_weight
         self.codebook_weight = codebook_weight
-        self.codebook = nn.Embedding(codebook_size, latent_dim)
-        nn.init.uniform_(self.codebook.weight, -1.0 / codebook_size, 1.0 / codebook_size)
+        self.codebooks = nn.ModuleList([nn.Embedding(codebook_size, self.sub_dim) for _ in range(num_codebooks)])
+        for codebook in self.codebooks:
+            nn.init.uniform_(codebook.weight, -1.0 / codebook_size, 1.0 / codebook_size)
 
-    def forward(self, latents: torch.Tensor, patch_mask: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+    def forward(
+        self,
+        latents: torch.Tensor,
+        patch_mask: torch.Tensor,
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         batch_size, num_patches, latent_dim = latents.shape
-        flat = latents.reshape(-1, latent_dim)
-        codebook = self.codebook.weight
+        split_latents = latents.view(batch_size, num_patches, self.num_codebooks, self.sub_dim)
 
-        distances = (
-            flat.pow(2).sum(dim=1, keepdim=True)
-            + codebook.pow(2).sum(dim=1)
-            - 2.0 * flat @ codebook.t()
-        )
-        symbol_ids = distances.argmin(dim=1)
-        quantized = self.codebook(symbol_ids).reshape(batch_size, num_patches, latent_dim)
-        symbol_ids = symbol_ids.reshape(batch_size, num_patches)
-
-        st_quantized = latents + (quantized - latents).detach()
-        commitment_loss = F.mse_loss(latents, quantized.detach()) * self.commitment_weight
-        codebook_loss = F.mse_loss(quantized, latents.detach()) * self.codebook_weight
-
-        one_hot = F.one_hot(symbol_ids, num_classes=self.codebook_size).to(latents.dtype)
+        all_symbol_ids = []
+        all_quantized = []
+        all_commit_losses = []
+        all_codebook_losses = []
+        perplexities = []
         active = patch_mask.unsqueeze(-1)
-        avg_probs = (one_hot * active).sum(dim=(0, 1)) / active.sum().clamp_min(1.0)
-        perplexity = torch.exp(-(avg_probs * (avg_probs + 1e-8).log()).sum())
+
+        for codebook_index, codebook in enumerate(self.codebooks):
+            sub_latents = split_latents[:, :, codebook_index, :]
+            flat = sub_latents.reshape(-1, self.sub_dim)
+            entries = codebook.weight
+            distances = (
+                flat.pow(2).sum(dim=1, keepdim=True)
+                + entries.pow(2).sum(dim=1)
+                - 2.0 * flat @ entries.t()
+            )
+            symbol_ids = distances.argmin(dim=1).reshape(batch_size, num_patches)
+            quantized = codebook(symbol_ids)
+
+            all_symbol_ids.append(symbol_ids)
+            all_quantized.append(quantized)
+            all_commit_losses.append(F.mse_loss(sub_latents, quantized.detach()))
+            all_codebook_losses.append(F.mse_loss(quantized, sub_latents.detach()))
+
+            one_hot = F.one_hot(symbol_ids, num_classes=self.codebook_size).to(latents.dtype)
+            avg_probs = (one_hot * active).sum(dim=(0, 1)) / active.sum().clamp_min(1.0)
+            perplexities.append(torch.exp(-(avg_probs * (avg_probs + 1e-8).log()).sum()))
+
+        symbol_ids = torch.stack(all_symbol_ids, dim=-1)
+        quantized = torch.cat(all_quantized, dim=-1)
+        st_quantized = latents + (quantized - latents).detach()
+        commitment_loss = torch.stack(all_commit_losses).mean() * self.commitment_weight
+        codebook_loss = torch.stack(all_codebook_losses).mean() * self.codebook_weight
+        perplexity = torch.stack(perplexities).mean()
         return symbol_ids, quantized, st_quantized, commitment_loss, codebook_loss, perplexity
 
 
@@ -128,16 +160,22 @@ class SymbolicCodecV3(nn.Module):
         self.encoder = V3PatchEncoder(config)
         self.quantizer = VectorQuantizer(
             config.latent_dim,
-            config.codebook_size,
+            config.num_codebooks,
+            config.sub_codebook_size,
             config.commitment_weight,
             config.codebook_weight,
         )
         self.decoder = V3PatchDecoder(config)
-        self.next_symbol_predictor = nn.Sequential(
-            nn.LayerNorm(config.latent_dim),
-            nn.Linear(config.latent_dim, config.latent_dim),
-            nn.GELU(),
-            nn.Linear(config.latent_dim, config.codebook_size),
+        self.next_symbol_predictor = nn.ModuleList(
+            [
+                nn.Sequential(
+                    nn.LayerNorm(config.latent_dim),
+                    nn.Linear(config.latent_dim, config.latent_dim),
+                    nn.GELU(),
+                    nn.Linear(config.latent_dim, config.sub_codebook_size),
+                )
+                for _ in range(config.num_codebooks)
+            ]
         )
 
     def forward(self, patch_ids: torch.Tensor, patch_mask: torch.Tensor) -> SymbolicForward:
@@ -152,15 +190,18 @@ class SymbolicCodecV3(nn.Module):
         )
 
         if st_quantized.size(1) > 1:
-            next_logits = self.next_symbol_predictor(st_quantized[:, :-1])
-            next_targets = symbol_ids[:, 1:].detach()
             pair_mask = patch_mask[:, :-1] * patch_mask[:, 1:]
-            next_loss = F.cross_entropy(
-                next_logits.reshape(-1, next_logits.size(-1)),
-                next_targets.reshape(-1),
-                reduction="none",
-            ).reshape_as(next_targets)
-            predictive_loss = (next_loss * pair_mask).sum() / pair_mask.sum().clamp_min(1.0)
+            next_targets = symbol_ids[:, 1:].detach()
+            all_next_losses = []
+            for codebook_index, predictor in enumerate(self.next_symbol_predictor):
+                next_logits = predictor(st_quantized[:, :-1])
+                next_loss = F.cross_entropy(
+                    next_logits.reshape(-1, next_logits.size(-1)),
+                    next_targets[..., codebook_index].reshape(-1),
+                    reduction="none",
+                ).reshape_as(next_targets[..., codebook_index])
+                all_next_losses.append((next_loss * pair_mask).sum() / pair_mask.sum().clamp_min(1.0))
+            predictive_loss = torch.stack(all_next_losses).mean()
             predictive_loss = predictive_loss * self.config.predictive_weight
         else:
             predictive_loss = recon_loss.new_zeros(())

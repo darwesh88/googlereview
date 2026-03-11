@@ -62,7 +62,8 @@ def parse_args(argv: list[str] | None = None) -> SymbolicCodecConfig:
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--device", default="auto")
     parser.add_argument("--overfit-all", action="store_true")
-    parser.add_argument("--codebook-size", type=int, default=256)
+    parser.add_argument("--num-codebooks", type=int, default=2)
+    parser.add_argument("--sub-codebook-size", type=int, default=256)
     parser.add_argument("--commitment-weight", type=float, default=0.25)
     parser.add_argument("--codebook-weight", type=float, default=1.0)
     parser.add_argument("--predictive-weight", type=float, default=0.0)
@@ -87,7 +88,8 @@ def parse_args(argv: list[str] | None = None) -> SymbolicCodecConfig:
         seed=args.seed,
         device=args.device,
         overfit_all=args.overfit_all,
-        codebook_size=args.codebook_size,
+        num_codebooks=args.num_codebooks,
+        sub_codebook_size=args.sub_codebook_size,
         commitment_weight=args.commitment_weight,
         codebook_weight=args.codebook_weight,
         predictive_weight=args.predictive_weight,
@@ -237,7 +239,8 @@ def main() -> None:
 
     print(
         f"Training v3 symbolic codec on {device.type} with {len(train_loader.dataset)} train samples, "
-        f"{len(val_loader.dataset)} val samples, patches={config.num_patches}, codebook={config.codebook_size}, raw_capacity_bpb={config.raw_capacity_bpb:.2f}"
+        f"{len(val_loader.dataset)} val samples, patches={config.num_patches}, num_codebooks={config.num_codebooks}, "
+        f"sub_codebook={config.sub_codebook_size}, raw_capacity_bpb={config.raw_capacity_bpb:.2f}"
     )
 
     for epoch in range(1, config.epochs + 1):

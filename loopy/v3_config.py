@@ -25,7 +25,8 @@ class SymbolicCodecConfig:
     seed: int = 7
     device: str = "auto"
     overfit_all: bool = False
-    codebook_size: int = 256
+    num_codebooks: int = 2
+    sub_codebook_size: int = 256
     commitment_weight: float = 0.25
     codebook_weight: float = 1.0
     predictive_weight: float = 0.0
@@ -36,7 +37,7 @@ class SymbolicCodecConfig:
 
     @property
     def raw_capacity_bpb(self) -> float:
-        return math.ceil(math.log2(self.codebook_size)) / self.patch_size
+        return (self.num_codebooks * math.ceil(math.log2(self.sub_codebook_size))) / self.patch_size
 
     def to_dict(self) -> dict[str, object]:
         payload = asdict(self)
