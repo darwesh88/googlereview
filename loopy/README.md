@@ -181,3 +181,20 @@ The next sensible step is:
 - treat `6.0 bpb` as alive after longer training
 - treat `5.0 bpb` as below the current quality bar
 - move to downstream usefulness testing for `v3`
+
+## Current downstream picture
+
+At `patch_size=2`, 5-epoch grouped-prior comparison:
+
+- raw patches:
+  - `bpb = 2.9473`
+- `v3` grouped symbols at `7.0 bpb`:
+  - `bpb = 3.8102`
+- `v3` grouped symbols at `6.0 bpb`:
+  - `bpb = 3.4601`
+
+Interpretation:
+
+- `v3` is still not better than raw downstream
+- but `6.0 bpb` symbols are clearly better downstream targets than `7.0 bpb`
+- that is an important sign that `v3` is approaching a useful training representation

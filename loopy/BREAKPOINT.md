@@ -84,3 +84,9 @@ Next resume step:
 - stop lowering capacity for now
 - move to downstream usefulness testing for `v3`
 - use [train_patch_prior_v3.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v3.py) for grouped-symbol priors on `v3`
+- downstream comparison now says:
+  - raw patch prior: `2.9473 bpb`
+  - `v3` grouped at `7.0 bpb`: `3.8102 bpb`
+  - `v3` grouped at `6.0 bpb`: `3.4601 bpb`
+- next resume step:
+  - run grouped prior on the `5.0 bpb` checkpoint

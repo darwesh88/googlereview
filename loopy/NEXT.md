@@ -95,6 +95,23 @@ Main metric:
 
 - validation `bpb`
 
+## Latest downstream result
+
+Observed:
+
+- raw patch prior:
+  - `bpb = 2.9473`
+- `v3` grouped prior on `7.0 bpb`:
+  - `bpb = 3.8102`
+- `v3` grouped prior on `6.0 bpb`:
+  - `bpb = 3.4601`
+
+Interpretation:
+
+- lower-capacity `v3` symbols are becoming easier to predict downstream
+- `6.0 bpb` is better downstream than `7.0 bpb`
+- the next run should now be the grouped prior on the `5.0 bpb` checkpoint
+
 ## Do not do next
 
 - do not move `v3` to real text yet

@@ -2212,3 +2212,36 @@ Interpretation:
 - the `v3` downstream path runs end to end
 - the metric plumbing works
 - next step is the real Colab comparison on the new `7.0 bpb` and `6.0 bpb` checkpoints
+
+## v3 downstream grouped-prior comparison
+
+### Raw patch prior baseline (`patch_size=2`, 5 epochs)
+
+- loss: `2.0429`
+- accuracy: `0.4507`
+- bpb: `2.9473`
+
+### v3 grouped prior on `7.0 bpb` checkpoint (`patch_size=2`, 5 epochs)
+
+- loss: `2.6392`
+- accuracy: `0.3749`
+- bpb: `3.8102`
+
+### v3 grouped prior on `6.0 bpb` checkpoint (`patch_size=2`, 5 epochs)
+
+- loss: `2.3968`
+- accuracy: `0.3906`
+- bpb: `3.4601`
+
+Interpretation:
+
+- raw still wins clearly
+- but `v3` is much closer downstream than the old `v2` branch was
+- lower-capacity `v3` symbols are more predictable downstream than the `7.0 bpb` symbols
+- that is a real signal: the compression frontier and the downstream frontier are starting to align
+
+Decision:
+
+- keep `7.0 bpb` as the safer reconstruction baseline
+- keep `6.0 bpb` as the best downstream `v3` point so far
+- test the grouped prior on the `5.0 bpb` checkpoint next

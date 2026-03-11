@@ -40,3 +40,25 @@ Lower is better.
 
 - If `v3` grouped priors get close to raw, the `v3` branch is becoming useful for downstream LM training.
 - If `v3` grouped priors stay much worse than raw, then `v3` is still mainly a reconstruction codec, not yet a better training representation.
+
+## Current results
+
+Observed 5-epoch comparison at `patch_size=2`:
+
+- raw patch prior:
+  - `bpb = 2.9473`
+  - `accuracy = 0.4507`
+- `v3` grouped prior on `7.0 bpb` checkpoint:
+  - `bpb = 3.8102`
+  - `accuracy = 0.3749`
+- `v3` grouped prior on `6.0 bpb` checkpoint:
+  - `bpb = 3.4601`
+  - `accuracy = 0.3906`
+
+Interpretation:
+
+- `v3` is still worse than raw as a downstream target
+- but `v3` is now much closer than the old `v2` branch ever was
+- lower-capacity `v3` symbols are easier to predict downstream than the `7.0 bpb` symbols
+- that means the new tradeoff is no longer just reconstruction quality
+- the next useful test is the grouped prior on the `5.0 bpb` checkpoint
