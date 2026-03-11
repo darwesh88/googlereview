@@ -35,6 +35,10 @@ What `v3` has shown so far:
     - byte accuracy: `0.9988`
   - `num_codebooks=2`, `sub_codebook_size=256`, `raw_capacity_bpb=8.0`
     - byte accuracy: `0.9892`
+  - `num_codebooks=2`, `sub_codebook_size=128`, `raw_capacity_bpb=7.0`
+    - byte accuracy: `0.9889`
+  - `num_codebooks=2`, `sub_codebook_size=64`, `raw_capacity_bpb=6.0`
+    - byte accuracy: `0.9794`
 
 ## What this means
 
@@ -47,11 +51,11 @@ The direction is still right:
 The next task is no longer “make `patch_size=2` work at all.”
 That part now works.
 
-The next task is:
+The next task is now narrower:
 
 - keep `patch_size=2` fidelity
-- lower capacity from the current high-capacity setup
-- do this on Colab GPU, not local CPU
+- hold `7.0 bpb` as the new baseline
+- test whether `6.0 bpb` can recover with longer training
 
 ## Immediate next step
 
@@ -59,8 +63,8 @@ Best next hypothesis:
 
 - keep soft assignments
 - keep explicit usage pressure
-- start from the working `patch_size=2`, `num_codebooks=2`, `sub_codebook_size=256` setup
-- reduce capacity gradually and compare fidelity
+- keep `patch_size=2`, `num_codebooks=2`, `sub_codebook_size=128` as the active baseline
+- rerun the `6.0 bpb` point longer before trying `5.0 bpb`
 
 ## Decision rule
 
@@ -70,10 +74,11 @@ Move `v3` to the next stage only if:
 - capacity can start coming down without collapse
 - codebook perplexity stays healthy
 
-The next stage is now a Colab GPU sweep below the new `8.0 bpb` point.
+The next stage is now a longer Colab GPU run at `6.0 bpb`.
 
 ## Do not do next
 
 - do not move `v3` to real text yet
 - do not rent H100s yet
 - do not return to tiny `v2` rate sweeps unless there is a brand new hypothesis
+- do not lower `v3` below `6.0 bpb` until the longer `6.0 bpb` follow-up is done

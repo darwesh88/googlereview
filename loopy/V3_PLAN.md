@@ -105,7 +105,7 @@ Sample reconstruction:
 Interpretation:
 
 - both runs are successful
-- `8.0 bpb` is now the best efficiency-oriented `v3` point
+- `8.0 bpb` becomes the first strong efficiency-oriented `v3` point
 - `14.0 bpb` is the best pure-fidelity point
 - the next work should continue reducing capacity from the new `8.0 bpb` baseline
 
@@ -127,3 +127,65 @@ Sample reconstruction:
 If the soft-assignment product-codebook `v3` cannot keep `patch_size=2` fidelity while lowering capacity, stop and fix the architecture before any larger-scale run.
 
 If `v3` starts reconstructing toy text clearly and codebook perplexity stays healthy, move to the real Twitter corpus next.
+
+## Second capacity-reduction results
+
+### Run 4
+
+- `patch_size=2`
+- `num_codebooks=2`
+- `sub_codebook_size=128`
+- `raw_capacity_bpb=7.0`
+- byte accuracy: `0.9889`
+- codebook perplexity: `124.67`
+
+Sample reconstruction:
+
+- `Customer: delivery slot of 7g. Now 930 and still waiting.... Agent: Sorry Sam, did you receive your order? CeriM`
+
+Interpretation:
+
+- this is another strong success
+- capacity dropped from `8.0` to `7.0`
+- fidelity barely moved
+- `7.0 bpb` is now the best efficiency-oriented `v3` point
+
+### Run 5
+
+- `patch_size=2`
+- `num_codebooks=2`
+- `sub_codebook_size=64`
+- `raw_capacity_bpb=6.0`
+- byte accuracy: `0.9794`
+- codebook perplexity: `61.46`
+
+Sample reconstruction:
+
+- `Customer: delivery slot of 70. Now !30 and still waiting.... Agent: Sorry Samm did you receive your order? Cerix`
+
+Interpretation:
+
+- `6.0 bpb` is still viable
+- but it is the first clear degradation point in the `v3` sweep
+- this is now the cliff test, not the baseline
+
+## Updated v3 decision
+
+- best pure fidelity:
+  - `14.0 bpb`
+  - byte accuracy: `0.9988`
+- best efficiency-oriented balance:
+  - `7.0 bpb`
+  - byte accuracy: `0.9889`
+- safest low-capacity reference:
+  - `8.0 bpb`
+  - byte accuracy: `0.9892`
+- current cliff test:
+  - `6.0 bpb`
+  - byte accuracy: `0.9794`
+
+Next step:
+
+- stop lowering capacity for one step
+- train the `6.0 bpb` point longer
+- then decide whether `5.0 bpb` is worth trying

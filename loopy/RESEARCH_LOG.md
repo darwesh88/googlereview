@@ -2020,3 +2020,69 @@ Updated conclusion:
   - `sub_codebook_size=256`
   - `raw_capacity_bpb=8.0`
 - the next research step is to continue lowering capacity from there, not to return to the `16.0` or `12.0` setups
+
+## v3 second capacity-reduction sweep
+
+### Colab run: `patch_size=2`, `num_codebooks=2`, `sub_codebook_size=128`
+
+Observed result:
+
+- loss: `0.05851`
+- recon loss: `0.04487`
+- byte accuracy: `0.9889`
+- codebook perplexity: `124.67`
+- raw capacity bpb: `7.0`
+
+Sample reconstruction:
+
+- `Customer: delivery slot of 7g. Now 930 and still waiting.... Agent: Sorry Sam, did you receive your order? CeriM`
+
+Interpretation:
+
+- this is another strong success
+- capacity dropped from `8.0` to `7.0`
+- fidelity barely moved
+- `7.0 bpb` is now the best efficiency-oriented `v3` point
+
+### Colab run: `patch_size=2`, `num_codebooks=2`, `sub_codebook_size=64`
+
+Observed result:
+
+- loss: `0.10175`
+- recon loss: `0.08992`
+- byte accuracy: `0.9794`
+- codebook perplexity: `61.46`
+- raw capacity bpb: `6.0`
+
+Sample reconstruction:
+
+- `Customer: delivery slot of 70. Now !30 and still waiting.... Agent: Sorry Samm did you receive your order? Cerix`
+
+Interpretation:
+
+- `6.0 bpb` is still viable
+- but it is the first clear degradation point in the new `v3` sweep
+- the next step should be a longer `6.0 bpb` run before pushing lower
+
+## Updated v3 capacity conclusion
+
+Current ranking:
+
+- best pure fidelity:
+  - `14.0 bpb`
+  - byte accuracy: `0.9988`
+- best efficiency-oriented balance:
+  - `7.0 bpb`
+  - byte accuracy: `0.9889`
+- safest low-capacity reference:
+  - `8.0 bpb`
+  - byte accuracy: `0.9892`
+- cliff test:
+  - `6.0 bpb`
+  - byte accuracy: `0.9794`
+
+Decision:
+
+- stop lowering capacity for one step
+- train the `6.0 bpb` point longer
+- then decide whether `5.0 bpb` is worth trying

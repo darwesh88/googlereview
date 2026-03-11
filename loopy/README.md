@@ -146,3 +146,29 @@ Current understanding:
   - `num_codebooks=2`, `sub_codebook_size=256`, `raw_capacity_bpb=8.0`
   - byte accuracy: `0.9892`
   - still near-exact reconstruction on real text
+  - `num_codebooks=2`, `sub_codebook_size=128`, `raw_capacity_bpb=7.0`
+  - byte accuracy: `0.9889`
+  - this is now the best efficiency-oriented `v3` point
+  - `num_codebooks=2`, `sub_codebook_size=64`, `raw_capacity_bpb=6.0`
+  - byte accuracy: `0.9794`
+  - this is the first clear low-capacity degradation point
+
+## Current v3 baseline
+
+The current `v3` ranking is:
+
+- best pure fidelity:
+  - `14.0 bpb`
+  - byte accuracy: `0.9988`
+- best efficiency-oriented balance:
+  - `7.0 bpb`
+  - byte accuracy: `0.9889`
+- safest low-capacity reference:
+  - `8.0 bpb`
+  - byte accuracy: `0.9892`
+
+The next sensible step is:
+
+- keep `7.0 bpb` as the active baseline
+- run the `6.0 bpb` point longer
+- only then decide whether to push lower
