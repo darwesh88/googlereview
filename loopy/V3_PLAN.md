@@ -263,4 +263,5 @@ Updated next step:
 
 - keep `7.0 bpb` as the safer reconstruction baseline
 - keep `5.0 bpb` as the current best downstream point
-- run a longer grouped-prior comparison on the `6.0 bpb` checkpoint next
+- note that longer grouped-prior training helped `6.0 bpb`, but not enough
+- run a longer codec training on the `5.0 bpb` checkpoint next

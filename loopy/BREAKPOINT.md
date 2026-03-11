@@ -88,8 +88,9 @@ Next resume step:
   - raw patch prior: `2.9473 bpb`
   - `v3` grouped at `7.0 bpb`: `3.8102 bpb`
   - `v3` grouped at `6.0 bpb`: `3.4601 bpb`
+  - `v3` grouped at `6.0 bpb`, longer prior: `3.1844 bpb`
   - `v3` grouped at `5.0 bpb`: `3.0444 bpb`
   - `v3` grouped at `5.0 bpb`, `10` epochs: `2.9174 bpb`
   - `v3` grouped at `5.0 bpb`, `20` epochs: `2.8497 bpb`
 - next resume step:
-  - run a longer grouped prior on the `6.0 bpb` checkpoint
+  - run a longer codec training on the `5.0 bpb` checkpoint

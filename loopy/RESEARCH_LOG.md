@@ -2233,6 +2233,12 @@ Interpretation:
 - accuracy: `0.3906`
 - bpb: `3.4601`
 
+### v3 grouped prior on `6.0 bpb` checkpoint (`patch_size=2`, longer prior)
+
+- loss: `2.2058`
+- accuracy: `0.4379`
+- bpb: `3.1844`
+
 Interpretation:
 
 - raw still wins clearly
@@ -2309,4 +2315,5 @@ Updated decision:
 
 - keep `7.0 bpb` as the safer reconstruction baseline
 - keep `5.0 bpb` as the current best downstream `v3` point
-- run a longer grouped-prior comparison on the `6.0 bpb` checkpoint next
+- note that longer prior training helped `6.0 bpb`, but not enough to catch `5.0 bpb`
+- next run should be a longer codec training on the `5.0 bpb` checkpoint

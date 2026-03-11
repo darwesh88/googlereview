@@ -54,6 +54,9 @@ Observed 5-epoch comparison at `patch_size=2`:
 - `v3` grouped prior on `6.0 bpb` checkpoint:
   - `bpb = 3.4601`
   - `accuracy = 0.3906`
+  - longer prior:
+    - `bpb = 3.1844`
+    - `accuracy = 0.4379`
 - `v3` grouped prior on `5.0 bpb` checkpoint:
   - `bpb = 3.0444`
   - `accuracy = 0.4122`
@@ -71,4 +74,5 @@ Interpretation:
 - lower-capacity `v3` symbols are easier to predict downstream than the `7.0 bpb` symbols
 - `5.0 bpb` is now the strongest downstream point so far
 - that means the new tradeoff is no longer just reconstruction quality
-- the next useful test is a `10`-epoch grouped prior on the `6.0 bpb` checkpoint for a fair longer comparison
+- the longer `6.0 bpb` prior helped, but still did not catch `5.0 bpb`
+- the next useful test is a longer codec run at `5.0 bpb`
