@@ -68,8 +68,10 @@ Interpretation:
 
 ## Next resume step
 
-Stop the tiny local rate sweep. The next resume step is to move to either:
+Stop the tiny local rate sweep.
 
-- better packing / entropy coding work
-or
-- downstream LM testing on the learned binary stream
+Grouped packing has now been tested and rejected for the current bit layout.
+
+The next resume step is:
+
+- patch-level downstream LM testing on the learned binary stream

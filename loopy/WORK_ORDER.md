@@ -132,7 +132,7 @@ Reason:
 
 - do not do another tiny `rate_weight` sweep
 - do not move to H100 yet
-- do not frame the project as “beating gzip”
+- do not frame the project as "beating gzip"
 - do not return to Loopy v1
 - do not add Mercury-style generation yet
 
@@ -147,4 +147,5 @@ If better packing does not help much:
 - move immediately to downstream LM usefulness
 
 That is the clean next fork.
+
 
