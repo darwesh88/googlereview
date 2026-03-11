@@ -17,12 +17,13 @@ class SymbolicForward:
     recon_loss: torch.Tensor
     commitment_loss: torch.Tensor
     codebook_loss: torch.Tensor
+    usage_loss: torch.Tensor
     predictive_loss: torch.Tensor
     codebook_perplexity: torch.Tensor
 
     @property
     def total_loss(self) -> torch.Tensor:
-        return self.recon_loss + self.commitment_loss + self.codebook_loss + self.predictive_loss
+        return self.recon_loss + self.commitment_loss + self.codebook_loss + self.usage_loss + self.predictive_loss
 
 
 class V3PatchEncoder(nn.Module):
@@ -92,8 +93,10 @@ class VectorQuantizer(nn.Module):
         latent_dim: int,
         num_codebooks: int,
         codebook_size: int,
+        assignment_temp: float,
         commitment_weight: float,
         codebook_weight: float,
+        usage_weight: float,
     ) -> None:
         super().__init__()
         if latent_dim % num_codebooks != 0:
@@ -102,8 +105,10 @@ class VectorQuantizer(nn.Module):
         self.num_codebooks = num_codebooks
         self.sub_dim = latent_dim // num_codebooks
         self.codebook_size = codebook_size
+        self.assignment_temp = assignment_temp
         self.commitment_weight = commitment_weight
         self.codebook_weight = codebook_weight
+        self.usage_weight = usage_weight
         self.codebooks = nn.ModuleList([nn.Embedding(codebook_size, self.sub_dim) for _ in range(num_codebooks)])
         for codebook in self.codebooks:
             nn.init.uniform_(codebook.weight, -1.0 / codebook_size, 1.0 / codebook_size)
@@ -112,7 +117,7 @@ class VectorQuantizer(nn.Module):
         self,
         latents: torch.Tensor,
         patch_mask: torch.Tensor,
-    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         batch_size, num_patches, latent_dim = latents.shape
         split_latents = latents.view(batch_size, num_patches, self.num_codebooks, self.sub_dim)
 
@@ -120,6 +125,7 @@ class VectorQuantizer(nn.Module):
         all_quantized = []
         all_commit_losses = []
         all_codebook_losses = []
+        usage_losses = []
         perplexities = []
         active = patch_mask.unsqueeze(-1)
 
@@ -133,24 +139,30 @@ class VectorQuantizer(nn.Module):
                 - 2.0 * flat @ entries.t()
             )
             symbol_ids = distances.argmin(dim=1).reshape(batch_size, num_patches)
+            logits = -distances / self.assignment_temp
+            soft_weights = F.softmax(logits, dim=-1).reshape(batch_size, num_patches, self.codebook_size)
+            soft_quantized = soft_weights @ entries
             quantized = codebook(symbol_ids)
 
             all_symbol_ids.append(symbol_ids)
-            all_quantized.append(quantized)
-            all_commit_losses.append(F.mse_loss(sub_latents, quantized.detach()))
-            all_codebook_losses.append(F.mse_loss(quantized, sub_latents.detach()))
+            all_quantized.append((quantized, soft_quantized))
+            all_commit_losses.append(F.mse_loss(sub_latents, soft_quantized.detach()))
+            all_codebook_losses.append(F.mse_loss(soft_quantized, sub_latents.detach()))
 
-            one_hot = F.one_hot(symbol_ids, num_classes=self.codebook_size).to(latents.dtype)
-            avg_probs = (one_hot * active).sum(dim=(0, 1)) / active.sum().clamp_min(1.0)
+            avg_probs = (soft_weights * active).sum(dim=(0, 1)) / active.sum().clamp_min(1.0)
+            usage_losses.append((avg_probs * (avg_probs.clamp_min(1e-8).log() + torch.log(avg_probs.new_tensor(self.codebook_size)))).sum())
             perplexities.append(torch.exp(-(avg_probs * (avg_probs + 1e-8).log()).sum()))
 
         symbol_ids = torch.stack(all_symbol_ids, dim=-1)
-        quantized = torch.cat(all_quantized, dim=-1)
-        st_quantized = latents + (quantized - latents).detach()
+        hard_quantized = torch.cat([pair[0] for pair in all_quantized], dim=-1)
+        soft_quantized = torch.cat([pair[1] for pair in all_quantized], dim=-1)
+        quantized = hard_quantized
+        st_quantized = hard_quantized + (soft_quantized - soft_quantized.detach())
         commitment_loss = torch.stack(all_commit_losses).mean() * self.commitment_weight
         codebook_loss = torch.stack(all_codebook_losses).mean() * self.codebook_weight
+        usage_loss = torch.stack(usage_losses).mean() * self.usage_weight
         perplexity = torch.stack(perplexities).mean()
-        return symbol_ids, quantized, st_quantized, commitment_loss, codebook_loss, perplexity
+        return symbol_ids, quantized, st_quantized, commitment_loss, codebook_loss, usage_loss, perplexity
 
 
 class SymbolicCodecV3(nn.Module):
@@ -162,8 +174,10 @@ class SymbolicCodecV3(nn.Module):
             config.latent_dim,
             config.num_codebooks,
             config.sub_codebook_size,
+            config.assignment_temp,
             config.commitment_weight,
             config.codebook_weight,
+            config.usage_weight,
         )
         self.decoder = V3PatchDecoder(config)
         self.next_symbol_predictor = nn.ModuleList(
@@ -180,7 +194,7 @@ class SymbolicCodecV3(nn.Module):
 
     def forward(self, patch_ids: torch.Tensor, patch_mask: torch.Tensor) -> SymbolicForward:
         latents = self.encoder(patch_ids)
-        symbol_ids, quantized, st_quantized, commitment_loss, codebook_loss, perplexity = self.quantizer(latents, patch_mask)
+        symbol_ids, quantized, st_quantized, commitment_loss, codebook_loss, usage_loss, perplexity = self.quantizer(latents, patch_mask)
         logits = self.decoder(st_quantized)
 
         recon_loss = F.cross_entropy(
@@ -212,6 +226,7 @@ class SymbolicCodecV3(nn.Module):
             recon_loss=recon_loss,
             commitment_loss=commitment_loss,
             codebook_loss=codebook_loss,
+            usage_loss=usage_loss,
             predictive_loss=predictive_loss,
             codebook_perplexity=perplexity,
         )

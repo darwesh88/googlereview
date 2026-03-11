@@ -27,8 +27,10 @@ class SymbolicCodecConfig:
     overfit_all: bool = False
     num_codebooks: int = 2
     sub_codebook_size: int = 256
+    assignment_temp: float = 1.0
     commitment_weight: float = 0.25
     codebook_weight: float = 1.0
+    usage_weight: float = 0.01
     predictive_weight: float = 0.0
 
     @property

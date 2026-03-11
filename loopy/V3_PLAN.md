@@ -51,13 +51,22 @@ Single-symbol `v3` did not work well enough:
 The active branch is now a **product-codebook** `v3`:
 
 - multiple sub-symbols per patch instead of one codebook ID
-- first toy smoke result:
+- first product-codebook toy smoke result:
   - byte accuracy: `0.7589`
   - codebook perplexity: `6.90`
   - output is partially readable, but still not good enough
+- soft assignments plus a usage loss then improved the same toy setup sharply:
+  - `patch_size=1`
+  - byte accuracy: `0.9265`
+  - codebook perplexity: `250.97`
+  - output became mostly readable
+- but the first `patch_size=2` run is still weak:
+  - byte accuracy: `0.5652`
+  - codebook perplexity: `169.11`
+  - output is not yet good enough
 
 ## Decision rule
 
-If the product-codebook `v3` cannot beat the partial `patch_size=1` toy result cleanly, stop and fix the architecture before any real-corpus run.
+If the soft-assignment product-codebook `v3` cannot make `patch_size=2` readable, stop and fix the architecture before any real-corpus run.
 
 If `v3` starts reconstructing toy text clearly and codebook perplexity stays healthy, move to the real Twitter corpus next.

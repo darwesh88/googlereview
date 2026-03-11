@@ -1767,3 +1767,76 @@ Current conclusion:
 - `v3` product-codebook is the active architecture branch
 - the next task is a clean toy sanity test on the committed product-codebook path
 - if toy reconstruction still stalls, fix `v3` again before any scaling
+
+## v3 soft-assignment fix
+
+The first explicit codebook-usage penalty did not help, because it was computed from hard `argmin` symbol IDs and therefore had almost no useful gradient path.
+
+The next fix replaced hard-only training with **soft codebook assignments during training**:
+
+- hard symbols are still used for the discrete latent stream
+- but gradients now flow through soft codebook weights
+- usage regularization is now computed from soft assignment probabilities
+
+This changed the behavior of `v3` sharply.
+
+## v3 soft-assignment patch-1 result
+
+Observed result:
+
+- run: `v3_product_soft_usage`
+- `patch_size=1`
+- `num_codebooks=2`
+- `sub_codebook_size=256`
+- `assignment_temp=0.5`
+- `usage_weight=0.05`
+- loss: `0.4708`
+- recon loss: `0.4565`
+- byte accuracy: `0.9265`
+- codebook perplexity: `250.97`
+- raw capacity bpb: `16.0`
+
+Sample reconstruction:
+
+- source: `A small robot woke up before sunrise and looked at the empty street.`
+- reconstruction: `b ssall roiot poke up iefore sunrise and looked at the espty street.`
+
+Interpretation:
+
+- this is the first real `v3` breakthrough
+- codebook usage is now healthy instead of collapsed
+- reconstruction is mostly readable
+- `v3` is finally behaving like a real patch-symbol model on the toy corpus
+
+## v3 soft-assignment patch-2 result
+
+Observed result:
+
+- run: `v3_product_soft_usage_p2`
+- `patch_size=2`
+- `num_codebooks=2`
+- `sub_codebook_size=256`
+- `assignment_temp=0.5`
+- `usage_weight=0.05`
+- loss: `1.9448`
+- recon loss: `1.7498`
+- byte accuracy: `0.5652`
+- codebook perplexity: `169.11`
+- raw capacity bpb: `8.0`
+
+Sample reconstruction:
+
+- source: `A small robot woke up before sunrise and looked at the empty street.`
+- reconstruction: `d t aht heoot oohe od seoohe sanhrse and aoohed at the o  t  stte t `
+
+Interpretation:
+
+- the soft-assignment fix is enough to make `patch_size=1` real
+- it is not yet enough to make `patch_size=2` usable
+- `v3` is alive, but still not ready to scale
+
+Current conclusion:
+
+- the new `v3` reference point is the soft-assignment `patch_size=1` run
+- the next bottleneck is now very specific: making `patch_size=2` readable
+- do not move `v3` to real text until that happens

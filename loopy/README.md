@@ -137,5 +137,7 @@ Current understanding:
 
 - single-symbol `v3` was too weak
 - product-codebook `v3` is the correct next attempt
-- the first product-codebook toy smoke test is partially readable but still not strong enough
-- the next task is a clean toy sanity run on the committed product-codebook path, before any real-corpus `v3` run
+- soft codebook assignments were the first real `v3` breakthrough
+- `patch_size=1` now reaches about `0.926` byte accuracy on the toy corpus with healthy codebook usage
+- `patch_size=2` is still too weak, so `v3` is not ready for real text yet
+- the next task is to make `v3` scale cleanly from `patch_size=1` to `patch_size=2`

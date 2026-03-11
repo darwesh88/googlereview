@@ -64,8 +64,10 @@ def parse_args(argv: list[str] | None = None) -> SymbolicCodecConfig:
     parser.add_argument("--overfit-all", action="store_true")
     parser.add_argument("--num-codebooks", type=int, default=2)
     parser.add_argument("--sub-codebook-size", type=int, default=256)
+    parser.add_argument("--assignment-temp", type=float, default=1.0)
     parser.add_argument("--commitment-weight", type=float, default=0.25)
     parser.add_argument("--codebook-weight", type=float, default=1.0)
+    parser.add_argument("--usage-weight", type=float, default=0.01)
     parser.add_argument("--predictive-weight", type=float, default=0.0)
     args = parser.parse_args(argv)
     return SymbolicCodecConfig(
@@ -90,8 +92,10 @@ def parse_args(argv: list[str] | None = None) -> SymbolicCodecConfig:
         overfit_all=args.overfit_all,
         num_codebooks=args.num_codebooks,
         sub_codebook_size=args.sub_codebook_size,
+        assignment_temp=args.assignment_temp,
         commitment_weight=args.commitment_weight,
         codebook_weight=args.codebook_weight,
+        usage_weight=args.usage_weight,
         predictive_weight=args.predictive_weight,
     )
 
@@ -150,6 +154,7 @@ def run_epoch(
         "recon_loss": 0.0,
         "commitment_loss": 0.0,
         "codebook_loss": 0.0,
+        "usage_loss": 0.0,
         "predictive_loss": 0.0,
         "byte_accuracy": 0.0,
         "codebook_perplexity": 0.0,
@@ -175,6 +180,7 @@ def run_epoch(
             totals["recon_loss"] += forward.recon_loss.item()
             totals["commitment_loss"] += forward.commitment_loss.item()
             totals["codebook_loss"] += forward.codebook_loss.item()
+            totals["usage_loss"] += forward.usage_loss.item()
             totals["predictive_loss"] += forward.predictive_loss.item()
             totals["byte_accuracy"] += byte_accuracy(forward.logits, patch_ids)
             totals["codebook_perplexity"] += forward.codebook_perplexity.item()
@@ -256,6 +262,7 @@ def main() -> None:
             f"val_loss={val_metrics['loss']:.4f} "
             f"val_recon={val_metrics['recon_loss']:.4f} "
             f"val_codebook={val_metrics['codebook_loss']:.4f} "
+            f"val_usage={val_metrics['usage_loss']:.4f} "
             f"val_commit={val_metrics['commitment_loss']:.4f} "
             f"val_pred={val_metrics['predictive_loss']:.4f} "
             f"byte_acc={val_metrics['byte_accuracy']:.3f} "
@@ -270,6 +277,7 @@ def main() -> None:
                 "recon_loss": val_metrics["recon_loss"],
                 "commitment_loss": val_metrics["commitment_loss"],
                 "codebook_loss": val_metrics["codebook_loss"],
+                "usage_loss": val_metrics["usage_loss"],
                 "predictive_loss": val_metrics["predictive_loss"],
                 "byte_accuracy": val_metrics["byte_accuracy"],
                 "codebook_perplexity": val_metrics["codebook_perplexity"],

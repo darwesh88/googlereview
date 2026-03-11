@@ -41,6 +41,14 @@ Product-codebook `v3` is now in the workspace:
   - byte accuracy: `0.7589`
   - codebook perplexity: `6.90`
   - output is partially readable, but still weak
+- soft assignments plus usage regularization changed the picture:
+  - `patch_size=1` now reaches `0.9265` byte accuracy
+  - codebook perplexity is about `250.97`
+  - output is mostly readable
+- but the first `patch_size=2` run is still weak:
+  - byte accuracy: `0.5652`
+  - codebook perplexity: `169.11`
+  - output still breaks badly
 
 ## Next resume step
 
@@ -48,7 +56,6 @@ Do not move `v3` to real text yet.
 
 Next resume step:
 
-- commit the product-codebook `v3` branch
-- use that committed version as the new reference point
-- run one clean toy sanity test on it
-- if toy reconstruction still stalls, fix `v3` again before any scaling
+- use the soft-assignment `patch_size=1` run as the new `v3` reference point
+- focus all next work on making `patch_size=2` readable
+- if `patch_size=2` still stalls, fix `v3` again before any scaling
