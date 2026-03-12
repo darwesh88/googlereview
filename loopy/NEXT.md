@@ -95,10 +95,10 @@ Immediate next run:
 
 - first `v4` real comparison is done
 - first `v4.2` toy comparison is encouraging
-- next run should be the first real `v4.2` comparison:
-  - current contextual `v4`
-  - plus a small residual-detail side channel
+- first real `v4.2` comparison is now a win
+- next run should be a small `v4.2` tuning pass:
   - same `5.0 bpb` semantic capacity
+  - tune only the residual branch controls
 
 Main metrics:
 
@@ -131,7 +131,8 @@ Interpretation:
 - the next step should now be an architecture change, not more training on the same design
 - `v4` is now that architecture branch
 - first `v4` real result was effectively a tie with `v3`
-- the next architecture branch should be `v4.2`: context plus residual detail
+- `v4.2` is now the winning branch at `5.0 bpb`
+- the next step is tuning, not redesign
 
 ## Do not do next
 

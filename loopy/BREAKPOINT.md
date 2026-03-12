@@ -10,6 +10,7 @@ Loopy has pivoted again.
 - v4 contextual codebook work is now the active implementation branch
 - first `v4` real-text result is now in, and it was effectively a tie with `v3`
 - first `v4.2` toy result is now in, and it improved over plain `v4`
+- first `v4.2` real-text result is now in, and it beat both `v3` and `v4`
 
 ## What v2 settled
 
@@ -88,7 +89,6 @@ Next resume step:
   - cross-patch context after quantization
 - `v4` has now been validated on toy and compared on real text
 - next resume step:
-  - keep the contextual `v4` path
-  - add a small residual-detail side channel
-  - compare that against current `v3` and `v4`
-  - first real target is the `5.0 bpb` point
+  - keep the contextual `v4.2` path
+  - run a small tuning pass on residual controls
+  - compare those tuned runs against the current `v4.2` baseline

@@ -2437,3 +2437,36 @@ Interpretation:
 - the residual-detail branch is not just compiling
 - it already improves the same `v4` toy setting materially
 - that is enough to justify the first real-corpus `v4.2` comparison next
+
+## v4.2 first real-text comparison at 5.0 bpb
+
+Observed result on the real Twitter support corpus:
+
+- loss: `0.16633`
+- recon loss: `0.15849`
+- byte accuracy: `0.95861`
+- residual usage loss: `0.00093`
+- codebook perplexity: `31.37`
+- best epoch: `19`
+
+Sample reconstruction:
+
+- `Customer: delivery sfot of 7y. Now 230 and still waiting.... Agent: Sorry Ham, did you receive your orders Cerid`
+
+Comparison:
+
+- `v3` at `5.0 bpb`: `0.94636`
+- `v4` at `5.0 bpb`: `0.94636`
+- `v4.2` at `5.0 bpb`: `0.95861`
+
+Interpretation:
+
+- this is the first clear architecture win over the old `5.0 bpb` point
+- context plus residual detail improves reconstruction materially
+- the residual path is staying small instead of taking over
+
+Updated decision:
+
+- keep the `v4.2` branch
+- do a small tuning pass on the residual controls next
+- do not redesign again yet

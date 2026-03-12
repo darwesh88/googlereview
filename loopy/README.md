@@ -216,3 +216,6 @@ Interpretation:
 - first `v4` real-text result at `5.0 bpb` was effectively a tie with `v3`
 - so the next likely gain is not context alone, but context plus a small residual-detail side channel
 - the first `v4.2` toy check is already better than plain `v4` on the same `5.0 bpb` setup
+- first `v4.2` real-text check is now a real win:
+  - `v3`/`v4` at `5.0 bpb`: `0.94636` byte accuracy
+  - `v4.2` at `5.0 bpb`: `0.95861` byte accuracy
