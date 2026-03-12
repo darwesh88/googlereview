@@ -2470,3 +2470,57 @@ Updated decision:
 - keep the `v4.2` branch
 - do a small tuning pass on the residual controls next
 - do not redesign again yet
+
+## v4.2 first residual-control tuning pass
+
+Baseline before tuning:
+
+- byte accuracy: `0.95861`
+- residual usage loss: `0.00093`
+
+### Run A - open the residual gate more
+
+Settings:
+
+- `residual_gate_bias = -1.5`
+- `residual_usage_weight = 0.01`
+
+Observed result:
+
+- byte accuracy: `0.95997`
+- residual usage loss: `0.00146`
+
+Sample reconstruction:
+
+- `Customer: delivery slot of 5mp Now 530 and still waiting.... Agent: Sorry Som, did you receive your order? Ceriv`
+
+### Run B - reduce residual pressure
+
+Settings:
+
+- `residual_gate_bias = -2.0`
+- `residual_usage_weight = 0.005`
+
+Observed result:
+
+- byte accuracy: `0.96058`
+- residual usage loss: `0.00156`
+
+Sample reconstruction:
+
+- `Customer: delivery slot of 1m. Now R30 and still waiting.... Agent: Sorry San, did you receive your ordes? Ceris`
+
+Interpretation:
+
+- both tuning changes improved over the original `v4.2` baseline
+- reducing residual pressure helped slightly more than only opening the gate
+- the gains are real but still small
+- exact fragile details are still the main remaining failure mode
+
+Updated decision:
+
+- keep `v4.2` as the active winning branch
+- use `residual_usage_weight = 0.005` as the new best point so far
+- next sensible run should combine both helpful changes:
+  - `residual_usage_weight = 0.005`
+  - `residual_gate_bias = -1.5`

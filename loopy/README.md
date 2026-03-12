@@ -219,3 +219,9 @@ Interpretation:
 - first `v4.2` real-text check is now a real win:
   - `v3`/`v4` at `5.0 bpb`: `0.94636` byte accuracy
   - `v4.2` at `5.0 bpb`: `0.95861` byte accuracy
+- first `v4.2` tuning pass improved that again:
+  - gate-bias tuning: `0.95997`
+  - residual-pressure tuning: `0.96058`
+- current best `v4.2` point so far:
+  - `residual_usage_weight = 0.005`
+  - byte accuracy: `0.96058`

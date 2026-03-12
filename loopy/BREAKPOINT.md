@@ -11,6 +11,7 @@ Loopy has pivoted again.
 - first `v4` real-text result is now in, and it was effectively a tie with `v3`
 - first `v4.2` toy result is now in, and it improved over plain `v4`
 - first `v4.2` real-text result is now in, and it beat both `v3` and `v4`
+- first `v4.2` tuning pass is now in, and both variants improved again
 
 ## What v2 settled
 
@@ -90,5 +91,7 @@ Next resume step:
 - `v4` has now been validated on toy and compared on real text
 - next resume step:
   - keep the contextual `v4.2` path
-  - run a small tuning pass on residual controls
-  - compare those tuned runs against the current `v4.2` baseline
+  - keep `residual_usage_weight = 0.005` as the best point so far
+  - run the combined tuning test next:
+    - `residual_usage_weight = 0.005`
+    - `residual_gate_bias = -1.5`

@@ -99,6 +99,10 @@ Immediate next run:
 - next run should be a small `v4.2` tuning pass:
   - same `5.0 bpb` semantic capacity
   - tune only the residual branch controls
+- first small tuning pass is now done
+- next run should combine the two helpful changes:
+  - `residual_usage_weight = 0.005`
+  - `residual_gate_bias = -1.5`
 
 Main metrics:
 
@@ -133,6 +137,7 @@ Interpretation:
 - first `v4` real result was effectively a tie with `v3`
 - `v4.2` is now the winning branch at `5.0 bpb`
 - the next step is tuning, not redesign
+- the current best tuned `v4.2` point is `0.96058` byte accuracy
 
 ## Do not do next
 
