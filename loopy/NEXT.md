@@ -103,6 +103,11 @@ Immediate next run:
 - next run should combine the two helpful changes:
   - `residual_usage_weight = 0.005`
   - `residual_gate_bias = -1.5`
+- combined run is now done and was worse
+- next run should return to single-variable tuning from the best point:
+  - keep `residual_usage_weight = 0.005`
+  - keep `residual_gate_bias = -2.0`
+  - test one smaller change at a time
 
 Main metrics:
 
@@ -138,6 +143,7 @@ Interpretation:
 - `v4.2` is now the winning branch at `5.0 bpb`
 - the next step is tuning, not redesign
 - the current best tuned `v4.2` point is `0.96058` byte accuracy
+- the combined tuning test regressed, so interaction effects matter
 
 ## Do not do next
 

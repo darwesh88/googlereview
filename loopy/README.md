@@ -225,3 +225,6 @@ Interpretation:
 - current best `v4.2` point so far:
   - `residual_usage_weight = 0.005`
   - byte accuracy: `0.96058`
+- combined tuning (`residual_usage_weight = 0.005`, `residual_gate_bias = -1.5`) was worse:
+  - byte accuracy: `0.95770`
+  - so the current best point remains the simpler `0.005 / -2.0` setting

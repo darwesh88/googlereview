@@ -2524,3 +2524,32 @@ Updated decision:
 - next sensible run should combine both helpful changes:
   - `residual_usage_weight = 0.005`
   - `residual_gate_bias = -1.5`
+
+## v4.2 combined residual tuning check
+
+Combined settings:
+
+- `residual_usage_weight = 0.005`
+- `residual_gate_bias = -1.5`
+
+Observed result:
+
+- byte accuracy: `0.95770`
+- residual usage loss: `0.00192`
+
+Sample reconstruction:
+
+- `Customer: delivery slot of 7 . Now 220 and still waiting.... Agent: Sorry Mad, did you receive your order? Ceris`
+
+Interpretation:
+
+- combining both changes did not help
+- it was worse than the current best tuned point (`0.96058`)
+- the residual path likely became too active when both levers were relaxed together
+
+Updated decision:
+
+- keep `residual_usage_weight = 0.005`
+- keep `residual_gate_bias = -2.0`
+- treat that as the best `v4.2` point so far
+- if tuning continues, change only one residual control at a time
