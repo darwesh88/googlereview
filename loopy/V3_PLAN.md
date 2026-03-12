@@ -266,3 +266,16 @@ Updated next step:
 - note that longer grouped-prior training helped `6.0 bpb`, but not enough
 - run a longer codec training on the `5.0 bpb` checkpoint next
 - then rerun the grouped prior and check whether the downstream win survives
+
+## Plateau result
+
+The longer `5.0 bpb` codec run did not improve materially.
+
+Interpretation:
+
+- `5.0 bpb` is not undertrained
+- the current `v3` design is hitting a structural tradeoff:
+  - good downstream symbols
+  - weak exact-detail reconstruction
+
+So the next branch should be a design change, not more of the same training.

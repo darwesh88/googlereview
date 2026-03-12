@@ -117,7 +117,8 @@ Interpretation:
 - `6.0 bpb` is better downstream than `7.0 bpb`
 - `5.0 bpb` has now beaten the raw downstream baseline
 - longer prior training improved `6.0 bpb`, but not enough to catch `5.0 bpb`
-- the next run should now be a longer codec run at `5.0 bpb` to see if the reconstruction side can catch up
+- a longer codec run at `5.0 bpb` did not materially improve reconstruction
+- the next step should now be an architecture change, not more training on the same design
 
 ## Do not do next
 

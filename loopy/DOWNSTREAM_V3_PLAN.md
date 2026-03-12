@@ -75,4 +75,5 @@ Interpretation:
 - `5.0 bpb` is now the strongest downstream point so far
 - that means the new tradeoff is no longer just reconstruction quality
 - the longer `6.0 bpb` prior helped, but still did not catch `5.0 bpb`
-- the next useful test is a longer codec run at `5.0 bpb` to see if reconstruction can improve without losing the downstream edge
+- a longer codec run at `5.0 bpb` did not improve reconstruction materially
+- the next useful step is an architecture change that separates semantic symbols from exact-detail recovery

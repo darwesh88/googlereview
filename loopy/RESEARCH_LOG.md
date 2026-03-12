@@ -2317,3 +2317,30 @@ Updated decision:
 - keep `5.0 bpb` as the current best downstream `v3` point
 - note that longer prior training helped `6.0 bpb`, but not enough to catch `5.0 bpb`
 - next run should be a longer codec training on the `5.0 bpb` checkpoint so we can test whether reconstruction can improve without giving up the downstream win
+
+## v3 longer codec run on the 5.0 bpb checkpoint
+
+The `5.0 bpb` codec was rerun with a longer training budget.
+
+Observed result:
+
+- loss: `0.20395`
+- recon loss: `0.19511`
+- byte accuracy: `0.9464`
+- codebook perplexity: `31.28`
+- best epoch: `17`
+
+Sample reconstruction stayed effectively unchanged:
+
+- `Customer: delivery slot of 5a. Now 4t? and still wamting.... Agent: S rry Sho, d d you receive your orderi Ceris`
+
+Interpretation:
+
+- longer training did not materially improve the `5.0 bpb` codec point
+- this means the current weakness is structural, not just undertraining
+
+Updated decision:
+
+- keep `7.0 bpb` as the safer reconstruction baseline
+- keep `5.0 bpb` as the best downstream point
+- move to an architecture change next

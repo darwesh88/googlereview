@@ -174,13 +174,15 @@ The current `v3` ranking is:
 - too-far compression point:
   - `5.0 bpb` after `20` epochs
   - byte accuracy: `0.9464`
+  - longer codec training did not improve this point materially
 
 The next sensible step is:
 
 - keep `7.0 bpb` as the stable baseline
 - treat `6.0 bpb` as alive after longer training
 - treat `5.0 bpb` as below the current quality bar
-- move to downstream usefulness testing for `v3`
+- note that `5.0 bpb` already won downstream
+- move to an architecture change that can keep the `5.0 bpb` downstream win while improving reconstruction
 
 ## Current downstream picture
 
@@ -204,3 +206,4 @@ Interpretation:
 - but the lower-capacity `v3` symbols are clearly becoming better downstream targets
 - that is the strongest sign yet that `v3` may become a useful training representation
 - longer prior training helped `6.0 bpb`, but `5.0 bpb` is still the downstream winner
+- longer codec training did not improve `5.0 bpb` reconstruction, so the next gain likely needs an architecture change
