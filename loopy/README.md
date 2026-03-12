@@ -213,3 +213,5 @@ Interpretation:
   - soft codebook quantizer
   - cross-patch transformer after quantization
   - local patch decoder
+- first `v4` real-text result at `5.0 bpb` was effectively a tie with `v3`
+- so the next likely gain is not context alone, but context plus a small residual-detail side channel

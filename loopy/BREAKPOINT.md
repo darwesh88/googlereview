@@ -8,6 +8,7 @@ Loopy has pivoted again.
 - v2 grouped independent-bit codec is archived as the current reference branch
 - v3 codebook / patch-symbol work is the current reference branch
 - v4 contextual codebook work is now the active implementation branch
+- first `v4` real-text result is now in, and it was effectively a tie with `v3`
 
 ## What v2 settled
 
@@ -84,5 +85,8 @@ Next resume step:
 - use the new `v4` branch to test the missing hypothesis:
   - cross-patch context before quantization
   - cross-patch context after quantization
-- first validate `v4` on toy overfit
-- then compare `v4` against the current `v3` `5.0 bpb` point on real Twitter text
+- `v4` has now been validated on toy and compared on real text
+- next resume step:
+  - keep the contextual `v4` path
+  - add a small residual-detail side channel
+  - compare that against current `v3` and `v4`

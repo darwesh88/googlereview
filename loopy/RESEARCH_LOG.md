@@ -2387,3 +2387,34 @@ Initial validation:
 - short `v4` toy smoke compiles and trains
 - longer `10`-epoch toy smoke reaches about `0.5303` byte accuracy at `5.0 bpb`
 - this is not yet a win, but it is enough to treat `v4` as alive and ready for the next controlled comparison
+
+## v4 real-text comparison at 5.0 bpb
+
+Observed result on the real Twitter support corpus:
+
+- loss: `0.20099`
+- recon loss: `0.19479`
+- byte accuracy: `0.94636`
+- codebook perplexity: `31.06`
+- best epoch: `14`
+
+Sample reconstruction:
+
+- `Customer: delivery slot of 2me Now 200 and still waiting.... Agent: Sorry bae, did you receive your ordee? Ceria`
+
+Comparison with the current `v3` `5.0 bpb` point:
+
+- `v3` byte accuracy: `0.94636`
+- `v4` byte accuracy: `0.94636`
+
+Interpretation:
+
+- cross-patch context alone did not materially improve the `5.0 bpb` reconstruction point
+- this means the bottleneck is not just missing neighborhood context
+- the likely remaining missing piece is a dedicated path for fragile exact surface detail
+
+Updated decision:
+
+- keep cross-patch context as part of the design direction
+- stop expecting context alone to solve the `5.0 bpb` tradeoff
+- the next architecture branch should add a small residual-detail side channel on top of the contextual `v4` path

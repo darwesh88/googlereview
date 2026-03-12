@@ -83,8 +83,44 @@ At `patch_size=2` and the current best downstream setting:
    - reconstruction quality
    - downstream grouped-prior `bpb`
 
-## Decision rule
+## First v4 result
+
+The first real-text `v4` comparison at `5.0 bpb` was effectively a tie with `v3`:
+
+- `v3` byte accuracy: `0.94636`
+- `v4` byte accuracy: `0.94636`
+
+So:
+
+- cross-patch context is not a bad idea
+- but it is not enough by itself
+
+## Updated decision rule
 
 - if reconstruction improves materially while downstream `bpb` stays near the current `5.0 bpb` win, this is the right `v4`
 - if downstream predictability collapses, then the added context is interfering too much
-- if reconstruction barely changes, then the next branch is a small residual-detail side channel
+- if reconstruction barely changes, the next branch is a small residual-detail side channel
+
+Current outcome:
+
+- reconstruction barely changed
+- so the next branch should be **context + residual detail**
+
+## Best next architecture idea now
+
+Keep the current contextual `v4` path, but add a tiny residual-detail channel:
+
+- main channel:
+  - semantic symbols
+  - low-capacity and downstream-friendly
+- residual channel:
+  - a small correction path only for exact local detail
+  - names
+  - digits
+  - punctuation
+  - rare byte-level fixes
+
+Simple mental model:
+
+- context helps the model guess what should be there
+- residual detail tells it what exact tiny pieces still need correction

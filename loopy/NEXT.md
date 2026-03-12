@@ -73,6 +73,7 @@ Best next hypothesis:
 - keep the existing codebook family
 - add cross-patch transformer context before quantization
 - add cross-patch transformer context after quantization
+- then add a small residual-detail side channel for exact local fixes
 
 ## Decision rule
 
@@ -92,8 +93,11 @@ Move `v4` forward only if:
 
 Immediate next run:
 
-- overfit `v4` on toy text at the same `5.0 bpb` setting as the current `v3` failure point
-- then compare `v4` vs `v3` on the real Twitter corpus at `5.0 bpb`
+- first `v4` real comparison is now done
+- next run should be `v4.2`:
+  - current contextual `v4`
+  - plus a small residual-detail side channel
+  - same `5.0 bpb` semantic capacity
 
 Main metrics:
 
@@ -125,6 +129,8 @@ Interpretation:
 - a longer codec run at `5.0 bpb` did not materially improve reconstruction
 - the next step should now be an architecture change, not more training on the same design
 - `v4` is now that architecture branch
+- first `v4` real result was effectively a tie with `v3`
+- the next architecture branch should be `v4.2`: context plus residual detail
 
 ## Do not do next
 
