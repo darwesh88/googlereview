@@ -2344,3 +2344,24 @@ Updated decision:
 - keep `7.0 bpb` as the safer reconstruction baseline
 - keep `5.0 bpb` as the best downstream point
 - move to an architecture change next
+
+## v4 bottleneck review against current code
+
+Checked the current `v3` code path directly.
+
+Confirmed:
+
+- patch encoder runs locally inside each patch
+- quantizer acts on each patch latent
+- patch decoder reconstructs each patch locally
+
+Interpretation:
+
+- the current `5.0 bpb` failure mode is likely a context problem
+- the model is being forced to reconstruct each patch too independently
+- lower-capacity symbols are already becoming useful downstream, so the likely missing piece is cross-patch context rather than more training
+
+Updated decision:
+
+- make cross-patch transformer context the primary `v4` branch
+- treat a residual detail channel as a possible follow-up, not the first change

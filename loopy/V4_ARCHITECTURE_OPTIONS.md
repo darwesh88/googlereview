@@ -5,70 +5,86 @@ The current `v3` result suggests a split:
 - `7.0 bpb` is better for reconstruction
 - `5.0 bpb` is better for downstream prediction
 
-That means one latent stream is doing two jobs at once:
+That means one latent stream is trying to do two jobs:
 
 1. carry **semantic structure**
 2. carry **fragile exact detail** like names, digits, punctuation, spelling
 
-That is likely the wrong architecture.
+## Current architectural bottleneck
+
+In `v3`, each patch is encoded locally and decoded locally.
+
+- the patch encoder sees bytes **inside one patch**
+- the quantizer acts on **one patch latent**
+- the patch decoder reconstructs **one patch at a time**
+
+So at lower capacity, each patch has to describe itself mostly alone.
+
+That is likely the real reason `5.0 bpb` helps downstream but hurts exact reconstruction:
+
+- low-capacity symbols are becoming more predictable
+- but the decoder cannot use nearby patches to recover missing detail
 
 ## Best next architecture idea
 
-Use **two channels** instead of one.
+Add **cross-patch context** around the quantizer.
 
-### Channel A: semantic symbols
+### Proposed v4
 
-- low-capacity patch symbols
-- optimized for predictability
-- this is the part we want the next model to learn on
+```text
+[local patch encoder] -> [cross-patch transformer] -> [quantizer] -> [cross-patch transformer] -> [local patch decoder]
+```
 
-### Channel B: detail residual
+Meaning:
 
-- tiny side channel for fragile surface details
-- names
-- numbers
-- punctuation
-- rare character-level corrections
+- local patch encoder:
+  - still models bytes inside each patch
+- encoder-side cross-patch transformer:
+  - lets patches see neighbors before quantization
+  - helps decide what to keep vs. what can be inferred later
+- decoder-side cross-patch transformer:
+  - lets quantized patches help reconstruct each other
+  - should especially help names, numbers, punctuation, and local spelling detail
 
-Then reconstruct text from:
+This is the single most likely `v4` change to break the current wall.
 
-- semantic symbol stream
-- plus small residual detail stream
-
-## Why this is the best next step
+## Why this is better than "just train longer"
 
 Current evidence says:
 
-- the lower-capacity stream is becoming better downstream
-- but exact text quality breaks on small details
-- longer training does not fix that
+- lower-capacity `v3` gets better downstream
+- longer training at `5.0 bpb` does not fix reconstruction
+- so the problem is likely **missing context**, not undertraining
 
-So the most likely missing piece is not "more training".
-It is a separate path for exact surface recovery.
+## Residual detail channel
 
-## Simple mental model
+A separate detail-residual channel is still a valid follow-up idea.
 
-Think of it like:
+But it should be treated as:
 
-- **main idea channel**
-- **fine-detail correction channel**
+- **v4.2**
 
-Instead of forcing one code stream to carry both.
+not the first change.
+
+Why:
+
+- cross-patch context is the simpler and more direct explanation for the current failure mode
+- if context alone fixes much of the reconstruction gap, the architecture stays cleaner
 
 ## First recommended v4 experiment
 
-At `patch_size=2`:
+At `patch_size=2` and the current best downstream setting:
 
-1. keep the current `5.0 bpb` symbol stream as the semantic channel
-2. add a small residual head that predicts:
-   - byte-difference mask
-   - corrected bytes only where needed
-3. keep reconstruction and usage losses
-4. compare:
+1. keep the current `5.0 bpb` symbol capacity
+2. insert a small cross-patch transformer before quantization
+3. insert a small cross-patch transformer after quantization
+4. keep the existing losses at first
+5. compare against current `v3` on:
    - reconstruction quality
    - downstream grouped-prior `bpb`
 
 ## Decision rule
 
-- if reconstruction improves while downstream `bpb` stays near the current `5.0 bpb` win, this is the right branch
-- if downstream predictability collapses, then the residual path is interfering too much
+- if reconstruction improves materially while downstream `bpb` stays near the current `5.0 bpb` win, this is the right `v4`
+- if downstream predictability collapses, then the added context is interfering too much
+- if reconstruction barely changes, then the next branch is a small residual-detail side channel
