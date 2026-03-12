@@ -9,6 +9,7 @@ Loopy has pivoted again.
 - v3 codebook / patch-symbol work is the current reference branch
 - v4 contextual codebook work is now the active implementation branch
 - first `v4` real-text result is now in, and it was effectively a tie with `v3`
+- first `v4.2` toy result is now in, and it improved over plain `v4`
 
 ## What v2 settled
 
@@ -90,3 +91,4 @@ Next resume step:
   - keep the contextual `v4` path
   - add a small residual-detail side channel
   - compare that against current `v3` and `v4`
+  - first real target is the `5.0 bpb` point

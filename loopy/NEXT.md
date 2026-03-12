@@ -71,9 +71,9 @@ Best next hypothesis:
 - keep explicit usage pressure
 - keep `patch_size=2`
 - keep the existing codebook family
-- add cross-patch transformer context before quantization
-- add cross-patch transformer context after quantization
-- then add a small residual-detail side channel for exact local fixes
+- keep cross-patch transformer context before quantization
+- keep cross-patch transformer context after quantization
+- add a small residual-detail side channel for exact local fixes
 
 ## Decision rule
 
@@ -93,8 +93,9 @@ Move `v4` forward only if:
 
 Immediate next run:
 
-- first `v4` real comparison is now done
-- next run should be `v4.2`:
+- first `v4` real comparison is done
+- first `v4.2` toy comparison is encouraging
+- next run should be the first real `v4.2` comparison:
   - current contextual `v4`
   - plus a small residual-detail side channel
   - same `5.0 bpb` semantic capacity

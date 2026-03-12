@@ -71,6 +71,9 @@ def parse_args(argv: list[str] | None = None) -> ContextualSymbolicCodecConfig:
     parser.add_argument("--codebook-weight", type=float, default=1.0)
     parser.add_argument("--usage-weight", type=float, default=0.01)
     parser.add_argument("--predictive-weight", type=float, default=0.0)
+    parser.add_argument("--use-residual-detail", action="store_true")
+    parser.add_argument("--residual-usage-weight", type=float, default=0.01)
+    parser.add_argument("--residual-gate-bias", type=float, default=-2.0)
     args = parser.parse_args(argv)
     return ContextualSymbolicCodecConfig(
         data_path=args.data_path,
@@ -101,6 +104,9 @@ def parse_args(argv: list[str] | None = None) -> ContextualSymbolicCodecConfig:
         codebook_weight=args.codebook_weight,
         usage_weight=args.usage_weight,
         predictive_weight=args.predictive_weight,
+        use_residual_detail=args.use_residual_detail,
+        residual_usage_weight=args.residual_usage_weight,
+        residual_gate_bias=args.residual_gate_bias,
     )
 
 
@@ -160,6 +166,7 @@ def run_epoch(
         "codebook_loss": 0.0,
         "usage_loss": 0.0,
         "predictive_loss": 0.0,
+        "residual_usage_loss": 0.0,
         "byte_accuracy": 0.0,
         "codebook_perplexity": 0.0,
         "batches": 0.0,
@@ -186,6 +193,7 @@ def run_epoch(
             totals["codebook_loss"] += forward.codebook_loss.item()
             totals["usage_loss"] += forward.usage_loss.item()
             totals["predictive_loss"] += forward.predictive_loss.item()
+            totals["residual_usage_loss"] += forward.residual_usage_loss.item()
             totals["byte_accuracy"] += byte_accuracy(forward.logits, patch_ids)
             totals["codebook_perplexity"] += forward.codebook_perplexity.item()
             totals["batches"] += 1
@@ -270,6 +278,7 @@ def main() -> None:
             f"val_usage={val_metrics['usage_loss']:.4f} "
             f"val_commit={val_metrics['commitment_loss']:.4f} "
             f"val_pred={val_metrics['predictive_loss']:.4f} "
+            f"val_residual={val_metrics['residual_usage_loss']:.4f} "
             f"byte_acc={val_metrics['byte_accuracy']:.3f} "
             f"codebook_ppl={val_metrics['codebook_perplexity']:.2f} "
             f"epoch_s={epoch_seconds:.2f}"
@@ -284,6 +293,7 @@ def main() -> None:
                 "codebook_loss": val_metrics["codebook_loss"],
                 "usage_loss": val_metrics["usage_loss"],
                 "predictive_loss": val_metrics["predictive_loss"],
+                "residual_usage_loss": val_metrics["residual_usage_loss"],
                 "byte_accuracy": val_metrics["byte_accuracy"],
                 "codebook_perplexity": val_metrics["codebook_perplexity"],
                 "raw_capacity_bpb": config.raw_capacity_bpb,

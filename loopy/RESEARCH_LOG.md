@@ -2418,3 +2418,22 @@ Updated decision:
 - keep cross-patch context as part of the design direction
 - stop expecting context alone to solve the `5.0 bpb` tradeoff
 - the next architecture branch should add a small residual-detail side channel on top of the contextual `v4` path
+
+## v4.2 residual-detail branch started
+
+Implemented:
+
+- optional residual-detail side channel inside [train_symbolic_codec_v4.py](C:/Users/adarw/Desktop/googlereview/loopy/train_symbolic_codec_v4.py)
+- gated residual correction head inside [symbolic_codec_v4.py](C:/Users/adarw/Desktop/googlereview/loopy/symbolic_codec_v4.py)
+- residual sparsity controls in [v4_config.py](C:/Users/adarw/Desktop/googlereview/loopy/v4_config.py)
+
+Initial toy comparison at `5.0 bpb`, `10` epochs:
+
+- `v4` toy byte accuracy: about `0.5303`
+- `v4.2` toy byte accuracy: about `0.6140`
+
+Interpretation:
+
+- the residual-detail branch is not just compiling
+- it already improves the same `v4` toy setting materially
+- that is enough to justify the first real-corpus `v4.2` comparison next

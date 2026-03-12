@@ -2,10 +2,47 @@ from __future__ import annotations
 
 import torch
 from torch import nn
+from torch.nn import functional as F
 
-from loopy.binary_codec_v2 import PAD_BYTE_ID
-from loopy.symbolic_codec_v3 import SymbolicForward, V3PatchDecoder, V3PatchEncoder, VectorQuantizer
+from loopy.binary_codec_v2 import BYTE_VOCAB_SIZE, PAD_BYTE_ID
+from loopy.symbolic_codec_v3 import V3PatchEncoder, VectorQuantizer
 from loopy.v4_config import ContextualSymbolicCodecConfig
+
+
+class ContextualForward:
+    def __init__(
+        self,
+        *,
+        logits: torch.Tensor,
+        symbol_ids: torch.Tensor,
+        recon_loss: torch.Tensor,
+        commitment_loss: torch.Tensor,
+        codebook_loss: torch.Tensor,
+        usage_loss: torch.Tensor,
+        predictive_loss: torch.Tensor,
+        residual_usage_loss: torch.Tensor,
+        codebook_perplexity: torch.Tensor,
+    ) -> None:
+        self.logits = logits
+        self.symbol_ids = symbol_ids
+        self.recon_loss = recon_loss
+        self.commitment_loss = commitment_loss
+        self.codebook_loss = codebook_loss
+        self.usage_loss = usage_loss
+        self.predictive_loss = predictive_loss
+        self.residual_usage_loss = residual_usage_loss
+        self.codebook_perplexity = codebook_perplexity
+
+    @property
+    def total_loss(self) -> torch.Tensor:
+        return (
+            self.recon_loss
+            + self.commitment_loss
+            + self.codebook_loss
+            + self.usage_loss
+            + self.predictive_loss
+            + self.residual_usage_loss
+        )
 
 
 class PatchContextTransformer(nn.Module):
@@ -38,6 +75,36 @@ class PatchContextTransformer(nn.Module):
         return self.norm(contextual)
 
 
+class V4PatchDecoder(nn.Module):
+    def __init__(self, config: ContextualSymbolicCodecConfig) -> None:
+        super().__init__()
+        self.patch_size = config.patch_size
+        self.position_embedding = nn.Parameter(torch.randn(config.patch_size, config.embed_dim) * 0.02)
+        self.expand = nn.Sequential(
+            nn.Linear(config.latent_dim, config.embed_dim * config.patch_size),
+            nn.GELU(),
+        )
+        decoder_layer = nn.TransformerEncoderLayer(
+            d_model=config.embed_dim,
+            nhead=config.num_heads,
+            dim_feedforward=config.embed_dim * 4,
+            dropout=config.dropout,
+            batch_first=True,
+        )
+        self.decoder = nn.TransformerEncoder(decoder_layer, num_layers=config.decoder_layers)
+        self.output = nn.Linear(config.embed_dim, BYTE_VOCAB_SIZE)
+
+    def forward(self, latents: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+        batch_size, num_patches, latent_dim = latents.shape
+        flat = latents.reshape(batch_size * num_patches, latent_dim)
+        expanded = self.expand(flat).reshape(batch_size * num_patches, self.patch_size, -1)
+        hidden = self.decoder(expanded + self.position_embedding.unsqueeze(0))
+        logits = self.output(hidden)
+        hidden = hidden.reshape(batch_size, num_patches, self.patch_size, -1)
+        logits = logits.reshape(batch_size, num_patches, self.patch_size, BYTE_VOCAB_SIZE)
+        return hidden, logits
+
+
 class SymbolicCodecV4(nn.Module):
     def __init__(self, config: ContextualSymbolicCodecConfig) -> None:
         super().__init__()
@@ -54,9 +121,23 @@ class SymbolicCodecV4(nn.Module):
             config.usage_weight,
         )
         self.post_context = PatchContextTransformer(config, config.post_context_layers)
-        self.decoder = V3PatchDecoder(config)
+        self.decoder = V4PatchDecoder(config)
+        self.use_residual_detail = config.use_residual_detail
 
-    def forward(self, patch_ids: torch.Tensor, patch_mask: torch.Tensor) -> SymbolicForward:
+        if self.use_residual_detail:
+            self.residual_gate = nn.Linear(config.embed_dim, 1)
+            nn.init.constant_(self.residual_gate.bias, config.residual_gate_bias)
+            self.residual_head = nn.Sequential(
+                nn.LayerNorm(config.embed_dim),
+                nn.Linear(config.embed_dim, config.embed_dim),
+                nn.GELU(),
+                nn.Linear(config.embed_dim, BYTE_VOCAB_SIZE),
+            )
+        else:
+            self.residual_gate = None
+            self.residual_head = None
+
+    def forward(self, patch_ids: torch.Tensor, patch_mask: torch.Tensor) -> ContextualForward:
         local_latents = self.encoder(patch_ids)
         contextual_latents = self.pre_context(local_latents, patch_mask)
         symbol_ids, _quantized, st_quantized, commitment_loss, codebook_loss, usage_loss, perplexity = self.quantizer(
@@ -64,19 +145,32 @@ class SymbolicCodecV4(nn.Module):
             patch_mask,
         )
         decoded_latents = self.post_context(st_quantized, patch_mask)
-        logits = self.decoder(decoded_latents, patch_ids)
-        recon_loss = torch.nn.functional.cross_entropy(
+        byte_hidden, base_logits = self.decoder(decoded_latents)
+
+        if self.use_residual_detail:
+            gate = torch.sigmoid(self.residual_gate(byte_hidden))
+            residual_logits = self.residual_head(byte_hidden)
+            logits = base_logits + gate * residual_logits
+            valid_mask = patch_ids.ne(PAD_BYTE_ID).float()
+            residual_usage_loss = (
+                (gate.squeeze(-1) * valid_mask).sum() / valid_mask.sum().clamp_min(1.0)
+            ) * self.config.residual_usage_weight
+        else:
+            logits = base_logits
+            residual_usage_loss = base_logits.new_zeros(())
+
+        recon_loss = F.cross_entropy(
             logits.reshape(-1, logits.size(-1)),
             patch_ids.reshape(-1),
             ignore_index=PAD_BYTE_ID,
         )
 
-        # Predictive loss is intentionally disabled in the first v4 branch.
-        # The new contextual encoder is bidirectional, so reusing the old v3
-        # next-symbol objective would leak future information.
+        # Predictive loss is intentionally disabled in the contextual branch.
+        # The encoder sees neighboring patches bidirectionally, so the old next-
+        # symbol objective would leak future information.
         predictive_loss = recon_loss.new_zeros(())
 
-        return SymbolicForward(
+        return ContextualForward(
             logits=logits,
             symbol_ids=symbol_ids,
             recon_loss=recon_loss,
@@ -84,6 +178,7 @@ class SymbolicCodecV4(nn.Module):
             codebook_loss=codebook_loss,
             usage_loss=usage_loss,
             predictive_loss=predictive_loss,
+            residual_usage_loss=residual_usage_loss,
             codebook_perplexity=perplexity,
         )
 

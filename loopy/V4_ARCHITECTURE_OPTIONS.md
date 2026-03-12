@@ -124,3 +124,13 @@ Simple mental model:
 
 - context helps the model guess what should be there
 - residual detail tells it what exact tiny pieces still need correction
+
+## v4.2 initial result
+
+The first toy `v4.2` check is encouraging:
+
+- same `5.0 bpb` setting as the first `v4` toy comparison
+- `v4` toy byte accuracy: about `0.5303`
+- `v4.2` toy byte accuracy: about `0.6140`
+
+So the residual-detail channel is already helping on the small test.

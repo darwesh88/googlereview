@@ -215,3 +215,4 @@ Interpretation:
   - local patch decoder
 - first `v4` real-text result at `5.0 bpb` was effectively a tie with `v3`
 - so the next likely gain is not context alone, but context plus a small residual-detail side channel
+- the first `v4.2` toy check is already better than plain `v4` on the same `5.0 bpb` setup
