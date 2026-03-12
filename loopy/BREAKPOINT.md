@@ -22,6 +22,11 @@ Loopy has pivoted again.
 - the old predictive-on-`v4.2` path was a no-op
 - `v4` now has a real masked predictive objective
 - local smoke test confirms `predictive_loss` is active again
+- masked predictive `v4.2` at `6.0 bpb` is now in:
+  - reconstruction: `0.9912` byte accuracy
+  - downstream grouped prior: `3.1301`
+  - this is better than plain `v4.2` at `6.0 bpb` (`3.2052`)
+  - but still worse than raw (`2.9473`) and best downstream `v3` (`2.8497`)
 
 ## What v2 settled
 
@@ -111,6 +116,9 @@ Next resume step:
 - keep the best `v4.2` checkpoint
 - use the best `v4.2` `6.0 bpb` checkpoint as the new balanced reference
 - next practical move:
-  - run masked predictive `v4.2` at `6.0 bpb`
-  - compare reconstruction and downstream grouped-prior results
-  - then build the controlled experiment runner around the surviving branch
+  - stop manual branch-toggling
+  - build the controlled experiment runner around the current stable branches
+  - use it to compare:
+    - `v3 5.0 bpb` downstream winner
+    - `v4.2 6.0 bpb` balanced reconstruction winner
+    - `v4.2 6.0 bpb + masked predictive` improved balanced point

@@ -194,4 +194,9 @@ Decision:
 - local smoke test confirmed:
   - `predictive_loss` is nonzero
   - masked predictive training runs end to end
-- next branch should test masked predictive on the best `v4.2` `6.0 bpb` checkpoint before building the runner
+- masked predictive on the best `v4.2` `6.0 bpb` checkpoint is now tested:
+  - reconstruction improved slightly to `0.9912`
+  - downstream grouped prior improved to `3.1301`
+  - but it still did not beat raw (`2.9473`) or best downstream `v3` (`2.8497`)
+- next branch should not be more masked-predictive tuning
+- next branch should build the controlled experiment runner around the current stable comparisons

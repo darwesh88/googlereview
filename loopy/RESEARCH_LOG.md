@@ -2723,3 +2723,54 @@ Updated decision:
 
 - predictive-on-`v4` is now a real branch again
 - run one real `v4.2 6.0 bpb + masked predictive` comparison before building the experiment runner
+
+## Masked predictive on v4.2 at 6.0 bpb
+
+The new masked predictive objective was tested on the best balanced `v4.2` point:
+
+- `patch_size = 2`
+- `num_codebooks = 2`
+- `sub_codebook_size = 64`
+- `raw_capacity_bpb = 6.0`
+- `residual_usage_weight = 0.005`
+- `residual_gate_bias = -2.0`
+- `predictive_weight = 0.01`
+- `predictive_mask_prob = 0.15`
+
+Observed reconstruction result:
+
+- loss: `0.07438`
+- recon loss: `0.03556`
+- predictive loss: `0.03478`
+- byte accuracy: `0.99121`
+- codebook perplexity: `62.88`
+
+Sample reconstruction:
+
+- `Customer: delivery slot of 7m. Now R40 and still waiting.... Agent: Sorry Sam, did you receive your order? CeriF`
+
+Observed downstream grouped-prior result:
+
+- loss: `2.1681`
+- accuracy: `0.4346`
+- bpb: `3.1301`
+
+Comparison:
+
+- plain `v4.2` at `6.0 bpb` downstream: `3.2052`
+- masked-predictive `v4.2` at `6.0 bpb` downstream: `3.1301`
+- raw patch prior baseline: `2.9473`
+- best downstream `v3` at `5.0 bpb`: `2.8497`
+
+Interpretation:
+
+- masked predictive helped both reconstruction and downstream usefulness
+- but the gain was incremental, not decisive
+- `v4.2 6.0 bpb + masked predictive` is now the strongest balanced `v4` point so far
+- however, it still does not beat raw downstream and still does not beat best downstream `v3`
+
+Updated decision:
+
+- stop manual one-off architecture toggles for now
+- the branches are now stable enough to justify a controlled experiment runner
+- next major task should be the experiment harness, not another ad hoc manual run
