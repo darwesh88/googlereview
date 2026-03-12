@@ -2582,3 +2582,42 @@ Updated decision:
 - stop lowering residual pressure
 - treat the current `v4.2` tuning sweep as converged enough
 - next step should move away from residual tuning and back to downstream usefulness testing
+
+## First downstream v4.2 grouped-prior result
+
+The best tuned `v4.2` checkpoint was tested as a downstream grouped-symbol training target.
+
+Checkpoint used:
+
+- `patch_size=2`
+- `num_codebooks=2`
+- `sub_codebook_size=32`
+- `raw_capacity_bpb = 5.0`
+- `residual_usage_weight = 0.005`
+- `residual_gate_bias = -2.0`
+
+Observed downstream grouped-prior result:
+
+- loss: `2.0469`
+- accuracy: `0.4390`
+- bpb: `2.9551`
+
+Comparison:
+
+- raw patch prior baseline (`patch_size=2`): `2.9473`
+- best downstream `v3` grouped prior (`5.0 bpb`, `20` epochs): `2.8497`
+- first downstream `v4.2` grouped prior: `2.9551`
+
+Interpretation:
+
+- `v4.2` materially improved reconstruction quality at `5.0 bpb`
+- but that gain did not carry through to a downstream win
+- the first `v4.2` downstream result is extremely close to raw, which is encouraging
+- however, it is still slightly worse than raw and clearly worse than the best downstream `v3` point
+
+Updated decision:
+
+- stop micro-tuning the residual branch
+- keep the current best `v4.2` checkpoint as the reconstruction winner
+- keep `v3` as the downstream winner for now
+- the next architectural question is how to preserve the `v4.2` reconstruction gain while recovering the downstream advantage

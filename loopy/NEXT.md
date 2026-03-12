@@ -147,6 +147,10 @@ Interpretation:
 - the current best tuned `v4.2` point is `0.96058` byte accuracy
 - the combined tuning test regressed, so interaction effects matter
 - the lower residual-pressure test also regressed, so this tuning sweep is likely done
+- first `v4.2` downstream grouped-prior result is now in:
+  - `bpb = 2.9551`
+  - this is very close to raw, but still slightly worse than the raw `patch_size=2` prior (`2.9473`)
+  - it is also worse than the best downstream `v3` point (`2.8497`)
 
 ## Do not do next
 
@@ -155,3 +159,28 @@ Interpretation:
 - do not return to tiny `v2` rate sweeps unless there is a brand new hypothesis
 - do not jump straight to H100s while Colab is still enough for these frontier tests
 - do not push `v3` below `5.0 bpb` until downstream usefulness is tested
+- do not keep micro-tuning `v4.2` residual controls unless there is a very specific new hypothesis
+
+## Latest downstream result
+
+Observed:
+
+- raw patch prior at `patch_size=2`:
+  - `bpb = 2.9473`
+- best downstream `v3` point at `5.0 bpb`, `20` epochs:
+  - `bpb = 2.8497`
+- first downstream `v4.2` grouped prior at the best tuned `5.0 bpb` checkpoint:
+  - `bpb = 2.9551`
+
+Interpretation:
+
+- `v4.2` clearly improved reconstruction over `v3` and `v4`
+- but it has not yet improved downstream usefulness over raw
+- and it has not matched the best downstream `v3` point
+
+Decision:
+
+- `v4.2` is currently the best reconstruction architecture at `5.0 bpb`
+- `v3` is still the best downstream architecture at `5.0 bpb`
+- the next branch should not be more residual tuning
+- the next branch should test whether a small predictive objective on top of the best `v4.2` point can recover the downstream gap

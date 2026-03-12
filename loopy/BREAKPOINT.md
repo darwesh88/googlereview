@@ -14,6 +14,7 @@ Loopy has pivoted again.
 - first `v4.2` tuning pass is now in, and both variants improved again
 - combined `v4.2` tuning test is now in, and it regressed
 - lower residual-pressure `v4.2` test is now in, and it also regressed
+- first `v4.2` downstream grouped-prior result is now in, and it is close to raw but still slightly worse
 
 ## What v2 settled
 
@@ -95,4 +96,10 @@ Next resume step:
   - keep the contextual `v4.2` path
   - keep `residual_usage_weight = 0.005` and `residual_gate_bias = -2.0` as the best point so far
   - stop this residual tuning sweep
-  - move back to downstream usefulness testing
+  - note the first downstream `v4.2` grouped prior result:
+    - `bpb = 2.9551`
+    - raw baseline: `2.9473`
+    - best downstream `v3`: `2.8497`
+  - move to the next branch:
+    - keep the best `v4.2` checkpoint
+    - test a small predictive objective on top of `v4.2` rather than more residual tuning
