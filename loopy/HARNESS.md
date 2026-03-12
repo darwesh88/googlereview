@@ -35,6 +35,11 @@ This creates a batch directory under `loopy/experiment_batches/` and writes:
 - `commands.md`
 - `experiments/*.json`
 
+`commands.md` includes both:
+
+- local `python -m ...` commands
+- Colab-ready `!python -m ...` commands
+
 ## Check status
 
 ```powershell

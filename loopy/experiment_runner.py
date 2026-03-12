@@ -159,9 +159,11 @@ def prepare_batch(plan_file: Path, batch_dir: Path | None) -> Path:
         experiment = build_experiment(plan, raw_experiment)
         for step in experiment["steps"]:
             exec_args = command_args(step, sys.executable)
-            display_args = command_args(step, "python")
+            local_args = command_args(step, "python")
+            colab_args = command_args(step, "python")
             step["command_args"] = exec_args
-            step["command"] = printable_command(display_args)
+            step["local_command"] = printable_command(local_args)
+            step["colab_command"] = "!" + printable_command(colab_args)
         experiments.append(experiment)
         dump_json(experiments_dir / f"{experiment['id']}.json", experiment)
 
@@ -171,8 +173,14 @@ def prepare_batch(plan_file: Path, batch_dir: Path | None) -> Path:
             command_lines.append("")
         for step in experiment["steps"]:
             command_lines.append(f"### {step['name']}")
+            command_lines.append("Local:")
             command_lines.append("```bash")
-            command_lines.append(step["command"])
+            command_lines.append(step["local_command"])
+            command_lines.append("```")
+            command_lines.append("")
+            command_lines.append("Colab:")
+            command_lines.append("```python")
+            command_lines.append(step["colab_command"])
             command_lines.append("```")
             command_lines.append("")
 
