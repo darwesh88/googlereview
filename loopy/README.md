@@ -228,3 +228,6 @@ Interpretation:
 - combined tuning (`residual_usage_weight = 0.005`, `residual_gate_bias = -1.5`) was worse:
   - byte accuracy: `0.95770`
   - so the current best point remains the simpler `0.005 / -2.0` setting
+- lowering residual pressure further to `0.003` was also worse:
+  - byte accuracy: `0.95357`
+  - so the current best point still remains `0.005 / -2.0`

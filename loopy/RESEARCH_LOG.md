@@ -2553,3 +2553,32 @@ Updated decision:
 - keep `residual_gate_bias = -2.0`
 - treat that as the best `v4.2` point so far
 - if tuning continues, change only one residual control at a time
+
+## v4.2 lower residual pressure test
+
+Settings:
+
+- `residual_usage_weight = 0.003`
+- `residual_gate_bias = -2.0`
+
+Observed result:
+
+- byte accuracy: `0.95357`
+- residual usage loss: `0.00125`
+
+Sample reconstruction:
+
+- `Customer: delivery slot of 71. Now <3  and still waiting.... Agent: Sorry Mam.odis you receive your ordey. Ceris`
+
+Interpretation:
+
+- lowering residual pressure further was clearly worse
+- the current best point remains:
+  - `residual_usage_weight = 0.005`
+  - `residual_gate_bias = -2.0`
+
+Updated decision:
+
+- stop lowering residual pressure
+- treat the current `v4.2` tuning sweep as converged enough
+- next step should move away from residual tuning and back to downstream usefulness testing

@@ -108,6 +108,8 @@ Immediate next run:
   - keep `residual_usage_weight = 0.005`
   - keep `residual_gate_bias = -2.0`
   - test one smaller change at a time
+- lower residual pressure (`0.003`) is now tested and was worse
+- next step should stop this tuning sweep and move back to downstream usefulness testing
 
 Main metrics:
 
@@ -144,6 +146,7 @@ Interpretation:
 - the next step is tuning, not redesign
 - the current best tuned `v4.2` point is `0.96058` byte accuracy
 - the combined tuning test regressed, so interaction effects matter
+- the lower residual-pressure test also regressed, so this tuning sweep is likely done
 
 ## Do not do next
 

@@ -13,6 +13,7 @@ Loopy has pivoted again.
 - first `v4.2` real-text result is now in, and it beat both `v3` and `v4`
 - first `v4.2` tuning pass is now in, and both variants improved again
 - combined `v4.2` tuning test is now in, and it regressed
+- lower residual-pressure `v4.2` test is now in, and it also regressed
 
 ## What v2 settled
 
@@ -93,4 +94,5 @@ Next resume step:
 - next resume step:
   - keep the contextual `v4.2` path
   - keep `residual_usage_weight = 0.005` and `residual_gate_bias = -2.0` as the best point so far
-  - continue with single-variable tuning only
+  - stop this residual tuning sweep
+  - move back to downstream usefulness testing
