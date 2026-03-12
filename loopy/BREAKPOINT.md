@@ -15,6 +15,10 @@ Loopy has pivoted again.
 - combined `v4.2` tuning test is now in, and it regressed
 - lower residual-pressure `v4.2` test is now in, and it also regressed
 - first `v4.2` downstream grouped-prior result is now in, and it is close to raw but still slightly worse
+- `v4.2` at `6.0 bpb` is now in:
+  - reconstruction is very strong (`0.9907` byte accuracy)
+  - downstream grouped prior is `3.2052`
+  - that beats old `v3` `6.0 bpb`, but not raw and not best `v3` `5.0 bpb`
 
 ## What v2 settled
 
@@ -101,5 +105,6 @@ Next resume step:
     - raw baseline: `2.9473`
     - best downstream `v3`: `2.8497`
   - move to the next branch:
-    - keep the best `v4.2` checkpoint
-    - test a small predictive objective on top of `v4.2` rather than more residual tuning
+- keep the best `v4.2` checkpoint
+- use the best `v4.2` `6.0 bpb` checkpoint as the new balanced reference
+- test a small predictive objective on top of `v4.2` rather than more residual tuning

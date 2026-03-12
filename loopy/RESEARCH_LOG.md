@@ -2621,3 +2621,61 @@ Updated decision:
 - keep the current best `v4.2` checkpoint as the reconstruction winner
 - keep `v3` as the downstream winner for now
 - the next architectural question is how to preserve the `v4.2` reconstruction gain while recovering the downstream advantage
+
+## v4.2 at 6.0 bpb
+
+The best tuned `v4.2` architecture was moved to a slightly higher-capacity point:
+
+- `patch_size = 2`
+- `num_codebooks = 2`
+- `sub_codebook_size = 64`
+- `raw_capacity_bpb = 6.0`
+- `residual_usage_weight = 0.005`
+- `residual_gate_bias = -2.0`
+
+Observed reconstruction result:
+
+- loss: `0.04142`
+- recon loss: `0.03731`
+- byte accuracy: `0.99066`
+- codebook perplexity: `62.61`
+
+Sample reconstruction:
+
+- `Customer: delivery slot of 7m. Now 930 and still waiting.... Agent: Sorry Sa2, did you receive your order? Ceril`
+
+Interpretation:
+
+- this is the strongest `6.0 bpb` reconstruction result in the project so far
+- it beats old `v3` at `6.0 bpb` (`0.9846`)
+- the residual-detail path is helping meaningfully at a more balanced compression point
+
+## First downstream v4.2 grouped-prior result at 6.0 bpb
+
+Observed downstream grouped-prior result:
+
+- loss: `2.2202`
+- accuracy: `0.4280`
+- bpb: `3.2052`
+
+Comparison:
+
+- raw patch prior baseline: `2.9473`
+- best downstream `v3` at `5.0 bpb`: `2.8497`
+- old downstream `v3` at `6.0 bpb`: `3.4601`
+- longer downstream `v3` at `6.0 bpb`: `3.1844`
+- downstream `v4.2` at `5.0 bpb`: `2.9551`
+- downstream `v4.2` at `6.0 bpb`: `3.2052`
+
+Interpretation:
+
+- `v4.2` at `6.0 bpb` is now clearly better than the earlier `v3` `6.0 bpb` downstream point
+- but it is still worse than raw and worse than the best downstream `v3` point
+- so `6.0 bpb` `v4.2` is currently the best balanced reconstruction point, not the best downstream point
+
+Updated decision:
+
+- stop residual tuning
+- keep `v4.2` `6.0 bpb` as the balanced reconstruction reference
+- keep `v3` `5.0 bpb` as the downstream winner for now
+- next branch should add predictive pressure to `v4.2` `6.0 bpb` rather than redesigning again immediately

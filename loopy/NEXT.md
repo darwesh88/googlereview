@@ -182,5 +182,11 @@ Decision:
 
 - `v4.2` is currently the best reconstruction architecture at `5.0 bpb`
 - `v3` is still the best downstream architecture at `5.0 bpb`
+- `v4.2` at `6.0 bpb` is now the best `6.0 bpb` reconstruction point:
+  - `byte_accuracy = 0.9907`
+- but its first downstream grouped prior at `6.0 bpb` is:
+  - `bpb = 3.2052`
+  - this is better than old `v3` at `6.0 bpb` (`3.4601` / `3.1844` longer)
+  - but still worse than raw (`2.9473`) and worse than best downstream `v3` at `5.0 bpb` (`2.8497`)
 - the next branch should not be more residual tuning
-- the next branch should test whether a small predictive objective on top of the best `v4.2` point can recover the downstream gap
+- the next branch should test whether a small predictive objective on top of the best `v4.2` `6.0 bpb` point can recover the downstream gap
