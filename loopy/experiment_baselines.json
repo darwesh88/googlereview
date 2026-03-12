@@ -1,13 +1,13 @@
 {
   "raw_patch_prior_p2": {
-    "label": "Raw patch prior, patch_size=2",
+    "label": "Raw patch prior, patch_size=2, 20 epochs",
     "metrics": {
-      "bpb": 2.9472746000810663,
-      "accuracy": 0.4506544853422623
+      "bpb": 2.5258104499998546,
+      "accuracy": 0.5233119703058836
     }
   },
   "v3_grouped_prior_5bpb_20ep": {
-    "label": "v3 grouped prior, 5.0 bpb, 20 epochs",
+    "label": "Best learned downstream prior so far, v3 grouped, 5.0 bpb, 20 epochs",
     "metrics": {
       "bpb": 2.849686392290683,
       "accuracy": 0.44718722722245385

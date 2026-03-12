@@ -8,6 +8,10 @@ Loopy has pivoted again.
   - prepare a batch
   - run exact commands on local, Colab, or future remote compute
   - ingest results into a local ledger
+- the corrected raw downstream baseline is now:
+  - `patch_size=2`, `20` epochs
+  - `bpb = 2.5258`
+  - `accuracy = 0.5233`
 
 - v1 symbolic middleware is archived
 - v2 grouped independent-bit codec is archived as the current reference branch
@@ -31,7 +35,12 @@ Loopy has pivoted again.
   - reconstruction: `0.9912` byte accuracy
   - downstream grouped prior: `3.1301`
   - this is better than plain `v4.2` at `6.0 bpb` (`3.2052`)
-  - but still worse than raw (`2.9473`) and best downstream `v3` (`2.8497`)
+  - but still worse than corrected raw (`2.5258`) and best learned downstream `v3` (`2.8497`)
+- first harness runs are now in:
+  - `v42_6bpb_base` prior: `3.1965`
+  - `v42_pw005_mp010` prior: `3.1787`
+  - `v42_pw005_mp015` prior: `3.2130`
+  - none are close to the corrected raw baseline yet
 
 ## What v2 settled
 

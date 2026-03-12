@@ -2792,3 +2792,41 @@ Updated decision:
 - stop manual one-off architecture toggles for now
 - the branches are now stable enough to justify a controlled experiment runner
 - next major task should be the experiment harness, not another ad hoc manual run
+## Corrected raw downstream baseline and harness recalibration
+
+A stronger raw downstream baseline was run at `patch_size=2` with `20` epochs.
+
+Result:
+
+- raw patch prior:
+  - `bpb = 2.5258`
+  - `accuracy = 0.5233`
+
+This replaces the earlier `5`-epoch raw baseline:
+
+- old raw patch prior:
+  - `bpb = 2.9473`
+  - `accuracy = 0.4507`
+
+Interpretation:
+
+- earlier statements that a learned downstream point had "beaten raw" are no longer valid
+- the best learned downstream point is still:
+  - `v3` grouped prior at `5.0 bpb`, `20` epochs
+  - `bpb = 2.8497`
+- but that is still worse than corrected raw `2.5258`
+
+Harness recalibration:
+
+- `v42_6bpb_base` prior:
+  - `bpb = 3.1965`
+- `v42_pw005_mp010` prior:
+  - `bpb = 3.1787`
+- `v42_pw005_mp015` prior:
+  - `bpb = 3.2130`
+
+Decision:
+
+- use the corrected raw baseline for all future harness ingestion and comparisons
+- treat `v42_pw005_mp010` as a small improvement over the harness baseline only
+- next harness run should still be `v42_pw010_mp015`

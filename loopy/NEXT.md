@@ -130,8 +130,8 @@ Main metrics:
 
 Observed:
 
-- raw patch prior:
-  - `bpb = 2.9473`
+- raw patch prior (`20` epochs):
+  - `bpb = 2.5258`
 - `v3` grouped prior on `7.0 bpb`:
   - `bpb = 3.8102`
 - `v3` grouped prior on `6.0 bpb`:
@@ -146,7 +146,7 @@ Interpretation:
 
 - lower-capacity `v3` symbols are becoming easier to predict downstream
 - `6.0 bpb` is better downstream than `7.0 bpb`
-- `5.0 bpb` has now beaten the raw downstream baseline
+- `5.0 bpb` no longer beats the corrected raw downstream baseline
 - longer prior training improved `6.0 bpb`, but not enough to catch `5.0 bpb`
 - a longer codec run at `5.0 bpb` did not materially improve reconstruction
 - the next step should now be an architecture change, not more training on the same design
@@ -175,8 +175,8 @@ Interpretation:
 
 Observed:
 
-- raw patch prior at `patch_size=2`:
-  - `bpb = 2.9473`
+- raw patch prior at `patch_size=2`, `20` epochs:
+  - `bpb = 2.5258`
 - best downstream `v3` point at `5.0 bpb`, `20` epochs:
   - `bpb = 2.8497`
 - first downstream `v4.2` grouped prior at the best tuned `5.0 bpb` checkpoint:
@@ -210,3 +210,26 @@ Decision:
   - but it still did not beat raw (`2.9473`) or best downstream `v3` (`2.8497`)
 - next branch should not be more masked-predictive tuning
 - next branch should build the controlled experiment runner around the current stable comparisons
+
+## Harness recalibration
+
+The harness should now use the corrected raw downstream baseline:
+
+- raw patch prior at `patch_size=2`, `20` epochs:
+  - `bpb = 2.5258`
+  - `accuracy = 0.5233`
+
+First harness runs so far:
+
+- `v42_6bpb_base` prior:
+  - `bpb = 3.1965`
+- `v42_pw005_mp010` prior:
+  - `bpb = 3.1787`
+- `v42_pw005_mp015` prior:
+  - `bpb = 3.2130`
+
+Interpretation:
+
+- `v42_pw005_mp010` is a small improvement over the harness baseline
+- none of the first harness runs are close to the corrected raw baseline
+- next harness run should still be `v42_pw010_mp015`
