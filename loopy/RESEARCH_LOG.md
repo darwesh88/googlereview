@@ -2679,3 +2679,33 @@ Updated decision:
 - keep `v4.2` `6.0 bpb` as the balanced reconstruction reference
 - keep `v3` `5.0 bpb` as the downstream winner for now
 - next branch should add predictive pressure to `v4.2` `6.0 bpb` rather than redesigning again immediately
+
+## Attempted predictive-on-v4.2 run exposed a no-op
+
+A local `v4.2` `6.0 bpb` run was launched with:
+
+- `predictive_weight = 0.01`
+
+Observed result:
+
+- reconstruction improved slightly to about `0.9916` byte accuracy
+- but `predictive_loss` remained exactly `0.0`
+
+Code inspection confirmed why:
+
+- `symbolic_codec_v4.py` explicitly sets `predictive_loss = 0`
+- the comment explains that the current contextual branch is bidirectional, so the old next-symbol predictive objective is intentionally disabled to avoid future leakage
+
+Implication:
+
+- the predictive experiment was not a valid predictive test
+- until a causal or masked predictive objective is implemented for `v4`, `predictive_weight` must be treated as unsupported
+
+Fix applied:
+
+- `train_symbolic_codec_v4.py` now raises an error if `--predictive-weight` is nonzero
+
+Updated decision:
+
+- do not use predictive-on-`v4` as the next branch yet
+- either implement a real predictive objective first, or move to the experiment runner using only supported `v4.2` configs

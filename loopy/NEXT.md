@@ -189,4 +189,8 @@ Decision:
   - this is better than old `v3` at `6.0 bpb` (`3.4601` / `3.1844` longer)
   - but still worse than raw (`2.9473`) and worse than best downstream `v3` at `5.0 bpb` (`2.8497`)
 - the next branch should not be more residual tuning
-- the next branch should test whether a small predictive objective on top of the best `v4.2` `6.0 bpb` point can recover the downstream gap
+- attempted predictive-on-`v4.2` testing exposed that `predictive_weight` is currently a no-op in `v4`
+- the train script now fails fast if `--predictive-weight` is nonzero
+- next branch should either:
+  - implement a real causal or masked predictive objective for `v4`
+  - or proceed to the experiment runner using only supported `v4.2` configs

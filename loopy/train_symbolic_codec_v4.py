@@ -75,6 +75,12 @@ def parse_args(argv: list[str] | None = None) -> ContextualSymbolicCodecConfig:
     parser.add_argument("--residual-usage-weight", type=float, default=0.01)
     parser.add_argument("--residual-gate-bias", type=float, default=-2.0)
     args = parser.parse_args(argv)
+    if args.predictive_weight != 0.0:
+        raise ValueError(
+            "predictive_weight is currently unsupported in v4/v4.2. "
+            "The contextual encoder is bidirectional and the predictive loss path is intentionally disabled. "
+            "Use --predictive-weight 0.0 until a causal or masked predictive objective is implemented."
+        )
     return ContextualSymbolicCodecConfig(
         data_path=args.data_path,
         output_dir=args.output_dir,
