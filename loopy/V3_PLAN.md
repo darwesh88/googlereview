@@ -279,3 +279,5 @@ Interpretation:
   - weak exact-detail reconstruction
 
 So the next branch should be a design change, not more of the same training.
+
+That design branch now exists as `v4`, so `v3` should be treated as the reference line for comparison rather than the active implementation branch.

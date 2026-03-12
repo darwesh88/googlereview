@@ -2365,3 +2365,25 @@ Updated decision:
 
 - make cross-patch transformer context the primary `v4` branch
 - treat a residual detail channel as a possible follow-up, not the first change
+
+## v4 implementation branch created
+
+Implemented:
+
+- [train_symbolic_codec_v4.py](C:/Users/adarw/Desktop/googlereview/loopy/train_symbolic_codec_v4.py)
+- [symbolic_codec_v4.py](C:/Users/adarw/Desktop/googlereview/loopy/symbolic_codec_v4.py)
+- [v4_config.py](C:/Users/adarw/Desktop/googlereview/loopy/v4_config.py)
+
+Design:
+
+- local patch encoder
+- cross-patch transformer before quantization
+- existing soft codebook quantizer
+- cross-patch transformer after quantization
+- local patch decoder
+
+Initial validation:
+
+- short `v4` toy smoke compiles and trains
+- longer `10`-epoch toy smoke reaches about `0.5303` byte accuracy at `5.0 bpb`
+- this is not yet a win, but it is enough to treat `v4` as alive and ready for the next controlled comparison

@@ -58,10 +58,10 @@ That part now works.
 The next task is now narrower:
 
 - keep `patch_size=2` fidelity
-- hold `7.0 bpb` as the new baseline
-- note that `6.0 bpb` did recover with longer training
-- note that `5.0 bpb` is too degraded
-- switch from capacity probing to downstream usefulness
+- hold `7.0 bpb` as the safer `v3` baseline
+- hold `5.0 bpb` as the best downstream `v3` point
+- stop trying to fix `5.0 bpb` with more training alone
+- switch to `v4`: cross-patch context around the quantizer
 
 ## Immediate next step
 
@@ -69,31 +69,36 @@ Best next hypothesis:
 
 - keep soft assignments
 - keep explicit usage pressure
-- keep `patch_size=2`, `num_codebooks=2`, `sub_codebook_size=128` as the active baseline
-- keep `6.0 bpb` as the low-capacity frontier point
-- compare `v3` symbol-stream prediction against raw patches next
+- keep `patch_size=2`
+- keep the existing codebook family
+- add cross-patch transformer context before quantization
+- add cross-patch transformer context after quantization
 
 ## Decision rule
 
-Move `v3` to the next stage only if:
+Move `v4` forward only if:
 
-- `patch_size=2` keeps high fidelity on real text
-- capacity can start coming down without collapse
-- codebook perplexity stays healthy
-
-The next stage is now a downstream-LM test for `v3`.
+- it improves the current `5.0 bpb` reconstruction quality
+- while keeping downstream usefulness near the current `5.0 bpb` `v3` point
+- and codebook perplexity stays healthy
 
 ## Immediate next run
 
-Compare:
+`v4` is now implemented in:
 
-- raw patch prior at `patch_size=2`
-- `v3` grouped prior on the `7.0 bpb` checkpoint
-- `v3` grouped prior on the `6.0 bpb` checkpoint
+- [train_symbolic_codec_v4.py](C:/Users/adarw/Desktop/googlereview/loopy/train_symbolic_codec_v4.py)
+- [symbolic_codec_v4.py](C:/Users/adarw/Desktop/googlereview/loopy/symbolic_codec_v4.py)
+- [v4_config.py](C:/Users/adarw/Desktop/googlereview/loopy/v4_config.py)
 
-Main metric:
+Immediate next run:
 
-- validation `bpb`
+- overfit `v4` on toy text at the same `5.0 bpb` setting as the current `v3` failure point
+- then compare `v4` vs `v3` on the real Twitter corpus at `5.0 bpb`
+
+Main metrics:
+
+- reconstruction quality first
+- downstream `bpb` second
 
 ## Latest downstream result
 
@@ -119,6 +124,7 @@ Interpretation:
 - longer prior training improved `6.0 bpb`, but not enough to catch `5.0 bpb`
 - a longer codec run at `5.0 bpb` did not materially improve reconstruction
 - the next step should now be an architecture change, not more training on the same design
+- `v4` is now that architecture branch
 
 ## Do not do next
 

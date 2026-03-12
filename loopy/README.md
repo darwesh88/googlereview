@@ -133,7 +133,7 @@ Do this next:
 
 ## Current active branch
 
-`v3` is now the active architecture branch.
+`v4` is now the active architecture branch.
 
 Current understanding:
 
@@ -207,3 +207,9 @@ Interpretation:
 - that is the strongest sign yet that `v3` may become a useful training representation
 - longer prior training helped `6.0 bpb`, but `5.0 bpb` is still the downstream winner
 - longer codec training did not improve `5.0 bpb` reconstruction, so the next gain likely needs an architecture change
+- that architecture change is now implemented as `v4`:
+  - local patch encoder
+  - cross-patch transformer before quantization
+  - soft codebook quantizer
+  - cross-patch transformer after quantization
+  - local patch decoder

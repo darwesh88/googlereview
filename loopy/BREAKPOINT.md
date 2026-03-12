@@ -6,8 +6,8 @@ Loopy has pivoted again.
 
 - v1 symbolic middleware is archived
 - v2 grouped independent-bit codec is archived as the current reference branch
-- v3 codebook / patch-symbol work is now the active direction
-- product-codebook `v3` changes are the current live workspace state
+- v3 codebook / patch-symbol work is the current reference branch
+- v4 contextual codebook work is now the active implementation branch
 
 ## What v2 settled
 
@@ -78,20 +78,11 @@ Product-codebook `v3` is now in the workspace:
 
 Next resume step:
 
-- use the `7.0 bpb` run as the new `v3` reference point
-- keep the `8.0 bpb` run as the safer reference
-- treat the new `6.0 bpb` `20`-epoch run as the current low-capacity frontier
-- stop lowering capacity for now
-- move to downstream usefulness testing for `v3`
-- use [train_patch_prior_v3.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v3.py) for grouped-symbol priors on `v3`
-- downstream comparison now says:
-  - raw patch prior: `2.9473 bpb`
-  - `v3` grouped at `7.0 bpb`: `3.8102 bpb`
-  - `v3` grouped at `6.0 bpb`: `3.4601 bpb`
-  - `v3` grouped at `6.0 bpb`, longer prior: `3.1844 bpb`
-  - `v3` grouped at `5.0 bpb`: `3.0444 bpb`
-  - `v3` grouped at `5.0 bpb`, `10` epochs: `2.9174 bpb`
-  - `v3` grouped at `5.0 bpb`, `20` epochs: `2.8497 bpb`
-- next resume step:
-  - note that longer codec training on `5.0 bpb` did not help materially
-  - move to an architecture change that preserves the downstream win while improving reconstruction
+- keep `v3` `7.0 bpb` as the safer reconstruction reference
+- keep `v3` `5.0 bpb` as the best downstream reference
+- note that longer codec training at `5.0 bpb` did not help materially
+- use the new `v4` branch to test the missing hypothesis:
+  - cross-patch context before quantization
+  - cross-patch context after quantization
+- first validate `v4` on toy overfit
+- then compare `v4` against the current `v3` `5.0 bpb` point on real Twitter text
