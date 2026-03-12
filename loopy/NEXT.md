@@ -189,8 +189,9 @@ Decision:
   - this is better than old `v3` at `6.0 bpb` (`3.4601` / `3.1844` longer)
   - but still worse than raw (`2.9473`) and worse than best downstream `v3` at `5.0 bpb` (`2.8497`)
 - the next branch should not be more residual tuning
-- attempted predictive-on-`v4.2` testing exposed that `predictive_weight` is currently a no-op in `v4`
-- the train script now fails fast if `--predictive-weight` is nonzero
-- next branch should either:
-  - implement a real causal or masked predictive objective for `v4`
-  - or proceed to the experiment runner using only supported `v4.2` configs
+- the old predictive-on-`v4.2` path was a no-op
+- a real masked predictive objective is now implemented for `v4`
+- local smoke test confirmed:
+  - `predictive_loss` is nonzero
+  - masked predictive training runs end to end
+- next branch should test masked predictive on the best `v4.2` `6.0 bpb` checkpoint before building the runner

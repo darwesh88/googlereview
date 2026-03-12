@@ -19,8 +19,9 @@ Loopy has pivoted again.
   - reconstruction is very strong (`0.9907` byte accuracy)
   - downstream grouped prior is `3.2052`
   - that beats old `v3` `6.0 bpb`, but not raw and not best `v3` `5.0 bpb`
-- attempted predictive-on-`v4.2` test showed `predictive_weight` is currently disabled in `v4`
-- the train entrypoint now rejects nonzero predictive weight so future runs do not silently no-op
+- the old predictive-on-`v4.2` path was a no-op
+- `v4` now has a real masked predictive objective
+- local smoke test confirms `predictive_loss` is active again
 
 ## What v2 settled
 
@@ -109,7 +110,7 @@ Next resume step:
   - move to the next branch:
 - keep the best `v4.2` checkpoint
 - use the best `v4.2` `6.0 bpb` checkpoint as the new balanced reference
-- do not run predictive-on-`v4.2` again until a real causal or masked predictive objective is implemented
-- next practical move is either:
-  - build the controlled experiment runner around the supported `v4.2` configs
-  - or implement the real predictive objective first
+- next practical move:
+  - run masked predictive `v4.2` at `6.0 bpb`
+  - compare reconstruction and downstream grouped-prior results
+  - then build the controlled experiment runner around the surviving branch

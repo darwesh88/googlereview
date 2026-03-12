@@ -123,6 +123,19 @@ class SymbolicCodecV4(nn.Module):
         self.post_context = PatchContextTransformer(config, config.post_context_layers)
         self.decoder = V4PatchDecoder(config)
         self.use_residual_detail = config.use_residual_detail
+        self.mask_token = nn.Parameter(torch.randn(1, 1, config.latent_dim) * 0.02)
+        self.predictive_context = PatchContextTransformer(config, config.post_context_layers)
+        self.masked_symbol_predictor = nn.ModuleList(
+            [
+                nn.Sequential(
+                    nn.LayerNorm(config.latent_dim),
+                    nn.Linear(config.latent_dim, config.latent_dim),
+                    nn.GELU(),
+                    nn.Linear(config.latent_dim, config.sub_codebook_size),
+                )
+                for _ in range(config.num_codebooks)
+            ]
+        )
 
         if self.use_residual_detail:
             self.residual_gate = nn.Linear(config.embed_dim, 1)
@@ -136,6 +149,18 @@ class SymbolicCodecV4(nn.Module):
         else:
             self.residual_gate = None
             self.residual_head = None
+
+    def _sample_predictive_mask(self, patch_mask: torch.Tensor) -> torch.Tensor:
+        if self.config.predictive_weight <= 0.0:
+            return patch_mask.new_zeros(patch_mask.shape, dtype=torch.bool)
+        valid = patch_mask.gt(0)
+        sampled = (torch.rand_like(patch_mask) < self.config.predictive_mask_prob) & valid
+        for batch_index in range(sampled.size(0)):
+            if sampled[batch_index].any() or not valid[batch_index].any():
+                continue
+            valid_positions = valid[batch_index].nonzero(as_tuple=False).flatten()
+            sampled[batch_index, valid_positions[0]] = True
+        return sampled
 
     def forward(self, patch_ids: torch.Tensor, patch_mask: torch.Tensor) -> ContextualForward:
         local_latents = self.encoder(patch_ids)
@@ -165,10 +190,27 @@ class SymbolicCodecV4(nn.Module):
             ignore_index=PAD_BYTE_ID,
         )
 
-        # Predictive loss is intentionally disabled in the contextual branch.
-        # The encoder sees neighboring patches bidirectionally, so the old next-
-        # symbol objective would leak future information.
-        predictive_loss = recon_loss.new_zeros(())
+        predictive_mask = self._sample_predictive_mask(patch_mask)
+        if predictive_mask.any():
+            masked_quantized = st_quantized.masked_fill(predictive_mask.unsqueeze(-1), 0.0)
+            masked_quantized = masked_quantized + predictive_mask.unsqueeze(-1) * self.mask_token
+            predictive_latents = self.predictive_context(masked_quantized, patch_mask)
+            masked_targets = symbol_ids.detach()
+            masked_positions = predictive_mask.float()
+            per_codebook_losses = []
+            for codebook_index, predictor in enumerate(self.masked_symbol_predictor):
+                next_logits = predictor(predictive_latents)
+                codebook_loss_value = F.cross_entropy(
+                    next_logits.reshape(-1, next_logits.size(-1)),
+                    masked_targets[..., codebook_index].reshape(-1),
+                    reduction="none",
+                ).reshape_as(masked_positions)
+                per_codebook_losses.append(
+                    (codebook_loss_value * masked_positions).sum() / masked_positions.sum().clamp_min(1.0)
+                )
+            predictive_loss = torch.stack(per_codebook_losses).mean() * self.config.predictive_weight
+        else:
+            predictive_loss = recon_loss.new_zeros(())
 
         return ContextualForward(
             logits=logits,

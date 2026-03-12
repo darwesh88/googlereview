@@ -2680,9 +2680,9 @@ Updated decision:
 - keep `v3` `5.0 bpb` as the downstream winner for now
 - next branch should add predictive pressure to `v4.2` `6.0 bpb` rather than redesigning again immediately
 
-## Attempted predictive-on-v4.2 run exposed a no-op
+## Predictive-on-v4.2 no-op fixed with masked predictive objective
 
-A local `v4.2` `6.0 bpb` run was launched with:
+An earlier local `v4.2` `6.0 bpb` run was launched with:
 
 - `predictive_weight = 0.01`
 
@@ -2693,19 +2693,33 @@ Observed result:
 
 Code inspection confirmed why:
 
-- `symbolic_codec_v4.py` explicitly sets `predictive_loss = 0`
-- the comment explains that the current contextual branch is bidirectional, so the old next-symbol predictive objective is intentionally disabled to avoid future leakage
+- `symbolic_codec_v4.py` explicitly set `predictive_loss = 0`
+- the old next-symbol predictive objective had been disabled because the contextual branch is bidirectional and would leak future information
 
-Implication:
+Fix implemented:
 
-- the predictive experiment was not a valid predictive test
-- until a causal or masked predictive objective is implemented for `v4`, `predictive_weight` must be treated as unsupported
+- `v4_config.py` now includes `predictive_mask_prob`
+- `symbolic_codec_v4.py` now supports a masked-symbol predictive objective:
+  - mask a subset of valid patch latents
+  - run them through a separate predictive context transformer
+  - predict the true codebook IDs only at masked positions
+- `train_symbolic_codec_v4.py` now passes the new masked-predictive settings through normally
 
-Fix applied:
+Local smoke test:
 
-- `train_symbolic_codec_v4.py` now raises an error if `--predictive-weight` is nonzero
+- run: `v42_masked_pred_smoke`
+- `predictive_weight = 0.01`
+- `predictive_mask_prob = 0.15`
+- result:
+  - `predictive_loss = 0.0303`
+  - `byte_accuracy = 0.2369`
+
+Interpretation:
+
+- masked predictive training now works end to end
+- the next valid branch is to test masked predictive on the best `v4.2` `6.0 bpb` checkpoint
 
 Updated decision:
 
-- do not use predictive-on-`v4` as the next branch yet
-- either implement a real predictive objective first, or move to the experiment runner using only supported `v4.2` configs
+- predictive-on-`v4` is now a real branch again
+- run one real `v4.2 6.0 bpb + masked predictive` comparison before building the experiment runner

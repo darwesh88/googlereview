@@ -34,6 +34,7 @@ class ContextualSymbolicCodecConfig:
     codebook_weight: float = 1.0
     usage_weight: float = 0.01
     predictive_weight: float = 0.0
+    predictive_mask_prob: float = 0.15
     use_residual_detail: bool = False
     residual_usage_weight: float = 0.01
     residual_gate_bias: float = -2.0
