@@ -1,0 +1,92 @@
+{
+  "name": "v42-masked-grid-10",
+  "description": "Ten-run sweep around the current best v4.2 6.0 bpb branch.",
+  "cwd": "C:/Users/adarw/Desktop/googlereview",
+  "step_templates": {
+    "codec": {
+      "module": "loopy.train_symbolic_codec_v4",
+      "params": {
+        "data-path": "loopy/data/real/twitter_support_5k.txt",
+        "output-dir": "loopy/runs/auto/{experiment_id}/codec",
+        "epochs": 20,
+        "batch-size": 8,
+        "max-seq-len": 128,
+        "patch-size": 2,
+        "embed-dim": 128,
+        "latent-dim": 128,
+        "encoder-layers": 2,
+        "decoder-layers": 2,
+        "pre-context-layers": 1,
+        "post-context-layers": 1,
+        "num-heads": 4,
+        "dropout": 0.0,
+        "weight-decay": 0.0,
+        "num-codebooks": 2,
+        "sub-codebook-size": 64,
+        "assignment-temp": 0.5,
+        "commitment-weight": 0.05,
+        "codebook-weight": 0.25,
+        "usage-weight": 0.05,
+        "predictive-weight": "{predictive_weight}",
+        "predictive-mask-prob": "{predictive_mask_prob}",
+        "use-residual-detail": true,
+        "residual-usage-weight": 0.005,
+        "residual-gate-bias": -2.0
+      }
+    },
+    "prior": {
+      "module": "loopy.train_patch_prior_v4",
+      "params": {
+        "data-path": "loopy/data/real/twitter_support_5k.txt",
+        "codec-run-dir": "loopy/runs/auto/{experiment_id}/codec",
+        "output-dir": "loopy/runs/auto/{experiment_id}/prior",
+        "epochs": 20,
+        "batch-size": 16,
+        "hidden-size": 128,
+        "num-layers": 2,
+        "dropout": 0.1,
+        "learning-rate": 0.001,
+        "weight-decay": 0.01,
+        "max-seq-len": 128,
+        "patch-size": 2,
+        "group-embed-dim": 16,
+        "batch-encode-size": 32
+      }
+    }
+  },
+  "comparisons": [
+    {
+      "label": "codec_byte_accuracy_vs_masked_v42",
+      "step": "codec",
+      "metric": "byte_accuracy",
+      "baseline": "v42_maskpred_codec_6bpb",
+      "direction": "higher"
+    },
+    {
+      "label": "prior_bpb_vs_raw",
+      "step": "prior",
+      "metric": "bpb",
+      "baseline": "raw_patch_prior_p2",
+      "direction": "lower"
+    },
+    {
+      "label": "prior_bpb_vs_v3_best",
+      "step": "prior",
+      "metric": "bpb",
+      "baseline": "v3_grouped_prior_5bpb_20ep",
+      "direction": "lower"
+    }
+  ],
+  "experiments": [
+    { "id": "v42_6bpb_base", "description": "Reference without predictive loss.", "vars": { "predictive_weight": 0.0, "predictive_mask_prob": 0.15 } },
+    { "id": "v42_pw005_mp010", "vars": { "predictive_weight": 0.005, "predictive_mask_prob": 0.1 } },
+    { "id": "v42_pw005_mp015", "vars": { "predictive_weight": 0.005, "predictive_mask_prob": 0.15 } },
+    { "id": "v42_pw005_mp020", "vars": { "predictive_weight": 0.005, "predictive_mask_prob": 0.2 } },
+    { "id": "v42_pw010_mp010", "vars": { "predictive_weight": 0.01, "predictive_mask_prob": 0.1 } },
+    { "id": "v42_pw010_mp015", "vars": { "predictive_weight": 0.01, "predictive_mask_prob": 0.15 } },
+    { "id": "v42_pw010_mp020", "vars": { "predictive_weight": 0.01, "predictive_mask_prob": 0.2 } },
+    { "id": "v42_pw020_mp010", "vars": { "predictive_weight": 0.02, "predictive_mask_prob": 0.1 } },
+    { "id": "v42_pw020_mp015", "vars": { "predictive_weight": 0.02, "predictive_mask_prob": 0.15 } },
+    { "id": "v42_pw020_mp020", "vars": { "predictive_weight": 0.02, "predictive_mask_prob": 0.2 } }
+  ]
+}

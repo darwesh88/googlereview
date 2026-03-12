@@ -2,3 +2,5 @@ __pycache__/
 *.py[cod]
 
 loopy/runs/
+loopy/experiment_batches/
+loopy/experiment_ledger.jsonl

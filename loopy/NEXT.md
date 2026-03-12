@@ -2,6 +2,16 @@
 
 `v3` is now the active branch.
 
+## Harness
+
+The next default workflow is now the controlled experiment harness:
+
+- [experiment_runner.py](C:/Users/adarw/Desktop/googlereview/loopy/experiment_runner.py)
+- [HARNESS.md](C:/Users/adarw/Desktop/googlereview/loopy/HARNESS.md)
+- [experiment_plans/v42_masked_grid_10.json](C:/Users/adarw/Desktop/googlereview/loopy/experiment_plans/v42_masked_grid_10.json)
+
+Use it to prepare a multi-run sweep, run those commands on Colab or a future remote worker, and ingest results back into one ledger.
+
 ## Current status
 
 What we know:

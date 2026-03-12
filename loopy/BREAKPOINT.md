@@ -4,6 +4,11 @@ Loopy has pivoted again.
 
 ## Current state
 
+- the harness is now the default workflow for multi-run sweeps:
+  - prepare a batch
+  - run exact commands on local, Colab, or future remote compute
+  - ingest results into a local ledger
+
 - v1 symbolic middleware is archived
 - v2 grouped independent-bit codec is archived as the current reference branch
 - v3 codebook / patch-symbol work is the current reference branch

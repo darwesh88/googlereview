@@ -63,6 +63,11 @@ So v2 focuses on:
 - [train_symbolic_codec_v3.py](C:/Users/adarw/Desktop/googlereview/loopy/train_symbolic_codec_v3.py): v3 training loop
 - [DOWNSTREAM_V3_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/DOWNSTREAM_V3_PLAN.md): downstream usefulness plan for v3
 - [train_patch_prior_v3.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v3.py): grouped prior over v3 patch symbols
+- [train_patch_prior_v4.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v4.py): grouped prior over v4/v4.2 patch symbols
+- [experiment_runner.py](C:/Users/adarw/Desktop/googlereview/loopy/experiment_runner.py): controlled experiment batch runner
+- [experiment_baselines.json](C:/Users/adarw/Desktop/googlereview/loopy/experiment_baselines.json): named baseline registry
+- [HARNESS.md](C:/Users/adarw/Desktop/googlereview/loopy/HARNESS.md): batch workflow and run ledger guide
+- [experiment_plans/v42_masked_grid_10.json](C:/Users/adarw/Desktop/googlereview/loopy/experiment_plans/v42_masked_grid_10.json): starter 10-run masked-predictive sweep
 
 ## Current best understanding in v2
 
@@ -231,3 +236,8 @@ Interpretation:
 - lowering residual pressure further to `0.003` was also worse:
   - byte accuracy: `0.95357`
   - so the current best point still remains `0.005 / -2.0`
+- masked predictive on the best `v4.2 6.0 bpb` checkpoint improved both sides a bit:
+  - reconstruction: `0.9912`
+  - downstream grouped prior: `3.1301`
+  - still worse than raw (`2.9473`) and best downstream `v3` (`2.8497`)
+- because the branch logic is now stable enough, Loopy now has a controlled experiment harness so future sweeps can be prepared, run, and ingested consistently instead of tracked manually

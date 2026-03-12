@@ -1,0 +1,28 @@
+{
+  "raw_patch_prior_p2": {
+    "label": "Raw patch prior, patch_size=2",
+    "metrics": {
+      "bpb": 2.9472746000810663,
+      "accuracy": 0.4506544853422623
+    }
+  },
+  "v3_grouped_prior_5bpb_20ep": {
+    "label": "v3 grouped prior, 5.0 bpb, 20 epochs",
+    "metrics": {
+      "bpb": 2.849686392290683,
+      "accuracy": 0.44718722722245385
+    }
+  },
+  "v42_codec_6bpb": {
+    "label": "v4.2 codec, 6.0 bpb",
+    "metrics": {
+      "byte_accuracy": 0.9906634267198512
+    }
+  },
+  "v42_maskpred_codec_6bpb": {
+    "label": "v4.2 codec, 6.0 bpb, masked predictive",
+    "metrics": {
+      "byte_accuracy": 0.9912126482070209
+    }
+  }
+}

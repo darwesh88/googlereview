@@ -2,6 +2,24 @@
 
 ## Current direction
 
+## Experiment harness
+
+The project now has a controlled experiment harness for batched runs.
+
+Core files:
+
+- [experiment_runner.py](C:/Users/adarw/Desktop/googlereview/loopy/experiment_runner.py)
+- [experiment_baselines.json](C:/Users/adarw/Desktop/googlereview/loopy/experiment_baselines.json)
+- [HARNESS.md](C:/Users/adarw/Desktop/googlereview/loopy/HARNESS.md)
+- [experiment_plans/v42_masked_grid_10.json](C:/Users/adarw/Desktop/googlereview/loopy/experiment_plans/v42_masked_grid_10.json)
+
+Purpose:
+
+- prepare a 10+ experiment sweep from one plan
+- keep one batch directory per sweep
+- compare finished metrics against named baselines
+- append a stable ledger instead of relying on manual chat bookkeeping
+
 Use a mixed symbolic layer.
 
 - Keep normal text.
