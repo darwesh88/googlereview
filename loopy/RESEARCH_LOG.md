@@ -17,6 +17,7 @@ Purpose:
 
 - prepare a 10+ experiment sweep from one plan
 - keep one batch directory per sweep
+- persist remote artifacts with collect / bundle / restore
 - compare finished metrics against named baselines
 - append a stable ledger instead of relying on manual chat bookkeeping
 

@@ -8,6 +8,8 @@ It is intentionally inspired by the fixed-run, results-ledger style of `autorese
 
 - expands a plan into exact commands
 - keeps one batch directory per sweep
+- collects finished artifacts into the batch for persistence
+- bundles remote results into a portable zip
 - compares finished runs against named baselines
 - appends a ledger row for each experiment
 
@@ -22,6 +24,7 @@ It is intentionally inspired by the fixed-run, results-ledger style of `autorese
 1. Prepare a batch from a plan.
 2. Run the generated commands on local, Colab, or a future remote worker.
 3. Ingest the finished results back into the ledger.
+4. Persist remote artifacts so Colab/Vast runs are not lost.
 
 ## Prepare a batch
 
@@ -52,6 +55,30 @@ python -m loopy.experiment_runner status --batch-dir loopy/experiment_batches/<b
 python -m loopy.experiment_runner run --batch-dir loopy/experiment_batches/<batch-name> --limit 2
 ```
 
+## Persist remote results
+
+After experiments finish on a remote worker, collect them into the batch:
+
+```powershell
+python -m loopy.experiment_runner collect --batch-dir loopy/experiment_batches/<batch-name>
+```
+
+Then bundle them into a single zip you can download from Colab or another worker:
+
+```powershell
+python -m loopy.experiment_runner bundle --batch-dir loopy/experiment_batches/<batch-name>
+```
+
+This writes `artifacts.zip` inside the batch directory by default.
+
+## Restore a downloaded bundle locally
+
+If the remote machine only gives you a zip back, restore it into your local repo:
+
+```powershell
+python -m loopy.experiment_runner restore --batch-dir loopy/experiment_batches/<batch-name> --bundle-file loopy/experiment_batches/<batch-name>/artifacts.zip
+```
+
 ## Ingest results
 
 ```powershell
@@ -62,5 +89,11 @@ This writes `results.json` and appends rows to `loopy/experiment_ledger.jsonl`.
 
 ## Current use
 
-Use the harness for controlled `v4.2` sweeps and baseline comparisons.
-It keeps run bookkeeping stable before we add any Vast.ai or other remote launcher.
+Use the harness for controlled sweeps and baseline comparisons.
+It now separates:
+
+- local repo as the control plane
+- remote GPU sessions as execution workers
+- batch zips as the persistence layer
+
+This should be enough before adding any Vast.ai-specific launcher.

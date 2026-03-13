@@ -3,8 +3,10 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shutil
 import subprocess
 import sys
+import zipfile
 from copy import deepcopy
 from datetime import datetime, timezone
 from pathlib import Path
@@ -96,6 +98,33 @@ def resolve_result_file(step: dict[str, Any]) -> Path | None:
     return result_dir / step.get("result_file", "best_metrics.json")
 
 
+def collected_step_dir(batch_dir: Path, experiment_id: str, step_name: str) -> Path:
+    return batch_dir / "collected" / experiment_id / step_name
+
+
+def resolve_collected_result_file(batch_dir: Path, experiment_id: str, step: dict[str, Any]) -> Path:
+    return collected_step_dir(batch_dir, experiment_id, step["name"]) / step.get("result_file", "best_metrics.json")
+
+
+def copy_tree_contents(source_dir: Path, target_dir: Path) -> int:
+    if not source_dir.exists():
+        return 0
+    if target_dir.exists():
+        shutil.rmtree(target_dir)
+    target_dir.mkdir(parents=True, exist_ok=True)
+    copied_files = 0
+    for item in source_dir.rglob("*"):
+        relative = item.relative_to(source_dir)
+        destination = target_dir / relative
+        if item.is_dir():
+            destination.mkdir(parents=True, exist_ok=True)
+            continue
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(item, destination)
+        copied_files += 1
+    return copied_files
+
+
 def compare_metric(actual: float, baseline: float, direction: str) -> tuple[str, float]:
     if direction == "lower":
         if actual < baseline:
@@ -184,6 +213,41 @@ def prepare_batch(plan_file: Path, batch_dir: Path | None) -> Path:
             command_lines.append("```")
             command_lines.append("")
 
+    command_lines.extend(
+        [
+            "## Persist Remote Results",
+            "After remote runs finish, collect artifacts into the batch:",
+            "",
+            "```bash",
+            f"python -m loopy.experiment_runner collect --batch-dir {batch_dir}",
+            "```",
+            "",
+            "Colab:",
+            "```python",
+            f"!python -m loopy.experiment_runner collect --batch-dir {batch_dir}",
+            "```",
+            "",
+            "Create a downloadable bundle:",
+            "",
+            "```bash",
+            f"python -m loopy.experiment_runner bundle --batch-dir {batch_dir}",
+            "```",
+            "",
+            "Colab:",
+            "```python",
+            f"!python -m loopy.experiment_runner bundle --batch-dir {batch_dir}",
+            "```",
+            "",
+            "Back on the local repo, restore and ingest:",
+            "",
+            "```bash",
+            f"python -m loopy.experiment_runner restore --batch-dir {batch_dir} --bundle-file {batch_dir / 'artifacts.zip'}",
+            f"python -m loopy.experiment_runner ingest --batch-dir {batch_dir}",
+            "```",
+            "",
+        ]
+    )
+
     batch = {
         "schema_version": 1,
         "created_at": utc_now(),
@@ -260,6 +324,10 @@ def ingest_batch(batch_dir: Path, baselines_path: Path, ledger_path: Path) -> di
             result_file = resolve_result_file(step)
             if result_file and result_file.exists():
                 step_metrics[step["name"]] = load_json(result_file)
+                continue
+            collected_file = resolve_collected_result_file(batch_dir, experiment["id"], step)
+            if collected_file.exists():
+                step_metrics[step["name"]] = load_json(collected_file)
 
         comparisons = []
         for comparison in experiment.get("comparisons", []):
@@ -315,6 +383,82 @@ def ingest_batch(batch_dir: Path, baselines_path: Path, ledger_path: Path) -> di
     return payload
 
 
+def collect_batch(batch_dir: Path) -> dict[str, Any]:
+    batch = load_json(batch_dir / "batch.json")
+    collected = []
+    for experiment in batch["experiments"]:
+        step_records = []
+        for step in experiment["steps"]:
+            result_dir = resolve_result_dir(step)
+            target_dir = collected_step_dir(batch_dir, experiment["id"], step["name"])
+            copied_files = copy_tree_contents(result_dir, target_dir) if result_dir else 0
+            step_records.append(
+                {
+                    "name": step["name"],
+                    "source_dir": str(result_dir) if result_dir else "",
+                    "target_dir": str(target_dir),
+                    "copied_files": copied_files,
+                    "complete": copied_files > 0,
+                }
+            )
+        collected.append({"id": experiment["id"], "steps": step_records})
+
+    payload = {"batch_dir": str(batch_dir), "collected_at": utc_now(), "experiments": collected}
+    dump_json(batch_dir / "collected_manifest.json", payload)
+    return payload
+
+
+def bundle_batch(batch_dir: Path, output_file: Path | None) -> Path:
+    if output_file is None:
+        output_file = batch_dir / "artifacts.zip"
+    files_to_include = [
+        batch_dir / "batch.json",
+        batch_dir / "commands.md",
+        batch_dir / "collected_manifest.json",
+    ]
+    optional_files = [
+        batch_dir / "results.json",
+    ]
+    with zipfile.ZipFile(output_file, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        for file_path in files_to_include + optional_files:
+            if file_path.exists():
+                archive.write(file_path, file_path.relative_to(batch_dir))
+        collected_root = batch_dir / "collected"
+        if collected_root.exists():
+            for file_path in collected_root.rglob("*"):
+                if file_path.is_file():
+                    archive.write(file_path, file_path.relative_to(batch_dir))
+    return output_file
+
+
+def restore_batch(batch_dir: Path, bundle_file: Path) -> dict[str, Any]:
+    with zipfile.ZipFile(bundle_file, "r") as archive:
+        archive.extractall(batch_dir)
+
+    batch = load_json(batch_dir / "batch.json")
+    restored = []
+    for experiment in batch["experiments"]:
+        step_records = []
+        for step in experiment["steps"]:
+            source_dir = collected_step_dir(batch_dir, experiment["id"], step["name"])
+            target_dir = resolve_result_dir(step)
+            copied_files = copy_tree_contents(source_dir, target_dir) if target_dir else 0
+            step_records.append(
+                {
+                    "name": step["name"],
+                    "source_dir": str(source_dir),
+                    "target_dir": str(target_dir) if target_dir else "",
+                    "copied_files": copied_files,
+                    "restored": copied_files > 0,
+                }
+            )
+        restored.append({"id": experiment["id"], "steps": step_records})
+
+    payload = {"batch_dir": str(batch_dir), "restored_at": utc_now(), "experiments": restored}
+    dump_json(batch_dir / "restore_manifest.json", payload)
+    return payload
+
+
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Prepare, run, and ingest Loopy experiment batches.")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -331,6 +475,17 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
     status_parser = subparsers.add_parser("status")
     status_parser.add_argument("--batch-dir", required=True)
+
+    collect_parser = subparsers.add_parser("collect")
+    collect_parser.add_argument("--batch-dir", required=True)
+
+    bundle_parser = subparsers.add_parser("bundle")
+    bundle_parser.add_argument("--batch-dir", required=True)
+    bundle_parser.add_argument("--output-file")
+
+    restore_parser = subparsers.add_parser("restore")
+    restore_parser.add_argument("--batch-dir", required=True)
+    restore_parser.add_argument("--bundle-file", required=True)
 
     ingest_parser = subparsers.add_parser("ingest")
     ingest_parser.add_argument("--batch-dir", required=True)
@@ -352,6 +507,18 @@ def main(argv: list[str] | None = None) -> None:
         return
     if args.command == "status":
         print(json.dumps(status_batch(Path(args.batch_dir)), indent=2))
+        return
+    if args.command == "collect":
+        payload = collect_batch(Path(args.batch_dir))
+        print(json.dumps(payload, indent=2))
+        return
+    if args.command == "bundle":
+        output_file = bundle_batch(Path(args.batch_dir), Path(args.output_file) if args.output_file else None)
+        print(json.dumps({"batch_dir": args.batch_dir, "bundle_file": str(output_file)}, indent=2))
+        return
+    if args.command == "restore":
+        payload = restore_batch(Path(args.batch_dir), Path(args.bundle_file))
+        print(json.dumps(payload, indent=2))
         return
     if args.command == "ingest":
         payload = ingest_batch(Path(args.batch_dir), Path(args.baselines_file), Path(args.ledger_file))

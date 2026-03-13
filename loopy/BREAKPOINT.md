@@ -7,6 +7,7 @@ Loopy has pivoted again.
 - the harness is now the default workflow for multi-run sweeps:
   - prepare a batch
   - run exact commands on local, Colab, or future remote compute
+  - collect and bundle remote artifacts so runs are not lost with the session
   - ingest results into a local ledger
 - the corrected raw downstream baseline is now:
   - `patch_size=2`, `20` epochs
