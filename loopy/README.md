@@ -95,6 +95,7 @@ The next useful work is:
 - [BREAKPOINT.md](C:/Users/adarw/Desktop/googlereview/loopy/BREAKPOINT.md): resume-from-here snapshot
 - [HARNESS.md](C:/Users/adarw/Desktop/googlereview/loopy/HARNESS.md): experiment control-plane workflow
 - [CLEAN_DATA_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/CLEAN_DATA_PLAN.md): clean benchmark setup
+- [V5_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V5_PLAN.md): prior-aware codec design
 - [RESEARCH_LOG.md](C:/Users/adarw/Desktop/googlereview/loopy/RESEARCH_LOG.md): full chronological history
 
 ## Harness status

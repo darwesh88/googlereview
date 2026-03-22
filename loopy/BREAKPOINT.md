@@ -68,6 +68,10 @@ If clean-data results still do not move the gap enough, the next branch should b
 
 - `v5 = prior-aware codec`
 
+See:
+
+- [V5_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V5_PLAN.md)
+
 That branch should optimize for:
 
 - reconstruction

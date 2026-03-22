@@ -35,6 +35,7 @@ Current interpretation:
 - `v4.2` is still the reconstruction winner
 - the current `v42` masked-predictive sweep neighborhood is too weak for more local tuning to be a good next bet
 - clean data did not rescue the current architecture family, so the next main bottleneck is architectural
+- the next planned branch is now `v5 = prior-aware codec`
 
 ## How to read this log
 

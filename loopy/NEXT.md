@@ -73,6 +73,10 @@ The next branch should be:
 
 - `v5 = prior-aware codec`
 
+Working plan:
+
+- [V5_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V5_PLAN.md)
+
 Meaning:
 
 - keep the best codec structure pieces from `v4.2`
