@@ -83,6 +83,24 @@ Meaning:
 - train the codec more directly for downstream predictability instead of reconstruction alone
 - keep the clean TinyStories benchmark and the noisy Twitter support benchmark side by side while testing it
 
+Current implementation status:
+
+- scaffold exists in:
+  - [v5_config.py](C:/Users/adarw/Desktop/googlereview/loopy/v5_config.py)
+  - [symbolic_codec_v5.py](C:/Users/adarw/Desktop/googlereview/loopy/symbolic_codec_v5.py)
+  - [train_symbolic_codec_v5.py](C:/Users/adarw/Desktop/googlereview/loopy/train_symbolic_codec_v5.py)
+  - [train_patch_prior_v5.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v5.py)
+- local smoke passed:
+  - codec checkpoint saves
+  - `prior_match_loss` is nonzero
+  - grouped prior loads the `v5` checkpoint and trains
+
+Immediate next run order:
+
+1. TinyStories `v5` codec benchmark
+2. TinyStories `v5` grouped prior benchmark
+3. Twitter support `v5` robustness check only if TinyStories moves in the right direction
+
 ## Harness use
 
 Keep the harness as the default workflow.

@@ -66,6 +66,14 @@ So the project has split cleanly:
 - best reconstruction quality now lives here
 - masked predictive objective helped a bit, but not enough
 
+### v5
+
+- prior-aware codec branch
+- keeps the strongest `v4.2` structural pieces
+- adds an internal strictly causal grouped prior objective during codec training
+- scaffold is now implemented and smoke-tested locally
+- not benchmarked on the clean/noisy main corpora yet
+
 ## Current recommendation
 
 Do not keep sweeping the current `v42_masked_grid_10` neighborhood.
@@ -87,7 +95,7 @@ The next useful work is:
 
 1. keep the harness as infrastructure
 2. keep clean and noisy benchmarks side by side
-3. move to the next larger hypothesis shift
+3. benchmark the new `v5` branch before resuming broad sweeps
 
 ## Docs to read first
 

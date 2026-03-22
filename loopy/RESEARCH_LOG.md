@@ -35,7 +35,15 @@ Current interpretation:
 - `v4.2` is still the reconstruction winner
 - the current `v42` masked-predictive sweep neighborhood is too weak for more local tuning to be a good next bet
 - clean data did not rescue the current architecture family, so the next main bottleneck is architectural
-- the next planned branch is now `v5 = prior-aware codec`
+- the next active branch is now `v5 = prior-aware codec`
+- the `v5` scaffold is implemented and local smoke passed
+
+Current `v5` scaffold files:
+
+- [v5_config.py](C:/Users/adarw/Desktop/googlereview/loopy/v5_config.py)
+- [symbolic_codec_v5.py](C:/Users/adarw/Desktop/googlereview/loopy/symbolic_codec_v5.py)
+- [train_symbolic_codec_v5.py](C:/Users/adarw/Desktop/googlereview/loopy/train_symbolic_codec_v5.py)
+- [train_patch_prior_v5.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v5.py)
 
 ## How to read this log
 
