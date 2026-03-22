@@ -1,6 +1,45 @@
 # Loopy Research Log
 
-## Current direction
+## Current snapshot
+
+Read this before reading the older entries below.
+
+Current stable benchmark:
+
+- raw patch prior, `patch_size=2`, `20` epochs
+  - `bpb = 2.5258`
+  - `accuracy = 0.5233`
+
+Current learned references:
+
+- best downstream result:
+  - `v3`, `5.0 bpb`, grouped prior, `20` epochs
+  - `bpb = 2.8497`
+- best reconstruction result:
+  - `v4.2`, `6.0 bpb`
+  - `byte_accuracy = 0.9907`
+- best masked-predictive `v4.2` result:
+  - `byte_accuracy = 0.9912`
+  - downstream grouped prior `bpb = 3.1301`
+
+Current interpretation:
+
+- learned latents are real and useful enough to keep researching
+- but no learned stream has beaten the corrected raw downstream baseline
+- `v3` is still the downstream winner
+- `v4.2` is still the reconstruction winner
+- the current `v42` masked-predictive sweep neighborhood is too weak for more local tuning to be a good next bet
+
+## How to read this log
+
+This file is chronological.
+
+That means some older entries reflect intermediate beliefs that were later corrected.
+
+Important correction:
+
+- older places that compare against raw `2.9473 bpb` were using the earlier `5`-epoch raw baseline
+- the corrected raw baseline is now the `20`-epoch value above: `2.5258 bpb`
 
 ## Experiment harness
 
@@ -21,12 +60,7 @@ Purpose:
 - compare finished metrics against named baselines
 - append a stable ledger instead of relying on manual chat bookkeeping
 
-Use a mixed symbolic layer.
-
-- Keep normal text.
-- Replace selected concepts with reversible IDs like `<n4>`.
-- Train a small token LM on plain text and concept-rewritten text.
-- Compare loss, perplexity, and sample generations.
+Historical log begins below.
 
 ## Why we changed direction
 

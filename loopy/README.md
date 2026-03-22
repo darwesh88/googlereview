@@ -1,243 +1,107 @@
 # Loopy
 
-Loopy is now a two-stage research repo.
+Loopy is a research repo for learned text latents.
 
-## v1
+The core question is simple:
 
-Loopy v1 tested a symbolic middleware layer:
+- can a learned patch-symbol stream become a better training target than raw byte patches
+- while still reconstructing the original text well
 
-- rewrite selected concepts into reversible IDs like `<n2>`
-- train on rewritten text
-- decode back to normal English
+## Current answer
 
-v1 result:
+Not yet.
 
-- worked on narrow synthetic support corpora
-- did not beat plain text on the first broad real Twitter corpus
+What is true now:
 
-Conclusion:
+- raw downstream baseline at `patch_size=2`, `20` epochs:
+  - `bpb = 2.5258`
+  - `accuracy = 0.5233`
+- best learned downstream result so far:
+  - `v3`, `5.0 bpb`, grouped prior, `20` epochs
+  - `bpb = 2.8497`
+  - `accuracy = 0.4472`
+- best balanced reconstruction result so far:
+  - `v4.2`, `6.0 bpb`
+  - `byte_accuracy = 0.9907`
+- best `v4.2` masked-predictive result so far:
+  - `v4.2`, `6.0 bpb`, masked predictive
+  - `byte_accuracy = 0.9912`
+  - downstream grouped prior `bpb = 3.1301`
 
-- useful research probe
-- not the active architecture direction anymore
+So the project has split cleanly:
 
-## v2
+- `v3` is still the best downstream branch
+- `v4.2` is the best reconstruction branch
+- neither branch beats raw on the corrected downstream benchmark
 
-Loopy v2 is the completed active branch for grouped-bit latents.
+## Branch summary
 
-The new goal is to build a **semantic binary codec**:
+### v1
 
-- raw bytes in
-- learned grouped binary patches internally
-- exact reconstruction back to text
-- later, train models on the binary stream itself
+- symbolic middleware probe
+- useful for early intuition
+- archived
 
-This is the boundary-pushing direction.
+### v2
 
-## Why v2 exists
+- grouped independent-bit codec
+- proved reconstruction/compression tradeoffs are real
+- did not produce a downstream stream that beats raw
+- archived as a reference branch
 
-v1 taught us something important:
+### v3
 
-- shallow word-level normalization is too weak for broad real text
-- if this idea is going to matter, the internal representation has to be deeper and more mathematical
+- product-codebook symbolic codec
+- first branch to get close downstream
+- best learned downstream point is still here
 
-So v2 focuses on:
+### v4 / v4.2
 
-- byte-level input
-- grouped binary quantization
-- compression-aware training
-- exact recoverability
+- adds cross-patch context
+- `v4.2` adds a residual-detail side channel
+- best reconstruction quality now lives here
+- masked predictive objective helped a bit, but not enough
 
-## Current active files
+## Current recommendation
 
-- [V2_ARCHITECTURE.md](C:/Users/adarw/Desktop/googlereview/loopy/V2_ARCHITECTURE.md): the v2 architecture
-- [V2_LOCAL_RUNBOOK.md](C:/Users/adarw/Desktop/googlereview/loopy/V2_LOCAL_RUNBOOK.md): local-machine execution path
-- [COLAB_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/COLAB_PLAN.md): the Colab scale-up plan
-- [Loopy_v2_Colab_Baseline.ipynb](C:/Users/adarw/Desktop/googlereview/loopy/Loopy_v2_Colab_Baseline.ipynb): ready Colab entrypoint
-- [measure_bitstream_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/measure_bitstream_v2.py): prototype true bitstream measurement
-- [v2_config.py](C:/Users/adarw/Desktop/googlereview/loopy/v2_config.py): v2 config
-- [binary_codec_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/binary_codec_v2.py): grouped binary codec model
-- [train_binary_codec_v2.py](C:/Users/adarw/Desktop/googlereview/loopy/train_binary_codec_v2.py): training loop for the codec
-- [V3_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V3_PLAN.md): product-codebook branch plan
-- [v3_config.py](C:/Users/adarw/Desktop/googlereview/loopy/v3_config.py): v3 config
-- [symbolic_codec_v3.py](C:/Users/adarw/Desktop/googlereview/loopy/symbolic_codec_v3.py): product-codebook codec
-- [train_symbolic_codec_v3.py](C:/Users/adarw/Desktop/googlereview/loopy/train_symbolic_codec_v3.py): v3 training loop
-- [DOWNSTREAM_V3_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/DOWNSTREAM_V3_PLAN.md): downstream usefulness plan for v3
-- [train_patch_prior_v3.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v3.py): grouped prior over v3 patch symbols
-- [train_patch_prior_v4.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v4.py): grouped prior over v4/v4.2 patch symbols
-- [experiment_runner.py](C:/Users/adarw/Desktop/googlereview/loopy/experiment_runner.py): controlled experiment batch runner
-- [experiment_baselines.json](C:/Users/adarw/Desktop/googlereview/loopy/experiment_baselines.json): named baseline registry
-- [HARNESS.md](C:/Users/adarw/Desktop/googlereview/loopy/HARNESS.md): batch workflow and run ledger guide
-- [experiment_plans/v42_masked_grid_10.json](C:/Users/adarw/Desktop/googlereview/loopy/experiment_plans/v42_masked_grid_10.json): starter 10-run masked-predictive sweep
+Do not keep sweeping the current `v42_masked_grid_10` neighborhood.
 
-## Current best understanding in v2
+The gap to the corrected raw baseline is too large for more tiny parameter sweeps to be the right next move.
 
-The strongest real-corpus modeling baseline so far is now:
+The next useful work is:
 
-- byte accuracy: `0.9876`
-- estimated bpb: `1.5684`
-- reconstruction stayed highly faithful on real noisy text
+1. keep the harness as infrastructure
+2. move to a cleaner data regime so architecture signal is easier to read
+3. then test the next larger hypothesis shift
 
-The strongest packed-bitstream result so far came from adding moderate rate pressure locally:
+## Docs to read first
 
-- `rate_weight=0.01`
-- byte accuracy: `0.9799`
-- zlib-compressed learned bitstream bpb: `4.3861`
-- zlib-compressed raw text bpb: `3.0611`
+- [NEXT.md](C:/Users/adarw/Desktop/googlereview/loopy/NEXT.md): immediate next steps
+- [BREAKPOINT.md](C:/Users/adarw/Desktop/googlereview/loopy/BREAKPOINT.md): resume-from-here snapshot
+- [HARNESS.md](C:/Users/adarw/Desktop/googlereview/loopy/HARNESS.md): experiment control-plane workflow
+- [RESEARCH_LOG.md](C:/Users/adarw/Desktop/googlereview/loopy/RESEARCH_LOG.md): full chronological history
 
-The best middle tradeoff tested so far is:
+## Harness status
 
-- `rate_weight=0.003`
-- byte accuracy: `0.9810`
-- zlib-compressed learned bitstream bpb: `4.3997`
+The experiment harness is now the default workflow for multi-run comparisons:
 
-And the `rate_weight=0.005` Colab GPU run was clearly worse than the baseline:
+- prepare a batch locally
+- run exact commands on Colab or another GPU worker
+- collect and bundle artifacts so sessions are not lost
+- restore and ingest results back into the local ledger
 
-- `rate_weight=0.002`
-  - byte accuracy: `0.9803`
-  - zlib-compressed learned bitstream bpb: `4.5546`
-- `rate_weight=0.0025`
-  - byte accuracy: `0.9840`
-  - zlib-compressed learned bitstream bpb: `4.5508`
-- `rate_weight=0.005`
-  - byte accuracy: `0.9805`
-  - zlib-compressed learned bitstream bpb: `4.5231`
+Main files:
 
-Interpretation:
+- [experiment_runner.py](C:/Users/adarw/Desktop/googlereview/loopy/experiment_runner.py)
+- [experiment_baselines.json](C:/Users/adarw/Desktop/googlereview/loopy/experiment_baselines.json)
+- [HARNESS.md](C:/Users/adarw/Desktop/googlereview/loopy/HARNESS.md)
 
-- the learned representation is strong for modeling
-- moderate rate pressure can improve the packed learned bitstream
-- `0.003` is currently the best compromise among the tested rate points
-- `0.01` is still the best packed-bitstream point so far
-- the nearby `0.002`, `0.0025`, and `0.005` points are all worse than `0.003`
-- but the current codec is still not yet competitive with standard raw-text compression
-- the active problem is no longer just fidelity/compression
-- the learned stream is also not yet beating a raw patch baseline in downstream patch prediction
-- a light predictive auxiliary loss helped only slightly downstream:
-  - learned patch prior `bpb` moved from `5.1364` to `5.0593`
-  - raw patch prior is still much better at `3.6991`
-- a grouped-symbol downstream target helped more than bitwise learned prediction:
-  - grouped patch prior `bpb = 4.9839`
-  - still worse than raw `3.6991`
-- grouped symbols on the predictive codec did not improve further:
-  - grouped predictive patch prior `bpb = 5.1005`
+## Practical state
 
-## Best next move from here
+Loopy is past the "does anything work at all?" stage.
 
-Do not rent H100s yet.
+It is now at the harder stage:
 
-Do this next:
-
-1. stop the simple local rate sweep around the current working point
-2. stop the grouped packing branch
-3. treat the current downstream patch-prior result as a negative result for the existing codec objective
-4. treat the first predictive auxiliary-loss test as only a weak partial improvement
-5. treat grouped-symbol priors as evidence that structured targets help, but not enough inside this codec family
-6. move to a stronger latent redesign so the learned stream is easier to predict, not just easier to reconstruct
-7. `v3` codebook scaffold is now started
-8. independent-bit `v2` is now good enough as a reference point, but not the main architecture to scale further
-
-## Current active branch
-
-`v4` is now the active architecture branch.
-
-Current understanding:
-
-- single-symbol `v3` was too weak
-- product-codebook `v3` is the correct next attempt
-- soft codebook assignments were the first real `v3` breakthrough
-- `patch_size=1` now reaches about `0.926` byte accuracy on the toy corpus with healthy codebook usage
-- `patch_size=2` becomes viable when capacity is raised enough
-- a high-capacity `patch_size=2` real-corpus smoke test already works
-- the next task is to keep that fidelity while bringing capacity back down
-- first Colab capacity-reduction results are now strong:
-  - `num_codebooks=2`, `sub_codebook_size=256`, `raw_capacity_bpb=8.0`
-  - byte accuracy: `0.9892`
-  - still near-exact reconstruction on real text
-  - `num_codebooks=2`, `sub_codebook_size=128`, `raw_capacity_bpb=7.0`
-  - byte accuracy: `0.9889`
-  - this is now the best efficiency-oriented `v3` point
-  - `num_codebooks=2`, `sub_codebook_size=64`, `raw_capacity_bpb=6.0`
-  - byte accuracy: `0.9794`
-  - this is the first clear low-capacity degradation point
-
-## Current v3 baseline
-
-The current `v3` ranking is:
-
-- best pure fidelity:
-  - `14.0 bpb`
-  - byte accuracy: `0.9988`
-- best efficiency-oriented balance:
-  - `7.0 bpb`
-  - byte accuracy: `0.9889`
-- safest low-capacity reference:
-  - `8.0 bpb`
-  - byte accuracy: `0.9892`
-- best recovered cliff point:
-  - `6.0 bpb` after `20` epochs
-  - byte accuracy: `0.9846`
-- too-far compression point:
-  - `5.0 bpb` after `20` epochs
-  - byte accuracy: `0.9464`
-  - longer codec training did not improve this point materially
-
-The next sensible step is:
-
-- keep `7.0 bpb` as the stable baseline
-- treat `6.0 bpb` as alive after longer training
-- treat `5.0 bpb` as below the current quality bar
-- note that `5.0 bpb` already won downstream
-- move to an architecture change that can keep the `5.0 bpb` downstream win while improving reconstruction
-
-## Current downstream picture
-
-At `patch_size=2`, 5-epoch grouped-prior comparison:
-
-- raw patches:
-  - `bpb = 2.9473`
-- `v3` grouped symbols at `7.0 bpb`:
-  - `bpb = 3.8102`
-- `v3` grouped symbols at `6.0 bpb`:
-  - `bpb = 3.4601`
-  - longer prior: `3.1844`
-- `v3` grouped symbols at `5.0 bpb`:
-  - `bpb = 3.0444`
-  - `10` epochs: `2.9174`
-  - `20` epochs: `2.8497`
-
-Interpretation:
-
-- `v3` at `5.0 bpb` has now beaten raw downstream after longer prior training
-- but the lower-capacity `v3` symbols are clearly becoming better downstream targets
-- that is the strongest sign yet that `v3` may become a useful training representation
-- longer prior training helped `6.0 bpb`, but `5.0 bpb` is still the downstream winner
-- longer codec training did not improve `5.0 bpb` reconstruction, so the next gain likely needs an architecture change
-- that architecture change is now implemented as `v4`:
-  - local patch encoder
-  - cross-patch transformer before quantization
-  - soft codebook quantizer
-  - cross-patch transformer after quantization
-  - local patch decoder
-- first `v4` real-text result at `5.0 bpb` was effectively a tie with `v3`
-- so the next likely gain is not context alone, but context plus a small residual-detail side channel
-- the first `v4.2` toy check is already better than plain `v4` on the same `5.0 bpb` setup
-- first `v4.2` real-text check is now a real win:
-  - `v3`/`v4` at `5.0 bpb`: `0.94636` byte accuracy
-  - `v4.2` at `5.0 bpb`: `0.95861` byte accuracy
-- first `v4.2` tuning pass improved that again:
-  - gate-bias tuning: `0.95997`
-  - residual-pressure tuning: `0.96058`
-- current best `v4.2` point so far:
-  - `residual_usage_weight = 0.005`
-  - byte accuracy: `0.96058`
-- combined tuning (`residual_usage_weight = 0.005`, `residual_gate_bias = -1.5`) was worse:
-  - byte accuracy: `0.95770`
-  - so the current best point remains the simpler `0.005 / -2.0` setting
-- lowering residual pressure further to `0.003` was also worse:
-  - byte accuracy: `0.95357`
-  - so the current best point still remains `0.005 / -2.0`
-- masked predictive on the best `v4.2 6.0 bpb` checkpoint improved both sides a bit:
-  - reconstruction: `0.9912`
-  - downstream grouped prior: `3.1301`
-  - still worse than raw (`2.9473`) and best downstream `v3` (`2.8497`)
-- because the branch logic is now stable enough, Loopy now has a controlled experiment harness so future sweeps can be prepared, run, and ingested consistently instead of tracked manually
+- choose better data
+- choose the next architecture hypothesis carefully
+- only then resume larger remote sweeps

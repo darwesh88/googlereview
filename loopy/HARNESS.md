@@ -97,3 +97,9 @@ It now separates:
 - batch zips as the persistence layer
 
 This should be enough before adding any Vast.ai-specific launcher.
+
+Current recommendation:
+
+- keep using the harness
+- but do not keep sweeping the current `v42_masked_grid_10` neighborhood
+- the next batch should target a cleaner dataset or a larger hypothesis shift

@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WhatsApp AI Platform Architecture</title>
+  <style>
+    :root {
+      --bg: #f6f2e9;
+      --panel: #fffdf8;
+      --ink: #1c1b17;
+      --muted: #5c574e;
+      --line: #d9d0c0;
+      --accent: #0f766e;
+      --accent-soft: #d4f3ee;
+      --heading: "Georgia", "Times New Roman", serif;
+      --body: "Segoe UI", "Helvetica Neue", sans-serif;
+      --mono: "Cascadia Code", Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, #fff8e7 0, transparent 35%),
+        linear-gradient(180deg, #f8f4ec 0%, #f2ece0 100%);
+      color: var(--ink);
+      font-family: var(--body);
+      line-height: 1.6;
+    }
+
+    .shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+
+    .hero {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 18px 50px rgba(46, 39, 27, 0.08);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 {
+      font-family: var(--heading);
+      line-height: 1.15;
+      margin: 0 0 12px;
+    }
+
+    h1 { font-size: clamp(34px, 5vw, 54px); margin-top: 16px; }
+    h2 { font-size: 30px; margin-top: 40px; }
+    h3 { font-size: 22px; margin-top: 26px; }
+
+    p, li { color: var(--muted); font-size: 16px; }
+
+    code {
+      font-family: var(--mono);
+      font-size: 0.95em;
+      background: #f3eee2;
+      padding: 2px 6px;
+      border-radius: 6px;
+      color: var(--ink);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .card h3 { margin-top: 0; font-size: 20px; }
+
+    .section {
+      margin-top: 28px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 16px 44px rgba(46, 39, 27, 0.05);
+    }
+
+    .mermaid {
+      overflow-x: auto;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 12px;
+      margin-top: 16px;
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .pill-list li {
+      margin: 0;
+      padding: 8px 12px;
+      background: #f3eee2;
+      border-radius: 999px;
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 18px;
+    }
+
+    .footer {
+      margin-top: 22px;
+      font-size: 14px;
+    }
+
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <span class="eyebrow">Architecture Brief</span>
+      <h1>WhatsApp AI Platform</h1>
+      <p>Multi-country, multi-vertical workflow platform designed to start with WhatsApp-first booking and lead recovery, then expand into broader SMB operations without rewriting the core.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>V1 Focus</h3>
+          <p>Independent beauty professionals and small salons in the UK and UAE.</p>
+        </div>
+        <div class="card">
+          <h3>Core Bet</h3>
+          <p>WhatsApp is the first channel. Workflow automation is the actual product.</p>
+        </div>
+        <div class="card">
+          <h3>Shape</h3>
+          <p>Modular monolith with clear internal boundaries and adapter-based integrations.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>System Overview</h2>
+      <div class="mermaid">
+flowchart LR
+    subgraph Channels["Customer Channels"]
+        WA["WhatsApp"]
+        Web["Web Form / Web Chat"]
+        IG["Instagram DM (later)"]
+        SMS["SMS / Email (later)"]
+        Call["Missed Call Trigger (later)"]
+    end
+
+    subgraph App["Core App"]
+        Gateway["Channel Gateway<br/>webhooks, auth, idempotency"]
+        Normalize["Event Normalizer<br/>channel to canonical event"]
+        Identity["Identity Resolver<br/>tenant, contact, conversation"]
+        Orchestrator["Conversation Orchestrator<br/>route to workflow"]
+        Policy["Policy and Guardrails<br/>confidence, consent, escalation"]
+        Inbox["Human Inbox and Approval Queue"]
+
+        subgraph AI["AI Layer"]
+            Router["Model Router"]
+            Extract["Intent and Entity Extraction"]
+            Draft["Reply Drafting"]
+            Memory["Conversation Memory"]
+            Summaries["Summaries and Notes"]
+        end
+
+        subgraph Domain["Workflow Engine"]
+            Booking["Booking / Lead Capture"]
+            Recovery["Reminder / No-show Recovery"]
+            Waitlist["Waitlist Fill / Reactivation"]
+            Reviews["Review Request / Follow-up"]
+            Future["Future Packs<br/>dispatch, support, CRM ops"]
+        end
+
+        subgraph Context["Tenant Context"]
+            Profile["Business Profile<br/>tone, FAQs, rules"]
+            Catalog["Services / Staff / Resources"]
+            Locale["Country, language, timezone, compliance"]
+        end
+
+        subgraph Connectors["Integration Adapters"]
+            Calendar["Calendar / Booking Systems"]
+            CRM["CRM / Pipeline"]
+            Pay["Deposits / Payments"]
+            EmailAPI["Email / Notification APIs"]
+            ReviewAPI["Review Platforms"]
+        end
+    end
+
+    subgraph Platform["Shared Platform"]
+        Queue["Job Queue / Workers"]
+        DB["Postgres"]
+        Files["Object Storage"]
+        Analytics["Analytics / Attribution / Experiments"]
+        Admin["Admin Console"]
+        Audit["Audit Log / Event Store"]
+    end
+
+    WA --> Gateway
+    Web --> Gateway
+    IG --> Gateway
+    SMS --> Gateway
+    Call --> Gateway
+
+    Gateway --> Normalize --> Identity --> Orchestrator
+    Orchestrator --> Policy
+    Orchestrator --> Extract
+    Orchestrator --> Draft
+    Orchestrator --> Booking
+    Orchestrator --> Recovery
+    Orchestrator --> Waitlist
+    Orchestrator --> Reviews
+    Policy --> Inbox
+    Extract --> Memory
+    Draft --> Memory
+    Summaries --> Memory
+
+    Booking <--> Calendar
+    Recovery <--> Calendar
+    Waitlist <--> CRM
+    Reviews <--> ReviewAPI
+    Booking <--> Pay
+    Recovery <--> EmailAPI
+
+    Profile --> Orchestrator
+    Catalog --> Orchestrator
+    Locale --> Policy
+
+    Orchestrator --> Queue
+    Queue --> Analytics
+    Queue --> Audit
+    Queue --> DB
+    DB --> Admin
+    Files --> Admin
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>End-to-End Flows</h2>
+      <div class="two-col">
+        <div>
+          <h3>Booking Flow</h3>
+          <div class="mermaid">
+sequenceDiagram
+    participant Customer as Customer
+    participant WA as WhatsApp
+    participant Gateway as Channel Gateway
+    participant Orch as Orchestrator
+    participant AI as AI Layer
+    participant WF as Workflow Engine
+    participant Cal as Booking Connector
+    participant Human as Human Inbox
+
+    Customer->>WA: "Can I book lashes tomorrow evening?"
+    WA->>Gateway: inbound webhook
+    Gateway->>Orch: canonical inbound event
+    Orch->>AI: detect intent, entities, confidence
+    AI-->>Orch: booking intent + service + date + confidence
+    Orch->>WF: start booking workflow
+    WF->>Cal: fetch availability
+    Cal-->>WF: slots by staff and service
+    WF->>AI: draft response with options
+    AI-->>WF: customer-facing reply
+    alt low confidence or policy edge case
+        WF->>Human: approval requested
+        Human-->>WF: approve or edit
+    end
+    WF-->>WA: send response
+    WA-->>Customer: offer slots and next step
+    WF->>Orch: persist workflow state and metrics
+          </div>
+        </div>
+        <div>
+          <h3>Lead Recovery Flow</h3>
+          <div class="mermaid">
+sequenceDiagram
+    participant Lead as Prospect
+    participant WA as WhatsApp
+    participant Gateway as Channel Gateway
+    participant Orch as Orchestrator
+    participant WF as Workflow Engine
+    participant CRM as CRM
+    participant Owner as Business Owner
+
+    Lead->>WA: "How much is balayage?"
+    WA->>Gateway: inbound message
+    Gateway->>Orch: canonical event
+    Orch->>WF: qualification workflow
+    WF->>CRM: lookup existing contact / create lead
+    CRM-->>WF: lead record
+    WF-->>WA: ask service, date, budget, preferred stylist
+    Lead-->>WA: replies with details
+    WA->>Gateway: follow-up messages
+    Gateway->>Orch: new events
+    Orch->>WF: continue qualification
+    WF->>CRM: score lead + set next action
+    alt customer goes silent
+        WF-->>WA: timed follow-up message
+    else customer requests human
+        WF-->>Owner: notify owner in inbox
+    end
+    WF->>CRM: mark booked / lost / follow-up
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Layers</h2>
+      <div class="grid">
+        <div class="card"><h3>Channels</h3><p>WhatsApp first, then Instagram DM, web chat, SMS, email, and missed-call recovery.</p></div>
+        <div class="card"><h3>Orchestration</h3><p>Canonical event routing, workflow selection, context loading, and state persistence.</p></div>
+        <div class="card"><h3>Policy</h3><p>Consent, quiet hours, confidence thresholds, escalation rules, and country-specific behavior.</p></div>
+        <div class="card"><h3>AI</h3><p>Intent detection, extraction, drafting, summarization, and tone adaptation only.</p></div>
+        <div class="card"><h3>Workflow Engine</h3><p>Booking, reminders, waitlist fill, review requests, and later dispatch/support packs.</p></div>
+        <div class="card"><h3>Integrations</h3><p>Booking tools, calendars, CRM, payments, reviews, and notifications behind adapter interfaces.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Data Model</h2>
+      <div class="mermaid">
+erDiagram
+    TENANT ||--o{ LOCATION : has
+    TENANT ||--o{ CONTACT : owns
+    TENANT ||--o{ CONVERSATION : owns
+    TENANT ||--o{ WORKFLOW_RUN : owns
+    TENANT ||--o{ MESSAGE_TEMPLATE : owns
+    LOCATION ||--o{ STAFF_MEMBER : has
+    LOCATION ||--o{ SERVICE : offers
+    CONTACT ||--o{ CONVERSATION : participates_in
+    CONVERSATION ||--o{ MESSAGE : contains
+    CONVERSATION ||--o{ WORKFLOW_RUN : drives
+    WORKFLOW_RUN ||--o{ TASK : creates
+    WORKFLOW_RUN ||--o{ AUDIT_EVENT : emits
+    SERVICE ||--o{ APPOINTMENT : used_for
+    STAFF_MEMBER ||--o{ APPOINTMENT : assigned_to
+    CONTACT ||--o{ APPOINTMENT : books
+      </div>
+      <ul class="pill-list">
+        <li>tenants</li>
+        <li>locations</li>
+        <li>contacts</li>
+        <li>conversations</li>
+        <li>messages</li>
+        <li>workflow_runs</li>
+        <li>appointments</li>
+        <li>staff_members</li>
+        <li>services</li>
+        <li>audit_events</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>Phase Plan</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Phase 1</h3>
+          <p>Independent beauty professionals. WhatsApp-only. Booking, confirmation, reminder, reschedule.</p>
+        </div>
+        <div class="card">
+          <h3>Phase 2</h3>
+          <p>Small salons. Staff and service routing, waitlist fill, no-show recovery, deposits.</p>
+        </div>
+        <div class="card">
+          <h3>Phase 3</h3>
+          <p>Clinics and med spas. Stronger approvals, multilingual flows, richer analytics.</p>
+        </div>
+        <div class="card">
+          <h3>Phase 4</h3>
+          <p>Home services. Quote capture, dispatch workflows, image-based issue triage.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Design Rules</h2>
+      <ul>
+        <li>Keep provider-specific behavior inside adapters.</li>
+        <li>Do not let AI write authoritative workflow state directly.</li>
+        <li>Make country behavior declarative, not hard-coded.</li>
+        <li>Keep the product centered on workflows, not on a generic chatbot.</li>
+      </ul>
+      <p class="footer">If Mermaid does not render in your editor, open the HTML file in a browser. For the source version, use the Markdown file in preview mode.</p>
+    </section>
+  </main>
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: true, theme: "base" });
+  </script>
+</body>
+</html>
