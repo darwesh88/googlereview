@@ -33,6 +33,12 @@ Interpretation:
 3. Introduce a cleaner data benchmark before the next architecture branch.
 4. Keep the harness, but use it on a stronger hypothesis, not on more nearby `v4.2` settings.
 
+The first clean-data scaffold now exists in:
+
+- [prepare_hf_corpus.py](C:/Users/adarw/Desktop/googlereview/loopy/prepare_hf_corpus.py)
+- [CLEAN_DATA_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/CLEAN_DATA_PLAN.md)
+- [experiment_plans/clean_tinystories_compare.json](C:/Users/adarw/Desktop/googlereview/loopy/experiment_plans/clean_tinystories_compare.json)
+
 ## Data decision
 
 Do not continue only on the mixed Twitter support corpus.

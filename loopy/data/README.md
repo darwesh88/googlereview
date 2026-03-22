@@ -14,3 +14,7 @@ Guidelines:
 - keep prepared one-sample-per-line corpora under `real/`
 - avoid committing private or sensitive production data
 - if the data includes support tickets or user text, prefer running preparation with redaction flags first
+
+Clean benchmark helper:
+
+- [prepare_hf_corpus.py](C:/Users/adarw/Desktop/googlereview/loopy/prepare_hf_corpus.py) can fetch and prepare a reproducible Hugging Face dataset slice such as TinyStories or WikiText into the same line-based format

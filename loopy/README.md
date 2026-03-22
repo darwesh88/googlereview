@@ -79,6 +79,7 @@ The next useful work is:
 - [NEXT.md](C:/Users/adarw/Desktop/googlereview/loopy/NEXT.md): immediate next steps
 - [BREAKPOINT.md](C:/Users/adarw/Desktop/googlereview/loopy/BREAKPOINT.md): resume-from-here snapshot
 - [HARNESS.md](C:/Users/adarw/Desktop/googlereview/loopy/HARNESS.md): experiment control-plane workflow
+- [CLEAN_DATA_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/CLEAN_DATA_PLAN.md): clean benchmark setup
 - [RESEARCH_LOG.md](C:/Users/adarw/Desktop/googlereview/loopy/RESEARCH_LOG.md): full chronological history
 
 ## Harness status
