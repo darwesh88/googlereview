@@ -24,5 +24,33 @@
     "metrics": {
       "byte_accuracy": 0.9912126482070209
     }
+  },
+  "raw_patch_prior_tinystories_p2": {
+    "label": "Raw patch prior on TinyStories, patch_size=2, 20 epochs",
+    "metrics": {
+      "bpb": 1.4022356800323852,
+      "accuracy": 0.7192615327380952
+    }
+  },
+  "v3_grouped_prior_tinystories_5bpb": {
+    "label": "v3 grouped prior on TinyStories, 5.0 bpb, 20 epochs",
+    "metrics": {
+      "bpb": 1.7466983665038318,
+      "accuracy": 0.6539093501984126
+    }
+  },
+  "v42_grouped_prior_tinystories_6bpb": {
+    "label": "v4.2 grouped prior on TinyStories, 6.0 bpb, 20 epochs",
+    "metrics": {
+      "bpb": 1.933564281317207,
+      "accuracy": 0.6381293402777778
+    }
+  },
+  "v42_maskpred_grouped_prior_tinystories_6bpb": {
+    "label": "v4.2 masked-predictive grouped prior on TinyStories, 6.0 bpb, 20 epochs",
+    "metrics": {
+      "bpb": 2.051323908970221,
+      "accuracy": 0.6113901289682541
+    }
   }
 }

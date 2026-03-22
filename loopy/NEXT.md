@@ -25,12 +25,13 @@ Interpretation:
 - `v3` still wins on downstream usefulness
 - `v4.2` wins on reconstruction quality
 - current `v42` masked-predictive sweeps are too far from raw to justify more local tuning
+- the first clean TinyStories benchmark says the architecture gap is real even on cleaner text
 
 ## Immediate priorities
 
 1. Freeze the current `v42_masked_grid_10` sweep after any run already in flight.
-2. Stop using the noisy Twitter support slice as the only proving ground.
-3. Introduce a cleaner data benchmark before the next architecture branch.
+2. Stop treating "maybe the noisy data is the whole problem" as an open question.
+3. Keep clean and noisy benchmarks together from now on.
 4. Keep the harness, but use it on a stronger hypothesis, not on more nearby `v4.2` settings.
 
 The first clean-data scaffold now exists in:
@@ -39,45 +40,36 @@ The first clean-data scaffold now exists in:
 - [CLEAN_DATA_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/CLEAN_DATA_PLAN.md)
 - [experiment_plans/clean_tinystories_compare.json](C:/Users/adarw/Desktop/googlereview/loopy/experiment_plans/clean_tinystories_compare.json)
 
-## Data decision
+## Clean benchmark result
 
-Do not continue only on the mixed Twitter support corpus.
+TinyStories was run as the first clean benchmark.
 
-Use a two-track data regime:
+Observed downstream results:
 
-1. A cleaner, narrower dataset to measure architecture signal.
-2. The current noisy support corpus as a robustness check.
+- raw patch prior:
+  - `bpb = 1.4022`
+  - `accuracy = 0.7193`
+- best downstream `v3` reference:
+  - `bpb = 1.7467`
+  - `accuracy = 0.6539`
+- best balanced `v4.2` reference:
+  - `bpb = 1.9336`
+  - `accuracy = 0.6381`
+- masked-predictive `v4.2` reference:
+  - `bpb = 2.0513`
+  - `accuracy = 0.6114`
 
-Why:
+Interpretation:
 
-- the current corpus is broad, messy, and heterogeneous
-- that makes it useful as a stress test
-- but it is poor as the only benchmark when we are still trying to detect whether a latent architecture is fundamentally good
+- raw still wins clearly on clean data
+- `v3` is still the best learned downstream branch
+- `v4.2` is still the best reconstruction branch
+- masked predictive did not help the clean downstream benchmark
+- so the main bottleneck is not just noisy customer-support data
 
-## Recommended next experiment block
+## Next branch
 
-Before building `v5`, run one controlled clean-data comparison:
-
-1. Choose one cleaner corpus.
-   Good first candidates:
-   - a small clean natural-language corpus such as TinyStories
-   - a clean WikiText slice
-   - or a curated single-domain support dataset with consistent language
-2. Match it roughly to the same order of scale as the current working corpus.
-3. Re-run:
-   - raw patch prior baseline
-   - best downstream `v3`
-   - best balanced `v4.2`
-4. Compare the gap against raw.
-
-Decision rule:
-
-- if learned streams still lose badly on clean data, the next bottleneck is mainly architecture
-- if the gap shrinks sharply on clean data, data heterogeneity is a major part of the current problem
-
-## After the data check
-
-If clean-data results are still weak, the next branch should be:
+The next branch should be:
 
 - `v5 = prior-aware codec`
 
@@ -85,6 +77,7 @@ Meaning:
 
 - keep the best codec structure pieces from `v4.2`
 - train the codec more directly for downstream predictability instead of reconstruction alone
+- keep the clean TinyStories benchmark and the noisy Twitter support benchmark side by side while testing it
 
 ## Harness use
 

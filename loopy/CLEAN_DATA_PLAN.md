@@ -36,7 +36,7 @@ Why TinyStories first:
 After installing `loopy/requirements.txt`, run:
 
 ```powershell
-python -m loopy.prepare_hf_corpus --dataset tinystories --output loopy/data/real/tinystories_5k.txt --max-samples 5000 --min-chars 40 --max-chars 220 --min-tokens 6 --dedupe
+python -m loopy.prepare_hf_corpus --dataset tinystories --output loopy/data/real/tinystories_5k.txt --max-samples 5000 --min-chars 40 --max-chars 600 --min-tokens 6 --dedupe
 ```
 
 This writes:
@@ -63,6 +63,31 @@ This compares:
 3. best balanced `v4.2` reference
 4. best masked-predictive `v4.2` reference
 
+## First result
+
+TinyStories has now been run.
+
+Observed downstream results:
+
+- raw patch prior:
+  - `bpb = 1.4022`
+  - `accuracy = 0.7193`
+- best downstream `v3`:
+  - `bpb = 1.7467`
+  - `accuracy = 0.6539`
+- best balanced `v4.2`:
+  - `bpb = 1.9336`
+  - `accuracy = 0.6381`
+- masked-predictive `v4.2`:
+  - `bpb = 2.0513`
+  - `accuracy = 0.6114`
+
+Interpretation:
+
+- clean data did not close the raw gap
+- this means the current main bottleneck is architecture, not just data heterogeneity
+- keep TinyStories as a standing clean benchmark for future branches
+
 ## Decision rule
 
 If learned streams still lose badly to raw on TinyStories:
@@ -80,7 +105,7 @@ If the gap shrinks a lot on TinyStories:
 If TinyStories is useful, follow it with:
 
 ```powershell
-python -m loopy.prepare_hf_corpus --dataset wikitext103 --output loopy/data/real/wikitext103_5k.txt --max-samples 5000 --min-chars 40 --max-chars 220 --min-tokens 6 --dedupe
+python -m loopy.prepare_hf_corpus --dataset wikitext103 --output loopy/data/real/wikitext103_5k.txt --max-samples 5000 --min-chars 40 --max-chars 600 --min-tokens 6 --dedupe
 ```
 
 This gives a second clean benchmark with a different style:

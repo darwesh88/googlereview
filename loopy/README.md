@@ -16,6 +16,9 @@ What is true now:
 - raw downstream baseline at `patch_size=2`, `20` epochs:
   - `bpb = 2.5258`
   - `accuracy = 0.5233`
+- clean TinyStories raw baseline at `patch_size=2`, `20` epochs:
+  - `bpb = 1.4022`
+  - `accuracy = 0.7193`
 - best learned downstream result so far:
   - `v3`, `5.0 bpb`, grouped prior, `20` epochs
   - `bpb = 2.8497`
@@ -33,6 +36,7 @@ So the project has split cleanly:
 - `v3` is still the best downstream branch
 - `v4.2` is the best reconstruction branch
 - neither branch beats raw on the corrected downstream benchmark
+- the first clean TinyStories benchmark says the main bottleneck is still architecture, not just noisy customer-support data
 
 ## Branch summary
 
@@ -68,11 +72,22 @@ Do not keep sweeping the current `v42_masked_grid_10` neighborhood.
 
 The gap to the corrected raw baseline is too large for more tiny parameter sweeps to be the right next move.
 
+Do not treat clean data as an open question anymore.
+
+TinyStories already answered it:
+
+- raw: `1.4022 bpb`
+- `v3`: `1.7467 bpb`
+- `v4.2`: `1.9336 bpb`
+- `v4.2 + masked predictive`: `2.0513 bpb`
+
+So cleaner data did not rescue the current learned-stream family.
+
 The next useful work is:
 
 1. keep the harness as infrastructure
-2. move to a cleaner data regime so architecture signal is easier to read
-3. then test the next larger hypothesis shift
+2. keep clean and noisy benchmarks side by side
+3. move to the next larger hypothesis shift
 
 ## Docs to read first
 

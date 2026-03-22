@@ -21,6 +21,11 @@ Current learned references:
 - best masked-predictive `v4.2` result:
   - `byte_accuracy = 0.9912`
   - downstream grouped prior `bpb = 3.1301`
+- clean TinyStories downstream results:
+  - raw: `1.4022`
+  - `v3`: `1.7467`
+  - `v4.2`: `1.9336`
+  - `v4.2 + masked predictive`: `2.0513`
 
 Current interpretation:
 
@@ -29,6 +34,7 @@ Current interpretation:
 - `v3` is still the downstream winner
 - `v4.2` is still the reconstruction winner
 - the current `v42` masked-predictive sweep neighborhood is too weak for more local tuning to be a good next bet
+- clean data did not rescue the current architecture family, so the next main bottleneck is architectural
 
 ## How to read this log
 
@@ -61,6 +67,52 @@ Purpose:
 - append a stable ledger instead of relying on manual chat bookkeeping
 
 Historical log begins below.
+
+## Clean TinyStories benchmark
+
+The first clean benchmark was finally run on TinyStories.
+
+Preparation:
+
+- dataset: `roneneldan/TinyStories`
+- prepared corpus size: `5000`
+- important note:
+  - the first `max_chars=220` filter was too strict and kept only `83` usable samples
+  - the working filter used `max_chars=600`
+
+Observed downstream results:
+
+- raw patch prior:
+  - `bpb = 1.4022356800323852`
+  - `accuracy = 0.7192615327380952`
+- `v3` grouped prior:
+  - `bpb = 1.7466983665038318`
+  - `accuracy = 0.6539093501984126`
+- `v4.2` grouped prior:
+  - `bpb = 1.933564281317207`
+  - `accuracy = 0.6381293402777778`
+- `v4.2 + masked predictive` grouped prior:
+  - `bpb = 2.051323908970221`
+  - `accuracy = 0.6113901289682541`
+
+Observed codec-side references:
+
+- `v3` codec:
+  - `byte_accuracy = 0.9841889880952381`
+- `v4.2` codec:
+  - `byte_accuracy = 0.9989304315476191`
+- `v4.2 + masked predictive` codec:
+  - `byte_accuracy = 0.9987754216269841`
+  - `predictive_loss = 0.030075881659748064`
+
+Interpretation:
+
+- raw still wins clearly on clean data
+- `v3` remains the best learned downstream branch
+- `v4.2` remains the best reconstruction branch
+- masked predictive did not help the clean downstream benchmark
+- so the current problem is not only messy customer-support data
+- the next major bottleneck is architecture
 
 ## Why we changed direction
 

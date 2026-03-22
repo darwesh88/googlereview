@@ -17,12 +17,18 @@ Resume from here.
 - best masked-predictive `v4.2` result:
   - `byte_accuracy = 0.9912`
   - downstream grouped prior `bpb = 3.1301`
+- clean TinyStories downstream benchmark:
+  - raw: `1.4022`
+  - `v3`: `1.7467`
+  - `v4.2`: `1.9336`
+  - `v4.2 + masked predictive`: `2.0513`
 
 ## Current interpretation
 
 - `v3` is still the best branch for downstream predictability
 - `v4.2` is still the best branch for reconstruction
 - the current `v42` harness neighborhood is too weak to close the corrected raw gap by local tuning alone
+- clean data did not remove the gap, so the next bottleneck is mainly architecture
 
 ## Harness state
 
@@ -52,9 +58,9 @@ Use it as:
 
 ## Resume with
 
-1. a cleaner benchmark dataset
-2. one controlled raw vs `v3` vs `v4.2` comparison on that dataset
-3. then the next larger architecture branch if needed
+1. keep the TinyStories clean benchmark as a standing benchmark
+2. keep the noisy Twitter support corpus as the robustness benchmark
+3. move to the next larger architecture branch
 
 ## Likely next architecture
 
