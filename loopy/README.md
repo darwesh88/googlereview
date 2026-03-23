@@ -78,6 +78,13 @@ So the project has split cleanly:
 - first clean TinyStories pass is now complete
 - codec side is strong, but downstream transfer is still weak
 
+### v5.1
+
+- aligned differentiable prior-aware branch
+- shares the grouped-prior family more closely between training-time and evaluation-time paths
+- uses previous soft grouped assignments instead of detached hard history
+- scaffold is now implemented and smoke-tested locally
+
 ## Current recommendation
 
 Do not keep sweeping the current `v42_masked_grid_10` neighborhood.
@@ -99,7 +106,7 @@ The next useful work is:
 
 1. keep the harness as infrastructure
 2. keep clean and noisy benchmarks side by side
-3. move from `v5` to a tighter `v5.1` prior-aligned branch before resuming broad sweeps
+3. run the first clean `v5.1` benchmark before any more branch-level decisions
 
 ## Docs to read first
 

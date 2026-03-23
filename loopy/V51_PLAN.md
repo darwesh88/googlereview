@@ -11,6 +11,20 @@ Simple target:
 
 - make the training-time prior look much more like the thing we actually score later
 
+## Status
+
+`v5.1` scaffold is now implemented.
+
+Local smoke status:
+
+- codec checkpoint saves
+- `prior_match_loss` is nonzero
+- external grouped prior loads the `v5.1` checkpoint and trains
+
+So the next real gate is no longer implementation.
+
+It is the first TinyStories benchmark.
+
 ## Why `v5.1` is needed
 
 The first `v5` pass was useful, but not good enough.

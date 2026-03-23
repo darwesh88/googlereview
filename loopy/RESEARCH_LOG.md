@@ -39,6 +39,7 @@ Current interpretation:
 - the `v5` scaffold is implemented and local smoke passed
 - first TinyStories `v5` benchmark is complete
 - the next active branch is now `v5.1 = aligned differentiable prior-aware codec`
+- the `v5.1` scaffold is now implemented and local smoke passed
 
 Current `v5` scaffold files:
 
@@ -46,6 +47,14 @@ Current `v5` scaffold files:
 - [symbolic_codec_v5.py](C:/Users/adarw/Desktop/googlereview/loopy/symbolic_codec_v5.py)
 - [train_symbolic_codec_v5.py](C:/Users/adarw/Desktop/googlereview/loopy/train_symbolic_codec_v5.py)
 - [train_patch_prior_v5.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v5.py)
+
+Current `v5.1` scaffold files:
+
+- [grouped_prior_core.py](C:/Users/adarw/Desktop/googlereview/loopy/grouped_prior_core.py)
+- [v51_config.py](C:/Users/adarw/Desktop/googlereview/loopy/v51_config.py)
+- [symbolic_codec_v51.py](C:/Users/adarw/Desktop/googlereview/loopy/symbolic_codec_v51.py)
+- [train_symbolic_codec_v51.py](C:/Users/adarw/Desktop/googlereview/loopy/train_symbolic_codec_v51.py)
+- [train_patch_prior_v51.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v51.py)
 
 ## How to read this log
 

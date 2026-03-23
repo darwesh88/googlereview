@@ -95,4 +95,6 @@ Current status:
 - `v5` scaffold is implemented
 - local smoke passed on `example_corpus.txt`
 - first TinyStories `v5` benchmark is complete and did not clear the bar
-- next decision should come from `v5.1`, not from more `v4.2` sweeps or more `v5` micro-tuning
+- `v5.1` scaffold is now implemented
+- local `v5.1` smoke passed
+- next decision should come from the first TinyStories `v5.1` benchmark, not from more `v4.2` sweeps or more `v5` micro-tuning

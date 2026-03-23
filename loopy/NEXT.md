@@ -76,7 +76,7 @@ Interpretation:
 
 `v5` as implemented should not be the long-term active branch.
 
-The next branch should be:
+The active next branch should be:
 
 - `v5.1 = aligned differentiable prior-aware codec`
 
@@ -108,12 +108,24 @@ Current `v5` status:
   - grouped prior `bpb = 1.9610`
   - result is better than masked-predictive `v4.2`, but still worse than plain `v4.2` and `v3`
 
+Current `v5.1` status:
+
+- scaffold exists in:
+  - [grouped_prior_core.py](C:/Users/adarw/Desktop/googlereview/loopy/grouped_prior_core.py)
+  - [v51_config.py](C:/Users/adarw/Desktop/googlereview/loopy/v51_config.py)
+  - [symbolic_codec_v51.py](C:/Users/adarw/Desktop/googlereview/loopy/symbolic_codec_v51.py)
+  - [train_symbolic_codec_v51.py](C:/Users/adarw/Desktop/googlereview/loopy/train_symbolic_codec_v51.py)
+  - [train_patch_prior_v51.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v51.py)
+- local smoke passed:
+  - codec checkpoint saves
+  - `prior_match_loss` is nonzero
+  - external grouped prior loads the `v5.1` checkpoint and trains
+
 Immediate next run order:
 
-1. implement `v5.1`
-2. TinyStories `v5.1` codec benchmark
-3. TinyStories `v5.1` grouped prior benchmark
-4. Twitter support `v5.1` robustness check only if TinyStories clearly improves over `v5`
+1. TinyStories `v5.1` codec benchmark
+2. TinyStories `v5.1` grouped prior benchmark
+3. Twitter support `v5.1` robustness check only if TinyStories clearly improves over `v5`
 
 ## Harness use
 
