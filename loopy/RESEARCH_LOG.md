@@ -37,6 +37,8 @@ Current interpretation:
 - clean data did not rescue the current architecture family, so the next main bottleneck is architectural
 - the next active branch is now `v5 = prior-aware codec`
 - the `v5` scaffold is implemented and local smoke passed
+- first TinyStories `v5` benchmark is complete
+- the next active branch is now `v5.1 = aligned differentiable prior-aware codec`
 
 Current `v5` scaffold files:
 
@@ -76,6 +78,49 @@ Purpose:
 - append a stable ledger instead of relying on manual chat bookkeeping
 
 Historical log begins below.
+
+## First `v5` TinyStories result
+
+The first real `v5` pass was run on the clean TinyStories benchmark.
+
+Observed codec result:
+
+- loss: `0.02158`
+- recon loss: `0.01539`
+- byte accuracy: `0.99656`
+- prior match loss: `0.00479`
+- prior CE loss: `3.62755`
+- prior bpb estimate: `5.23345`
+- codebook perplexity: `63.87`
+
+Observed grouped-prior result:
+
+- loss: `1.35928`
+- accuracy: `0.63094`
+- bpb: `1.96102`
+
+Comparison on TinyStories:
+
+- raw: `1.40224`
+- `v3`: `1.74670`
+- `v4.2`: `1.93356`
+- `v4.2 + masked predictive`: `2.05132`
+- `v5`: `1.96102`
+
+Interpretation:
+
+- `v5` is a real branch
+- the prior-aware loss did not collapse reconstruction
+- but the first internal prior formulation did not improve enough downstream
+- it beat masked-predictive `v4.2`, but lost to plain `v4.2` and `v3`
+
+Updated conclusion:
+
+- do not keep tuning `v5` as-is
+- the likely remaining problem is mismatch between:
+  - the internal `v5` prior head
+  - and the external grouped-prior evaluator
+- next branch should be `v5.1`, which should align those two paths more tightly and let gradients flow through previous soft symbol assignments
 
 ## Clean TinyStories benchmark
 

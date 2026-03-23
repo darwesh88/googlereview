@@ -58,6 +58,10 @@ Observed downstream results:
 - masked-predictive `v4.2` reference:
   - `bpb = 2.0513`
   - `accuracy = 0.6114`
+- first `v5` reference:
+  - codec byte accuracy: `0.9966`
+  - grouped prior `bpb = 1.9610`
+  - grouped prior accuracy: `0.6309`
 
 Interpretation:
 
@@ -65,25 +69,30 @@ Interpretation:
 - `v3` is still the best learned downstream branch
 - `v4.2` is still the best reconstruction branch
 - masked predictive did not help the clean downstream benchmark
+- `v5` preserved strong reconstruction, but its internal prior loss still did not transfer into a better external grouped-prior result
 - so the main bottleneck is not just noisy customer-support data
 
 ## Next branch
 
+`v5` as implemented should not be the long-term active branch.
+
 The next branch should be:
 
-- `v5 = prior-aware codec`
+- `v5.1 = aligned differentiable prior-aware codec`
 
 Working plan:
 
 - [V5_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V5_PLAN.md)
+- [V51_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V51_PLAN.md)
 
 Meaning:
 
-- keep the best codec structure pieces from `v4.2`
-- train the codec more directly for downstream predictability instead of reconstruction alone
+- keep the best codec structure pieces from `v4.2` and `v5`
+- remove the mismatch between the internal `v5` prior head and the external grouped-prior evaluation path
+- let prior-aware gradients flow through previous soft symbol assignments instead of only current hard targets
 - keep the clean TinyStories benchmark and the noisy Twitter support benchmark side by side while testing it
 
-Current implementation status:
+Current `v5` status:
 
 - scaffold exists in:
   - [v5_config.py](C:/Users/adarw/Desktop/googlereview/loopy/v5_config.py)
@@ -94,12 +103,17 @@ Current implementation status:
   - codec checkpoint saves
   - `prior_match_loss` is nonzero
   - grouped prior loads the `v5` checkpoint and trains
+- first TinyStories pass completed:
+  - codec byte accuracy: `0.9966`
+  - grouped prior `bpb = 1.9610`
+  - result is better than masked-predictive `v4.2`, but still worse than plain `v4.2` and `v3`
 
 Immediate next run order:
 
-1. TinyStories `v5` codec benchmark
-2. TinyStories `v5` grouped prior benchmark
-3. Twitter support `v5` robustness check only if TinyStories moves in the right direction
+1. implement `v5.1`
+2. TinyStories `v5.1` codec benchmark
+3. TinyStories `v5.1` grouped prior benchmark
+4. Twitter support `v5.1` robustness check only if TinyStories clearly improves over `v5`
 
 ## Harness use
 

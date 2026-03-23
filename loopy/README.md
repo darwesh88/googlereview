@@ -30,12 +30,16 @@ What is true now:
   - `v4.2`, `6.0 bpb`, masked predictive
   - `byte_accuracy = 0.9912`
   - downstream grouped prior `bpb = 3.1301`
+- first `v5` clean TinyStories result:
+  - codec byte accuracy: `0.9966`
+  - grouped prior `bpb = 1.9610`
 
 So the project has split cleanly:
 
 - `v3` is still the best downstream branch
 - `v4.2` is the best reconstruction branch
-- neither branch beats raw on the corrected downstream benchmark
+- `v5` reconstruction stayed strong, but the first prior-aware version still did not beat `v4.2` or `v3` downstream
+- no branch beats raw on the corrected downstream benchmark
 - the first clean TinyStories benchmark says the main bottleneck is still architecture, not just noisy customer-support data
 
 ## Branch summary
@@ -71,8 +75,8 @@ So the project has split cleanly:
 - prior-aware codec branch
 - keeps the strongest `v4.2` structural pieces
 - adds an internal strictly causal grouped prior objective during codec training
-- scaffold is now implemented and smoke-tested locally
-- not benchmarked on the clean/noisy main corpora yet
+- first clean TinyStories pass is now complete
+- codec side is strong, but downstream transfer is still weak
 
 ## Current recommendation
 
@@ -95,7 +99,7 @@ The next useful work is:
 
 1. keep the harness as infrastructure
 2. keep clean and noisy benchmarks side by side
-3. benchmark the new `v5` branch before resuming broad sweeps
+3. move from `v5` to a tighter `v5.1` prior-aligned branch before resuming broad sweeps
 
 ## Docs to read first
 
@@ -104,6 +108,7 @@ The next useful work is:
 - [HARNESS.md](C:/Users/adarw/Desktop/googlereview/loopy/HARNESS.md): experiment control-plane workflow
 - [CLEAN_DATA_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/CLEAN_DATA_PLAN.md): clean benchmark setup
 - [V5_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V5_PLAN.md): prior-aware codec design
+- [V51_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V51_PLAN.md): aligned differentiable prior next step
 - [RESEARCH_LOG.md](C:/Users/adarw/Desktop/googlereview/loopy/RESEARCH_LOG.md): full chronological history
 
 ## Harness status

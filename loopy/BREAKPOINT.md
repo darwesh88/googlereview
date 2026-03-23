@@ -22,6 +22,10 @@ Resume from here.
   - `v3`: `1.7467`
   - `v4.2`: `1.9336`
   - `v4.2 + masked predictive`: `2.0513`
+- first `v5` TinyStories result:
+  - codec byte accuracy: `0.9966`
+  - grouped prior `bpb = 1.9610`
+  - grouped prior accuracy: `0.6309`
 
 ## Current interpretation
 
@@ -29,6 +33,8 @@ Resume from here.
 - `v4.2` is still the best branch for reconstruction
 - the current `v42` harness neighborhood is too weak to close the corrected raw gap by local tuning alone
 - clean data did not remove the gap, so the next bottleneck is mainly architecture
+- `v5` kept strong reconstruction, but the internal prior head still did not transfer into a downstream win
+- the most likely remaining issue is mismatch between internal `v5` prior training and the external grouped-prior evaluator
 
 ## Harness state
 
@@ -60,17 +66,18 @@ Use it as:
 
 1. keep the TinyStories clean benchmark as a standing benchmark
 2. keep the noisy Twitter support corpus as the robustness benchmark
-3. run the new `v5` branch before resuming any broad sweep
+3. move to `v5.1`, not more `v5` tuning, before resuming any broad sweep
 
 ## Likely next architecture
 
-If clean-data results still do not move the gap enough, the next branch should be:
+The next branch should now be:
 
-- `v5 = prior-aware codec`
+- `v5.1 = aligned differentiable prior-aware codec`
 
 See:
 
 - [V5_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V5_PLAN.md)
+- [V51_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V51_PLAN.md)
 - [v5_config.py](C:/Users/adarw/Desktop/googlereview/loopy/v5_config.py)
 - [symbolic_codec_v5.py](C:/Users/adarw/Desktop/googlereview/loopy/symbolic_codec_v5.py)
 - [train_symbolic_codec_v5.py](C:/Users/adarw/Desktop/googlereview/loopy/train_symbolic_codec_v5.py)
@@ -87,4 +94,5 @@ Current status:
 
 - `v5` scaffold is implemented
 - local smoke passed on `example_corpus.txt`
-- next decision should come from the first TinyStories `v5` benchmark, not from more `v4.2` sweeps
+- first TinyStories `v5` benchmark is complete and did not clear the bar
+- next decision should come from `v5.1`, not from more `v4.2` sweeps or more `v5` micro-tuning

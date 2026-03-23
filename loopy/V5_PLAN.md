@@ -1,5 +1,44 @@
 # V5 Plan
 
+## Outcome
+
+`v5` is now implemented and the first TinyStories clean benchmark is complete.
+
+Observed result:
+
+- codec byte accuracy: `0.9966`
+- grouped prior `bpb = 1.9610`
+- grouped prior accuracy: `0.6309`
+
+Comparison:
+
+- raw: `1.4022`
+- `v3`: `1.7467`
+- `v4.2`: `1.9336`
+- `v4.2 + masked predictive`: `2.0513`
+- `v5`: `1.9610`
+
+Interpretation:
+
+- `v5` is a real branch, not a dead end
+- reconstruction stayed strong
+- it beat masked-predictive `v4.2`
+- but it did not beat plain `v4.2`
+- and it did not beat `v3`
+
+So `v5` should now be treated as:
+
+- a useful intermediate branch
+- but not the final next direction
+
+The next branch should be:
+
+- `v5.1 = aligned differentiable prior-aware codec`
+
+See:
+
+- [V51_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V51_PLAN.md)
+
 ## Goal
 
 Build the first Loopy branch that trains the codec **directly for downstream predictability**, not only for reconstruction.
