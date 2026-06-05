@@ -52,5 +52,13 @@
       "bpb": 2.051323908970221,
       "accuracy": 0.6113901289682541
     }
+  },
+  "v5_grouped_prior_tinystories_6bpb": {
+    "label": "v5 prior-aware grouped prior on TinyStories, 6.0 bpb, 20 epochs",
+    "metrics": {
+      "bpb": 1.9610246146863044,
+      "accuracy": 0.6309368799603173,
+      "codec_byte_accuracy": 0.9965587797619048
+    }
   }
 }

@@ -32,13 +32,15 @@ Interpretation:
 1. Freeze the current `v42_masked_grid_10` sweep after any run already in flight.
 2. Stop treating "maybe the noisy data is the whole problem" as an open question.
 3. Keep clean and noisy benchmarks together from now on.
-4. Keep the harness, but use it on a stronger hypothesis, not on more nearby `v4.2` settings.
+4. Run the first `v6` dynamic-patching benchmark before any more fixed-patch tuning.
+5. Keep the harness, but use it on a stronger hypothesis, not on more nearby `v4.2` settings.
 
 The first clean-data scaffold now exists in:
 
 - [prepare_hf_corpus.py](C:/Users/adarw/Desktop/googlereview/loopy/prepare_hf_corpus.py)
 - [CLEAN_DATA_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/CLEAN_DATA_PLAN.md)
 - [experiment_plans/clean_tinystories_compare.json](C:/Users/adarw/Desktop/googlereview/loopy/experiment_plans/clean_tinystories_compare.json)
+- [experiment_plans/v6_dynamic_tinystories.json](C:/Users/adarw/Desktop/googlereview/loopy/experiment_plans/v6_dynamic_tinystories.json)
 
 ## Clean benchmark result
 
@@ -72,25 +74,24 @@ Interpretation:
 - `v5` preserved strong reconstruction, but its internal prior loss still did not transfer into a better external grouped-prior result
 - so the main bottleneck is not just noisy customer-support data
 
-## Next branch
+## Active next branch
 
-`v5` as implemented should not be the long-term active branch.
+`v5` and `v5.1` are no longer the main active line.
 
-The active next branch should be:
+`v5.1` is implemented and smoke-tested, but the project is moving directly to:
 
-- `v5.1 = aligned differentiable prior-aware codec`
+- `v6 = dynamic byte patching`
 
 Working plan:
 
-- [V5_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V5_PLAN.md)
-- [V51_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V51_PLAN.md)
+- [V6_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V6_PLAN.md)
 
 Meaning:
 
-- keep the best codec structure pieces from `v4.2` and `v5`
-- remove the mismatch between the internal `v5` prior head and the external grouped-prior evaluation path
-- let prior-aware gradients flow through previous soft symbol assignments instead of only current hard targets
-- keep the clean TinyStories benchmark and the noisy Twitter support benchmark side by side while testing it
+- stop assuming every symbol should represent exactly 2 bytes
+- let patches have variable byte lengths
+- test whether boundary-aware dynamic patches improve downstream bpb
+- keep the same grouped-prior evaluation so results remain comparable
 
 Current `v5` status:
 
@@ -120,12 +121,27 @@ Current `v5.1` status:
   - codec checkpoint saves
   - `prior_match_loss` is nonzero
   - external grouped prior loads the `v5.1` checkpoint and trains
+- parked before full TinyStories benchmark
 
 Immediate next run order:
 
-1. TinyStories `v5.1` codec benchmark
-2. TinyStories `v5.1` grouped prior benchmark
-3. Twitter support `v5.1` robustness check only if TinyStories clearly improves over `v5`
+1. TinyStories `v6` dynamic codec benchmark
+2. TinyStories `v6` grouped prior benchmark
+3. `space` vs `boundary` vs `fixed` ablation only if the first v6 run is not obviously dead
+4. Twitter support `v6` robustness check only if TinyStories clearly improves over `v5`
+
+Current `v6` status:
+
+- scaffold exists in:
+  - [dynamic_patching.py](C:/Users/adarw/Desktop/googlereview/loopy/dynamic_patching.py)
+  - [v6_config.py](C:/Users/adarw/Desktop/googlereview/loopy/v6_config.py)
+  - [symbolic_codec_v6.py](C:/Users/adarw/Desktop/googlereview/loopy/symbolic_codec_v6.py)
+  - [train_symbolic_codec_v6.py](C:/Users/adarw/Desktop/googlereview/loopy/train_symbolic_codec_v6.py)
+  - [train_patch_prior_v6.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v6.py)
+- local smoke passed:
+  - codec checkpoint saves
+  - grouped prior loads the v6 checkpoint and trains
+  - dynamic patch encoding produces variable patch lengths
 
 ## Harness use
 

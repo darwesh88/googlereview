@@ -39,6 +39,7 @@ So the project has split cleanly:
 - `v3` is still the best downstream branch
 - `v4.2` is the best reconstruction branch
 - `v5` reconstruction stayed strong, but the first prior-aware version still did not beat `v4.2` or `v3` downstream
+- `v6` is now the active architecture pivot toward dynamic byte patches
 - no branch beats raw on the corrected downstream benchmark
 - the first clean TinyStories benchmark says the main bottleneck is still architecture, not just noisy customer-support data
 
@@ -84,6 +85,15 @@ So the project has split cleanly:
 - shares the grouped-prior family more closely between training-time and evaluation-time paths
 - uses previous soft grouped assignments instead of detached hard history
 - scaffold is now implemented and smoke-tested locally
+- parked before full benchmark because the project is moving to a stronger dynamic-patching hypothesis
+
+### v6
+
+- dynamic byte-patch branch
+- replaces fixed 2-byte patches with variable-length deterministic patches
+- first patching modes are `boundary`, `space`, and `fixed`
+- codec and grouped-prior scripts are implemented and smoke-tested locally
+- active next benchmark branch
 
 ## Current recommendation
 
@@ -102,11 +112,12 @@ TinyStories already answered it:
 
 So cleaner data did not rescue the current learned-stream family.
 
-The next useful work is:
+The next useful work is now:
 
 1. keep the harness as infrastructure
 2. keep clean and noisy benchmarks side by side
-3. run the first clean `v5.1` benchmark before any more branch-level decisions
+3. run the first clean `v6` dynamic-patch benchmark
+4. only return to v5.1 if v6 exposes a specific issue that v5.1 can answer
 
 ## Docs to read first
 
@@ -116,6 +127,7 @@ The next useful work is:
 - [CLEAN_DATA_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/CLEAN_DATA_PLAN.md): clean benchmark setup
 - [V5_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V5_PLAN.md): prior-aware codec design
 - [V51_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V51_PLAN.md): aligned differentiable prior next step
+- [V6_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V6_PLAN.md): dynamic patching branch
 - [RESEARCH_LOG.md](C:/Users/adarw/Desktop/googlereview/loopy/RESEARCH_LOG.md): full chronological history
 
 ## Harness status

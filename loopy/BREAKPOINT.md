@@ -34,7 +34,9 @@ Resume from here.
 - the current `v42` harness neighborhood is too weak to close the corrected raw gap by local tuning alone
 - clean data did not remove the gap, so the next bottleneck is mainly architecture
 - `v5` kept strong reconstruction, but the internal prior head still did not transfer into a downstream win
-- the most likely remaining issue is mismatch between internal `v5` prior training and the external grouped-prior evaluator
+- `v5.1` was implemented and smoke-tested, but is parked before full TinyStories benchmarking
+- the active hypothesis is now that fixed 2-byte patching is the bigger bottleneck
+- `v6` dynamic patching is the next branch
 
 ## Harness state
 
@@ -66,29 +68,28 @@ Use it as:
 
 1. keep the TinyStories clean benchmark as a standing benchmark
 2. keep the noisy Twitter support corpus as the robustness benchmark
-3. move to `v5.1`, not more `v5` tuning, before resuming any broad sweep
+3. run the first `v6` dynamic-patching benchmark before resuming any broad sweep
 
 ## Likely next architecture
 
-The next branch should now be:
+The next branch is now:
 
-- `v5.1 = aligned differentiable prior-aware codec`
+- `v6 = dynamic byte patching`
 
 See:
 
-- [V5_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V5_PLAN.md)
-- [V51_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V51_PLAN.md)
-- [v5_config.py](C:/Users/adarw/Desktop/googlereview/loopy/v5_config.py)
-- [symbolic_codec_v5.py](C:/Users/adarw/Desktop/googlereview/loopy/symbolic_codec_v5.py)
-- [train_symbolic_codec_v5.py](C:/Users/adarw/Desktop/googlereview/loopy/train_symbolic_codec_v5.py)
-- [train_patch_prior_v5.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v5.py)
+- [V6_PLAN.md](C:/Users/adarw/Desktop/googlereview/loopy/V6_PLAN.md)
+- [dynamic_patching.py](C:/Users/adarw/Desktop/googlereview/loopy/dynamic_patching.py)
+- [symbolic_codec_v6.py](C:/Users/adarw/Desktop/googlereview/loopy/symbolic_codec_v6.py)
+- [train_symbolic_codec_v6.py](C:/Users/adarw/Desktop/googlereview/loopy/train_symbolic_codec_v6.py)
+- [train_patch_prior_v6.py](C:/Users/adarw/Desktop/googlereview/loopy/train_patch_prior_v6.py)
 
 That branch should optimize for:
 
+- variable byte-patch boundaries
 - reconstruction
 - codebook health
-- residual sparsity
-- downstream predictability during codec training
+- downstream grouped-prior bpb
 
 Current status:
 
@@ -97,4 +98,6 @@ Current status:
 - first TinyStories `v5` benchmark is complete and did not clear the bar
 - `v5.1` scaffold is now implemented
 - local `v5.1` smoke passed
-- next decision should come from the first TinyStories `v5.1` benchmark, not from more `v4.2` sweeps or more `v5` micro-tuning
+- `v6` scaffold is now implemented
+- local `v6` codec and prior smokes passed
+- next decision should come from the first TinyStories `v6` benchmark, not from more `v4.2` sweeps or more `v5` micro-tuning

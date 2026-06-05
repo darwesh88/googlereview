@@ -21,9 +21,13 @@ Local smoke status:
 - `prior_match_loss` is nonzero
 - external grouped prior loads the `v5.1` checkpoint and trains
 
-So the next real gate is no longer implementation.
+The branch is now parked before a full TinyStories benchmark.
 
-It is the first TinyStories benchmark.
+Reason:
+
+- the broader research review pointed to fixed patching as the more likely bottleneck
+- v6 dynamic patching is now the active branch
+- v5.1 remains available if we need to isolate the prior-alignment question later
 
 ## Why `v5.1` is needed
 

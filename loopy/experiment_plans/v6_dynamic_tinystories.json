@@ -1,0 +1,63 @@
+{
+  "name": "v6-dynamic-tinystories",
+  "description": "First v6 dynamic-patch benchmark on the prepared TinyStories slice.",
+  "cwd": "C:/Users/adarw/Desktop/googlereview",
+  "step_templates": {
+    "v6_codec": {
+      "module": "loopy.train_symbolic_codec_v6",
+      "params": {
+        "data-path": "loopy/data/real/tinystories_5k.txt",
+        "output-dir": "loopy/runs/auto_clean/{experiment_id}/codec",
+        "epochs": 20,
+        "batch-size": 8,
+        "max-seq-len": 128,
+        "max-patches": 64,
+        "max-patch-size": 8,
+        "min-patch-size": 2,
+        "patching-mode": "boundary",
+        "embed-dim": 128,
+        "latent-dim": 128,
+        "encoder-layers": 2,
+        "decoder-layers": 2,
+        "pre-context-layers": 1,
+        "post-context-layers": 1,
+        "num-heads": 4,
+        "dropout": 0.0,
+        "weight-decay": 0.0,
+        "num-codebooks": 4,
+        "sub-codebook-size": 64,
+        "assignment-temp": 0.5,
+        "commitment-weight": 0.05,
+        "codebook-weight": 0.25,
+        "usage-weight": 0.05,
+        "use-residual-detail": true,
+        "residual-usage-weight": 0.005,
+        "residual-gate-bias": -2.0
+      }
+    },
+    "v6_prior": {
+      "module": "loopy.train_patch_prior_v6",
+      "params": {
+        "data-path": "loopy/data/real/tinystories_5k.txt",
+        "codec-run-dir": "loopy/runs/auto_clean/{experiment_id}/codec",
+        "output-dir": "loopy/runs/auto_clean/{experiment_id}/prior",
+        "epochs": 20,
+        "batch-size": 16,
+        "hidden-size": 128,
+        "num-layers": 2,
+        "dropout": 0.1,
+        "learning-rate": 0.001,
+        "weight-decay": 0.01,
+        "group-embed-dim": 16,
+        "batch-encode-size": 32
+      }
+    }
+  },
+  "experiments": [
+    {
+      "id": "v6_dynamic_boundary_clean",
+      "description": "First dynamic boundary-patched v6 run on TinyStories.",
+      "step_order": ["v6_codec", "v6_prior"]
+    }
+  ]
+}

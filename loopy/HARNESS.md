@@ -102,4 +102,4 @@ Current recommendation:
 
 - keep using the harness
 - but do not keep sweeping the current `v42_masked_grid_10` neighborhood
-- the next batch should target a cleaner dataset or a larger hypothesis shift
+- the next batch should target `v6_dynamic_tinystories`

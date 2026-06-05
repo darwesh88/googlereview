@@ -2980,3 +2980,44 @@ Decision:
 - use the corrected raw baseline for all future harness ingestion and comparisons
 - treat `v42_pw005_mp010` as a small improvement over the harness baseline only
 - next harness run should still be `v42_pw010_mp015`
+
+## V6 dynamic patching pivot
+
+After reviewing the fixed-patch results and current byte-level modeling literature, the project is moving past `v5.1` before running its full benchmark.
+
+Reason:
+
+- `v5` kept high reconstruction but did not improve downstream grouped-prior bpb
+- `v5.1` removes an internal/external prior mismatch, but still keeps the same fixed patch assumption
+- the larger bottleneck is likely that every symbol represents a fixed 2-byte island
+- BLT/MEGABYTE/GQ-VAE-style work points toward variable-length byte patches or learned dynamic tokenization
+
+Implemented v6 MVP:
+
+- deterministic dynamic byte patching in `dynamic_patching.py`
+- dynamic codec config in `v6_config.py`
+- dynamic-patch symbolic codec in `symbolic_codec_v6.py`
+- codec training script in `train_symbolic_codec_v6.py`
+- grouped-prior evaluation script in `train_patch_prior_v6.py`
+- harness plan in `experiment_plans/v6_dynamic_tinystories.json`
+
+Local smoke status:
+
+- codec checkpoint saves as `v6_codec.pt`
+- grouped prior loads the v6 checkpoint and trains
+- dynamic patch encoding produces variable patch lengths
+
+First real benchmark gate:
+
+- run TinyStories `v6_dynamic_boundary_clean`
+- compare grouped-prior bpb against:
+  - raw: `1.4022`
+  - `v3`: `1.7467`
+  - `v4.2`: `1.9336`
+  - `v5`: `1.9610`
+
+Decision rule:
+
+- worse than `1.9610`: dynamic boundary MVP failed
+- below `1.9336`: variable patching is useful
+- near/below `1.7467`: v6 becomes the main branch
